@@ -46,7 +46,6 @@ public class OutgoingCallActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.btnCancel);
         imgCallee = findViewById(R.id.imgCallee);
 
-        // Παράμετροι από ChatActivity
         callId      = getIntent().getStringExtra("callId");
         channelName = getIntent().getStringExtra("channelName");
         otherUid    = getIntent().getStringExtra("otherUid");
