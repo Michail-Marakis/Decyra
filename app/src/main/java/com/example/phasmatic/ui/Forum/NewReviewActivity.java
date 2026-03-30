@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Build;
@@ -60,6 +61,7 @@ public class NewReviewActivity extends AppCompatActivity {
     private String selectedCountry = null;
     private String selectedUniversity = null;
     private static final String CHANNEL_ID = "forum_reviews_channel";
+    private NotificationManager notificationManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,17 +109,56 @@ public class NewReviewActivity extends AppCompatActivity {
         btnVoice.setOnClickListener(v -> startSpeechRecognizer());
         createNotificationChannel();
 
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+    }
+
+    private void showNotification(String title, String message) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Review Notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        Intent intent = new Intent(this, NewReviewActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        Notification.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new Notification.Builder(this, CHANNEL_ID);
+        } else {
+            builder = new Notification.Builder(this);
+        }
+
+        builder.setContentTitle(title)
+                .setContentText(message)
+                .setSmallIcon(R.drawable.outline_circle_notifications_24)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        if (notificationManager != null) {
+            notificationManager.notify(1, builder.build());
+        }
     }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Forum Reviews";
             String description = "Notifications for new forum reviews";
+
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
             }
@@ -298,23 +339,11 @@ public class NewReviewActivity extends AppCompatActivity {
         forumRef.child(id)
                 .setValue(review)
                 .addOnSuccessListener(unused -> {
-                    //Toast.makeText(this, "Review posted", Toast.LENGTH_SHORT).show();
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    android.app.Notification notification = null;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        Toast.makeText(this, "Review posted", Toast.LENGTH_SHORT).show();
-                        notification = new Notification.Builder(this, CHANNEL_ID)
-                                .setContentTitle("Νέο Review Δημοσιεύτηκε")
-                                .setContentText("Το review gia to " + university + " δημοσιεύτηκε με επιτυχία.")
-                                .setSmallIcon(R.drawable.outline_circle_notifications_24)
-                                .setAutoCancel(true)
-                                .build();
-                    }
-
-                    if (notificationManager != null) {
-                        notificationManager.notify(1, notification);
-                    }
-
+                    Toast.makeText(this, "Review posted", Toast.LENGTH_SHORT).show();
+                    showNotification(
+                            "Νέο Review Δημοσιεύτηκε",
+                            "Το review για το " + university + " δημοσιεύτηκε με επιτυχία."
+                    );
                     finish();
                 })
                 .addOnFailureListener(e ->
