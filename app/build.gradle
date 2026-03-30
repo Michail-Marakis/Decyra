@@ -110,4 +110,7 @@ dependencies {
     //rtc
     implementation 'io.agora.rtc:full-sdk:4.2.3'
 
+    //zego cloud
+    implementation 'com.github.ZEGOCLOUD:zego_uikit_prebuilt_video_conference_android:latest.release'
+
 }
