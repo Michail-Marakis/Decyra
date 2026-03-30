@@ -54,7 +54,6 @@ public class ChatActivity extends AppCompatActivity {
     private String currentUid;
     private String otherUid;
     private String otherName;
-    CallListener callListener;
 
 
     private ProfileMenuHelper profileMenuHelper;
@@ -120,79 +119,11 @@ public class ChatActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> sendMessage());
 
         findOrCreateConversation();
-        setupVideoCall();
 
 
         btnVoice.setOnClickListener(v -> startSpeechRecognizer());
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //String currentUid = "βαλε_εδω_το_uid_του_user"; // πχ απο intent ή auth
 
-        callListener = new CallListener(this, currentUid);
-        callListener.start();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        if (callListener != null) {
-            callListener.stop();
-        }
-    }
-
-
-    private void setupVideoCall() {
-
-        btnVideoCall.setOnClickListener(v -> {
-
-            if (conversationKey == null) return;
-
-            CallManager callManager = new CallManager();
-
-            String callId = callManager.startCall(
-                    currentUid,
-                    otherUid,
-                    conversationKey
-            );
-
-            if (callId == null) return;
-
-            Intent i = new Intent(ChatActivity.this, OutgoingCallActivity.class);
-            i.putExtra("callId", callId);
-            i.putExtra("channelName", conversationKey);
-            i.putExtra("otherUid", otherUid);
-            i.putExtra("otherName", otherName);
-            startActivity(i);
-        });
-    }
-
-    private void listenCallStatus(String callId) {
-
-        DatabaseReference callRef = db.getReference("calls").child(callId);
-
-        callRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                String status = snapshot.child("status").getValue(String.class);
-                String channelName = snapshot.child("channelName").getValue(String.class);
-
-                if ("accepted".equals(status)) {
-
-                    Intent intent = new Intent(ChatActivity.this, VideoCallActivity.class);
-                    intent.putExtra("channelName", channelName);
-                    intent.putExtra("callId", callId);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
-    }
 
 
     private void startSpeechRecognizer() {

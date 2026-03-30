@@ -64,9 +64,8 @@
 
         <activity android:name=".ui.Chat.UsersActivity" />
         <activity android:name=".ui.Chat.ChatActivity"/>
-        <activity android:name=".ui.Chat.IncomingCallActivity"/>
-        <activity android:name=".ui.Chat.VideoCallActivity" />
-        <activity android:name=".ui.Chat.OutgoingCallActivity" />
+        <activity android:name=".ui.Chat.ConferenceActivity"/>
+        <activity android:name=".ui.Chat.GeneralConferenceActivity" />
 
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
