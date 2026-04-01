@@ -7,24 +7,31 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.UserExpectation;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import android.graphics.Bitmap;
 import com.example.phasmatic.extras.ProfileImageManager;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +49,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
     private ImageView imgProfile;
     private ProfileMenuHelper profileMenuHelper;
     private BackButtonHelper backButtonHelper;
+
+    private Spinner spnItField;
+    private List<String> itFieldNames = new ArrayList<>();
+    private List<Integer> itFieldIds = new ArrayList<>();
+    private Integer selectedFieldId = null;
+    private DatabaseReference itFieldsRef;
+    private DatabaseReference careerRef;
 
 
     private String userId, userFullName, userEmail, userPhone, modeType;
@@ -75,6 +89,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
         btnVoice = findViewById(R.id.btnVoice);
 
+        spnItField = findViewById(R.id.spnItField);
+
         BackButtonHelper.attachToGoModeSelection(
                 this,
                 R.id.btnBack,
@@ -88,6 +104,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
         );
         usersRef = firebaseDb.getReference("users");
+
+        itFieldsRef = firebaseDb.getReference("it_fields");
+        careerRef = firebaseDb.getReference("career");
 
         profileMenuHelper = new ProfileMenuHelper(
                 this,
@@ -115,6 +134,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
             txtModeTitle.setText("Master questionnaire");
         } else if ("career".equals(modeType)) {
             txtModeTitle.setText("Study - Work advisor questionnaire");
+            loadItFields();
         }
 
         for (int i = 0; i < stepDots.length; i++) {
@@ -165,6 +185,151 @@ public class QuestionnaireActivity extends AppCompatActivity {
         btnVoice.setOnClickListener(v -> startSpeechRecognizer());
     }
 
+    private void loadItFields() {
+        itFieldsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                itFieldNames.clear();
+                itFieldIds.clear();
+
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    Integer id   = child.child("id").getValue(Integer.class);
+                    String name  = child.child("name").getValue(String.class);
+                    if (id != null && name != null) {
+                        itFieldIds.add(id);
+                        itFieldNames.add(name);
+                    }
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        QuestionnaireActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        itFieldNames
+                );
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spnItField.setAdapter(adapter);
+
+                spnItField.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        selectedFieldId = itFieldIds.get(position);
+                        if ("career".equals(modeType) && currentIndex == 1) {
+                            updateCareerSecondQuestion();
+                        }
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) { }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(QuestionnaireActivity.this,
+                        "Failed to load IT fields: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
+    private void updateUI() {
+        txtQuestion.setText(questions.get(currentIndex));
+        txtProgress.setText((currentIndex + 1) + " / " + questions.size());
+
+        progressQuestions.setMax(questions.size());
+        progressQuestions.setProgress(currentIndex + 1);
+
+        if ("career".equals(modeType) && currentIndex == 0) {
+            //dropdown gia it_fields
+            edtAnswer.setVisibility(View.GONE);
+            spnItField.setVisibility(View.VISIBLE);
+            btnVoice.setEnabled(false);
+        } else {
+            edtAnswer.setVisibility(View.VISIBLE);
+            spnItField.setVisibility(View.GONE);
+            btnVoice.setEnabled(true);
+            edtAnswer.setText(answers.get(currentIndex));
+        }
+
+        btnPrev.setEnabled(currentIndex > 0);
+        btnNext.setText(currentIndex == questions.size() - 1 ? "Finish" : "Next");
+
+        for (int i = 0; i < stepDots.length; i++) {
+            if (i < questions.size()) {
+                stepDots[i].setVisibility(View.VISIBLE);
+                stepDots[i].setImageResource(
+                        i == currentIndex ? R.drawable.ic_step_active : R.drawable.ic_step_inactive
+                );
+            } else {
+                stepDots[i].setVisibility(View.GONE);
+            }
+        }
+
+        if ("career".equals(modeType) && currentIndex == 1) {
+            updateCareerSecondQuestion();
+        }
+    }
+
+    private void updateCareerSecondQuestion() {
+        Log.d("CAREER_DEBUG", "updateCareerSecondQuestion called. mode=" + modeType
+                + " currentIndex=" + currentIndex + " selectedFieldId=" + selectedFieldId);
+
+        if (!"career".equals(modeType) || selectedFieldId == null || currentIndex != 1) {
+            return;
+        }
+
+        final String original = questions.get(1);
+        Log.d("CAREER_DEBUG", "Original q2 = " + original);
+
+        careerRef.orderByChild("field_id")
+                .equalTo(selectedFieldId.longValue())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        Log.d("CAREER_DEBUG", "career children: " + snapshot.getChildrenCount());
+                        Long salary = null;
+                        for (DataSnapshot child : snapshot.getChildren()) {
+                            Long fieldId   = child.child("field_id").getValue(Long.class);
+                            Long countryId = child.child("country_id").getValue(Long.class);
+                            Log.d("CAREER_DEBUG", "row: fieldId=" + fieldId + " countryId=" + countryId);
+
+                            if (countryId != null && countryId == 3L) {
+                                salary = child.child("avg_salary_no_master").getValue(Long.class);
+                                break;
+                            }
+                        }
+
+                        if (salary != null) {
+                            String replaced = original.replace("...", String.valueOf(salary));
+                            Log.d("CAREER_DEBUG", "replaced q2 = " + replaced);
+                            questions.set(1, replaced);
+                            if (currentIndex == 1) {
+                                txtQuestion.setText(replaced);
+                            }
+                        } else {
+                            Log.d("CAREER_DEBUG", "NO salary found for fieldId=" + selectedFieldId);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.e("CAREER_DEBUG", "Failed: " + error.getMessage());
+                    }
+                });
+    }
+
+    private void saveCurrentAnswer() {
+        String ans;
+        if ("career".equals(modeType) && currentIndex == 0 && spnItField.getVisibility() == View.VISIBLE) {
+            ans = (spnItField.getSelectedItem() != null)
+                    ? spnItField.getSelectedItem().toString()
+                    : "";
+        } else {
+            ans = edtAnswer.getText().toString().trim();
+        }
+        answers.set(currentIndex, ans);
+    }
+
     private void loadProfilePhoto() {
         if (userId == null || userId.isEmpty()) {
             imgProfile.setImageResource(R.drawable.baseline_face_24);
@@ -183,7 +348,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
                         .error(R.drawable.baseline_face_24)
                         .into(imgProfile);
             } else {
-                // fallback se local cache an uparxei
+                //fallback se local cache an uparxei
                 Bitmap bitmap = ProfileImageManager.loadBitmap(this, userId);
                 if (bitmap != null) {
                     imgProfile.setImageBitmap(bitmap);
@@ -313,36 +478,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
     }
 
 
-    private void updateUI() {
-        txtQuestion.setText(questions.get(currentIndex));
-        txtProgress.setText((currentIndex + 1) + " / " + questions.size());
-
-        progressQuestions.setMax(questions.size());
-        progressQuestions.setProgress(currentIndex + 1);
-
-        edtAnswer.setText(answers.get(currentIndex));
-
-        btnPrev.setEnabled(currentIndex > 0);
-        btnNext.setText(currentIndex == questions.size() - 1 ? "Finish" : "Next");
-
-        for (int i = 0; i < stepDots.length; i++) {
-            if (i < questions.size()) {
-                stepDots[i].setVisibility(View.VISIBLE);
-                stepDots[i].setImageResource(
-                        i == currentIndex ? R.drawable.ic_step_active : R.drawable.ic_step_inactive
-                );
-            } else {
-                stepDots[i].setVisibility(View.GONE);
-            }
-        }
-    }
-
-
-    private void saveCurrentAnswer() {
-        String ans = edtAnswer.getText().toString().trim();
-        answers.set(currentIndex, ans);
-    }
-
     private void saveExpectationsAndGoChat() {
 
         StringBuilder sb = new StringBuilder();
@@ -371,8 +506,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
             sb.append("\nΛάβε υπόψη όλα τα παραπάνω και πρότεινέ μου 1 κατάλληλη επιλογή Erasmus, εξηγώντας γιατί ταιριάζουν στο προφίλ μου.");
         } else if ("master".equals(modeType)) {
             sb.append("\nΛάβε υπόψη όλα τα παραπάνω και πρότεινέ μου 1 κατάλληλο προγράμματα master, εξηγώντας γιατί ταιριάζουν στο προφίλ μου.");
-        } else if ("master".equals(modeType)) {
-            sb.append("\nΛάβε υπόψη όλα τα παραπάνω και δώσε μου καθοδήγηση για τα επόμενα μου βήματα");
+        } else if ("career".equals(modeType)) {
+            sb.append("\nΛάβε υπόψη όλα τα παραπάνω και δώσε μου καθοδήγηση για τα επόμενα μου βήματα όσο αφορά αν αξίζει να ακολοθθήσω ακαδημαίκη καριέρα ή να πάω να δουλέψω, εξηγώντας γιατί ταιριάζουν στο προφίλ μου.");
         }
 
         String expectationsText = sb.toString().trim();
@@ -401,7 +536,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
                         i = new Intent(QuestionnaireActivity.this, MasterChatActivity.class);
                     }
                     else {
-                        i = new Intent(QuestionnaireActivity.this, CarrerChatActivity.class);
+                        i = new Intent(QuestionnaireActivity.this, CareerChatActivity.class);
                     }
                     i.putExtra("userId", userId);
                     i.putExtra("userFullName", userFullName);

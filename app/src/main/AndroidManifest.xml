@@ -67,6 +67,8 @@
         <activity android:name=".ui.Chat.ChatActivity"/>
         <activity android:name=".ui.Chat.ConferenceActivity"/>
         <activity android:name=".ui.Chat.GeneralConferenceActivity" />
+        <activity android:name=".ui.CareerChatActivity" />
+
 
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
