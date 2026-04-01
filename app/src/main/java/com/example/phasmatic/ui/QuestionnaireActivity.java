@@ -113,8 +113,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
             txtModeTitle.setText("Erasmus questionnaire");
         } else if ("master".equals(modeType)) {
             txtModeTitle.setText("Master questionnaire");
-        } else { // AKOMA DEN TO EXW UPOLOGISEI
-            txtModeTitle.setText("Study advisor questionnaire");
+        } else if ("career".equals(modeType)) {
+            txtModeTitle.setText("Study - Work advisor questionnaire");
         }
 
         for (int i = 0; i < stepDots.length; i++) {
@@ -351,7 +351,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
             sb.append("Ψάχνω για πρόγραμμα Erasmus που να ταιριάζει σε μένα. ");
         } else if ("master".equals(modeType)) {
             sb.append("Ψάχνω για πρόγραμμα μεταπτυχιακού (Master) που να ταιριάζει σε μένα. ");
-        } else { //AUTH H PERIPTWSH DEN KALIPTETAI AKOMA
+        } else if ("career".equals(modeType)) {
             sb.append("Ψάχνω για συμβουλές που να μου ταιριάζουν. ");
         }
 
@@ -371,8 +371,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
             sb.append("\nΛάβε υπόψη όλα τα παραπάνω και πρότεινέ μου 1 κατάλληλη επιλογή Erasmus, εξηγώντας γιατί ταιριάζουν στο προφίλ μου.");
         } else if ("master".equals(modeType)) {
             sb.append("\nΛάβε υπόψη όλα τα παραπάνω και πρότεινέ μου 1 κατάλληλο προγράμματα master, εξηγώντας γιατί ταιριάζουν στο προφίλ μου.");
-        } else { //DEN KALIPTETAI AKOMA
-            sb.append("\nΛάβε υπόψη όλα τα παραπάνω και δώσε μου καθοδήγηση για τα επόμενα βήματα στις σπουδές μου.");
+        } else if ("master".equals(modeType)) {
+            sb.append("\nΛάβε υπόψη όλα τα παραπάνω και δώσε μου καθοδήγηση για τα επόμενα μου βήματα");
         }
 
         String expectationsText = sb.toString().trim();
@@ -396,8 +396,12 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     Intent i;
                     if ("erasmus".equals(modeType)) {
                         i = new Intent(QuestionnaireActivity.this, ErasmusChatActivity.class);
-                    } else {
+                    }
+                    else if ("master".equals(modeType)) {
                         i = new Intent(QuestionnaireActivity.this, MasterChatActivity.class);
+                    }
+                    else {
+                        i = new Intent(QuestionnaireActivity.this, CarrerChatActivity.class);
                     }
                     i.putExtra("userId", userId);
                     i.putExtra("userFullName", userFullName);

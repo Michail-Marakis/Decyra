@@ -25,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ModeSelectionActivity extends AppCompatActivity {
 
-    Button btnErasmus, btnMaster, btnForum;
+    Button btnErasmus, btnMaster, btnForum, btnCarrer;
     ImageButton btnBack;
     TextView txtTitle, txtSubtitle;
     ImageView imgProfile;
@@ -69,6 +69,7 @@ public class ModeSelectionActivity extends AppCompatActivity {
         txtSubtitle = findViewById(R.id.txtSubtitleMode);
         btnErasmus = findViewById(R.id.btnErasmusMode);
         btnMaster = findViewById(R.id.btnMasterMode);
+        btnCarrer = findViewById(R.id.btnCareerMode);
         videoView = findViewById(R.id.videoView);
         btnForum = findViewById(R.id.btnForum);
 
@@ -101,6 +102,16 @@ public class ModeSelectionActivity extends AppCompatActivity {
             i.putExtra("userEmail", userEmail);
             i.putExtra("userPhone", userPhone);
             i.putExtra("modeType", "master");
+            startActivity(i);
+        });
+
+        btnCarrer.setOnClickListener(v -> {
+            Intent i = new Intent(ModeSelectionActivity.this, QuestionnaireActivity.class);
+            i.putExtra("userId", userId);
+            i.putExtra("userFullName", userFullName);
+            i.putExtra("userEmail", userEmail);
+            i.putExtra("userPhone", userPhone);
+            i.putExtra("modeType", "career");
             startActivity(i);
         });
 
