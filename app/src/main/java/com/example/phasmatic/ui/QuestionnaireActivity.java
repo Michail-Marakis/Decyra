@@ -68,6 +68,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
     private DatabaseReference questionsRef;
     private DatabaseReference usersRef;
 
+    private String careerQuestion2Template;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,8 +280,12 @@ public class QuestionnaireActivity extends AppCompatActivity {
             return;
         }
 
-        final String original = questions.get(1);
-        Log.d("CAREER_DEBUG", "Original q2 = " + original);
+        if (careerQuestion2Template == null) {
+            careerQuestion2Template = questions.get(1);
+        }
+
+        final String original = careerQuestion2Template;
+        Log.d("CAREER_DEBUG", "Original q2 template = " + original);
 
         careerRef.orderByChild("field_id")
                 .equalTo(selectedFieldId.longValue())
@@ -300,7 +306,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
                         }
 
                         if (salary != null) {
-                            String replaced = original.replace("...", String.valueOf(salary));
+                            String replaced = original
+                                    .replace("...", String.valueOf(salary))
+                                    .replace("…", String.valueOf(salary));
                             Log.d("CAREER_DEBUG", "replaced q2 = " + replaced);
                             questions.set(1, replaced);
                             if (currentIndex == 1) {
@@ -456,6 +464,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
                         }
 
                         currentIndex = 0;
+
+                        if ("career".equals(modeType) && questions.size() > 1) {
+                            careerQuestion2Template = questions.get(1);
+                        }
 
                         if (questions.isEmpty()) {
                             Toast.makeText(QuestionnaireActivity.this,
