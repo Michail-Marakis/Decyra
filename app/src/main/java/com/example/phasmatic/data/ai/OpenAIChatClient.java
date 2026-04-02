@@ -262,7 +262,7 @@ public class OpenAIChatClient {
                                     );
                                 }
 
-                                // 🔥 FAILSAFE TIMEOUT
+                                //FAILSAFE TIMEOUT
                                 new android.os.Handler(android.os.Looper.getMainLooper())
                                         .postDelayed(() -> {
 
