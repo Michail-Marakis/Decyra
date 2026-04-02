@@ -174,12 +174,10 @@ public class OpenAIChatClient {
                                     //logic gia career
                                     namespaces = new String[]{
                                             "career",
-                                            "countries",
                                             "it_fields"
                                     };
 
                                     indexes = new String[]{
-                                            "career",
                                             "career",
                                             "career"
                                     };
@@ -262,7 +260,7 @@ public class OpenAIChatClient {
                                     );
                                 }
 
-                                // 🔥 FAILSAFE TIMEOUT
+                                //FAILSAFE TIMEOUT
                                 new android.os.Handler(android.os.Looper.getMainLooper())
                                         .postDelayed(() -> {
 
