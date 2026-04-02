@@ -128,12 +128,12 @@ public class LoginActivity extends AppCompatActivity {
 
             loginWithFirebase(email, password);
 
-            PineconeIndexer indexer = new PineconeIndexer(this);
-            indexer.indexMasterPrograms();
-            indexer.indexErasmus();
-            indexer.indexUniversities();
-            indexer.indexCareer();
-            indexer.indexITFields();
+//            PineconeIndexer indexer = new PineconeIndexer(this);
+//            indexer.indexMasterPrograms();
+//            indexer.indexErasmus();
+//            indexer.indexUniversities();
+//            indexer.indexCareer();
+//            indexer.indexITFields();
 
         });
 
