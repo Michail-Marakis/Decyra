@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +32,9 @@ public class GeneralConferenceActivity extends AppCompatActivity {
     private Button btnJoin, btnConfirm;
 
     private String userId;
-    private ImageButton btnProfile, btnBack;
+    private ImageButton  btnBack;
+
+    private ImageView btnProfile;
     private DatabaseReference usersRef;
     private String userFullName, userEmail, userPhone;
 

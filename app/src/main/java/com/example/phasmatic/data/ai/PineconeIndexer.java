@@ -170,7 +170,7 @@ public class PineconeIndexer {
                     String salaryNoMaster =  String.valueOf(salaryNoMasterLong);
                     String id =  String.valueOf(idLong);
                     String fieldId = String.valueOf(fieldLong);
-                    String country_name = item.child("country").getValue(String.class);
+                    String country_name = item.child("country_name").getValue(String.class);
 
 
 
@@ -191,7 +191,7 @@ public class PineconeIndexer {
                                 metadataObject.put("salary_With_Master", salary);
                                 metadataObject.put("salary_WithOut_Master", salaryNoMaster);
                                 metadataObject.put("field_id", fieldId);
-                                metadataObject.put("country", country_name);
+                                metadataObject.put("country_name", country_name);
 
                                 pineconeClient.upsertVector(
                                         embeddingVector,
