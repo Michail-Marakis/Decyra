@@ -174,12 +174,10 @@ public class OpenAIChatClient {
                                     //logic gia career
                                     namespaces = new String[]{
                                             "career",
-                                            "countries",
                                             "it_fields"
                                     };
 
                                     indexes = new String[]{
-                                            "career",
                                             "career",
                                             "career"
                                     };

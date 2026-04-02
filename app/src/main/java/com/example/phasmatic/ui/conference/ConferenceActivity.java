@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Chat;
+package com.example.phasmatic.ui.conference;
 
 import android.Manifest;
 import android.content.Intent;
@@ -18,7 +18,7 @@ public class ConferenceActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 100;
 
     private String userId;
-    private String conferenceID;
+    private String code, userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +27,8 @@ public class ConferenceActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
-        conferenceID = intent.getStringExtra("conferenceID");
-
-        // fallback για testing
-        if (userId == null) userId = "user123";
-        if (conferenceID == null) conferenceID = "test_room_1";
+        code = intent.getStringExtra("code");
+        userName = intent.getStringExtra("userName");
 
         if (checkPermissions()) {
             addFragment();
@@ -69,13 +66,6 @@ public class ConferenceActivity extends AppCompatActivity {
         long appID = 581663696;
         String appSign = "b8262be56354041edcd4128c02f73d0858f0d143f55036a2b79b45b16f61011c";
 
-        // Zego θέλει clean userId
-        String safeUserId = userId.replaceAll("[^a-zA-Z0-9_]", "");
-        if (safeUserId.isEmpty()) safeUserId = "user123";
-
-        String userName = "user_" + safeUserId;
-
-        // 👇 ΟΠΩΣ tutorial (χωρίς defaultConfig)
         ZegoUIKitPrebuiltVideoConferenceConfig config =
                 new ZegoUIKitPrebuiltVideoConferenceConfig();
 
@@ -83,9 +73,9 @@ public class ConferenceActivity extends AppCompatActivity {
                 ZegoUIKitPrebuiltVideoConferenceFragment.newInstance(
                         appID,
                         appSign,
-                        safeUserId,
+                        userId,
                         userName,
-                        conferenceID,
+                        code,
                         config
                 );
 

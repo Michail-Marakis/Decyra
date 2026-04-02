@@ -165,13 +165,12 @@ public class PineconeIndexer {
                     Long salaryLong = item.child("avg_salary_with_master").getValue(Long.class);
                     Long salaryNoMasterLong = item.child("avg_salary_no_master").getValue(Long.class);
                     Long fieldLong = item.child("field_id").getValue(Long.class);
-                    Long countryLong = item.child("country_id").getValue(Long.class);
 
                     String salary = String.valueOf(salaryLong);
                     String salaryNoMaster =  String.valueOf(salaryNoMasterLong);
                     String id =  String.valueOf(idLong);
                     String fieldId = String.valueOf(fieldLong);
-                    String countryId = String.valueOf(countryLong);
+                    String country_name = item.child("country").getValue(String.class);
 
 
 
@@ -179,7 +178,7 @@ public class PineconeIndexer {
                             "Average salary WITH master degree is " + salary + ". " +
                                     "Average salary WITHOUT master degree is " + salaryNoMaster + ". " +
                                     "Field id " + fieldId +
-                                    "Country id" + countryId;
+                                    "Country" + country_name;
 
                     openAIClient.getEmbedding(text, new EmbeddingCallback() {
 
@@ -192,7 +191,7 @@ public class PineconeIndexer {
                                 metadataObject.put("salary_With_Master", salary);
                                 metadataObject.put("salary_WithOut_Master", salaryNoMaster);
                                 metadataObject.put("field_id", fieldId);
-                                metadataObject.put("country_id", countryId);
+                                metadataObject.put("country", country_name);
 
                                 pineconeClient.upsertVector(
                                         embeddingVector,
@@ -268,64 +267,6 @@ public class PineconeIndexer {
                         @Override
                         public void onError(String errorMessage) {
                             Log.e("INDEX", "Embedding error (fields): " + errorMessage);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                error.toException().printStackTrace();
-            }
-        });
-    }
-
-
-    public void indexCountries() {
-
-        DatabaseReference reference =
-                FirebaseDatabase.getInstance().getReference("countries");
-
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-
-                for (DataSnapshot item : snapshot.getChildren()) {
-
-                    Long idLong = item.child("id").getValue(Long.class);
-
-                    String id = String.valueOf(idLong);
-                    String name = item.child("name").getValue(String.class);
-
-                    String text = "Country name " + name;
-
-                    openAIClient.getEmbedding(text, new EmbeddingCallback() {
-
-                        @Override
-                        public void onSuccess(float[] embeddingVector) {
-
-                            try {
-
-                                JSONObject metadataObject = new JSONObject();
-                                metadataObject.put("name", name);
-
-                                pineconeClient.upsertVector(
-                                        embeddingVector,
-                                        id,
-                                        metadataObject,
-                                        "countries",
-                                        "career"
-                                );
-
-                            } catch (Exception exception) {
-                                Log.e("INDEX", "Error indexing countries", exception);
-                            }
-                        }
-
-                        @Override
-                        public void onError(String errorMessage) {
-                            Log.e("INDEX", "Embedding error (countries): " + errorMessage);
                         }
                     });
                 }
