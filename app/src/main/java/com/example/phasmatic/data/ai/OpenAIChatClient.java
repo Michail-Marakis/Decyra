@@ -107,7 +107,10 @@ public class OpenAIChatClient {
     }
 
 
-    public void sendMessage(String userMessage, ChatCallback callback) {
+    public void sendMessage(int num, String userMessage, ChatCallback callback) {
+
+        long globalStart = System.currentTimeMillis();
+        Log.d("PERF", "==== NEW REQUEST ====");
 
         firebaseDb.getReference("api_keys/0/api_key")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -122,74 +125,161 @@ public class OpenAIChatClient {
                             return;
                         }
 
+                        long embeddingStart = System.currentTimeMillis();
+                        Log.d("PERF", "Embedding started");
+
                         getEmbedding(userMessage, new EmbeddingCallback() {
 
                             @Override
                             public void onSuccess(float[] embeddingVector) {
 
+                                long embeddingEnd = System.currentTimeMillis();
+                                Log.d("PERF", "Embedding finished in ms: " + (embeddingEnd - embeddingStart));
+
                                 PineconeClient pineconeClient = new PineconeClient();
 
                                 StringBuilder finalContext = new StringBuilder();
 
-                                int totalQueries = 6;
+                                String[] namespaces;
+                                String[] indexes;
+
+                                if (num == 0) {
+
+                                    //logic gia erasmus
+                                    namespaces = new String[]{
+                                            "erasmus",
+                                            "universities"
+                                    };
+
+                                    indexes = new String[]{
+                                            "Education",
+                                            "Education"
+                                    };
+
+                                } else if (num == 1) {
+
+                                    //logic gia master
+                                    namespaces = new String[]{
+                                            "master",
+                                            "universities"
+                                    };
+
+                                    indexes = new String[]{
+                                            "Education",
+                                            "Education"
+                                    };
+
+                                } else if (num == 2) {
+
+                                    //logic gia career
+                                    namespaces = new String[]{
+                                            "career",
+                                            "countries",
+                                            "it_fields"
+                                    };
+
+                                    indexes = new String[]{
+                                            "career",
+                                            "career",
+                                            "career"
+                                    };
+
+                                } else {
+
+                                    callback.onError("Invalid category num");
+                                    return;
+                                }
+                                Log.d("FLOW", "Mode: " + num);
+
+                                int totalQueries = namespaces.length;
                                 int[] completedQueries = {0};
 
-                                PineconeClient.PineconeCallback collector =
-                                        new PineconeClient.PineconeCallback() {
+                                for (int i = 0; i < namespaces.length; i++) {
 
-                                            @Override
-                                            public void onSuccess(String context) {
+                                    final int index = i;
+                                    final long queryStart = System.currentTimeMillis();
 
-                                                synchronized (finalContext) {
-                                                    finalContext.append(context).append("\n");
+                                    Log.d("PERF", "Query START: " + namespaces[index]);
+
+                                    pineconeClient.queryIndex(
+                                            embeddingVector,
+                                            namespaces[index],
+                                            indexes[index],
+                                            new PineconeClient.PineconeCallback() {
+
+                                                @Override
+                                                public void onSuccess(String context) {
+
+                                                    long queryEnd = System.currentTimeMillis();
+
+                                                    Log.d("PERF", "Query DONE: " + namespaces[index]
+                                                            + " in ms: " + (queryEnd - queryStart));
+
+                                                    synchronized (finalContext) {
+                                                        finalContext.append(context).append("\n");
+                                                    }
+
+                                                    handleCompletion();
                                                 }
 
-                                                synchronized (completedQueries) {
-                                                    completedQueries[0]++;
+                                                @Override
+                                                public void onError(String error) {
 
-                                                    if (completedQueries[0] == totalQueries) {
+                                                    long queryEnd = System.currentTimeMillis();
 
-                                                        String enrichedPrompt =
-                                                                "Use ONLY the following context:\n\n"
-                                                                        + finalContext.toString()
-                                                                        + "\nUser question: "
-                                                                        + userMessage;
+                                                    Log.e("PERF", "Query ERROR: " + namespaces[index]
+                                                            + " after ms: " + (queryEnd - queryStart)
+                                                            + " error: " + error);
 
-                                                        callOpenAI(apiKey, enrichedPrompt, callback);
+                                                    handleCompletion();
+                                                }
+
+                                                private void handleCompletion() {
+
+                                                    synchronized (completedQueries) {
+                                                        completedQueries[0]++;
+
+                                                        Log.d("PERF", "Completed: "
+                                                                + completedQueries[0] + "/" + totalQueries);
+
+                                                        if (completedQueries[0] == totalQueries) {
+
+                                                            long totalTime = System.currentTimeMillis() - globalStart;
+
+                                                            Log.d("PERF", "ALL QUERIES DONE in ms: " + totalTime);
+
+                                                            String enrichedPrompt =
+                                                                    "Use ONLY the following context:\n\n"
+                                                                            + finalContext.toString()
+                                                                            + "\nUser question: "
+                                                                            + userMessage;
+
+                                                            callOpenAI(apiKey, enrichedPrompt, callback);
+                                                        }
                                                     }
                                                 }
                                             }
+                                    );
+                                }
 
-                                            @Override
-                                            public void onError(String error) {
-                                                Log.e("RAG", "Query error: " + error);
+                                // 🔥 FAILSAFE TIMEOUT
+                                new android.os.Handler(android.os.Looper.getMainLooper())
+                                        .postDelayed(() -> {
 
-                                                synchronized (completedQueries) {
-                                                    completedQueries[0]++;
+                                            if (completedQueries[0] < totalQueries) {
 
-                                                    if (completedQueries[0] == totalQueries) {
+                                                Log.e("PERF", "TIMEOUT TRIGGERED. Completed: "
+                                                        + completedQueries[0] + "/" + totalQueries);
 
-                                                        String enrichedPrompt =
-                                                                "Use ONLY the following context:\n\n"
-                                                                        + finalContext.toString()
-                                                                        + "\nUser question: "
-                                                                        + userMessage;
+                                                String fallbackPrompt =
+                                                        "Use the following partial context:\n\n"
+                                                                + finalContext.toString()
+                                                                + "\nUser question: " + userMessage;
 
-                                                        callOpenAI(apiKey, enrichedPrompt, callback);
-                                                    }
-                                                }
+                                                callOpenAI(apiKey, fallbackPrompt, callback);
                                             }
-                                        };
 
-                                //EDUCATION INDEX
-                                pineconeClient.queryIndex(embeddingVector, "master", "Education", collector);
-                                pineconeClient.queryIndex(embeddingVector, "universities", "Education", collector);
-                                pineconeClient.queryIndex(embeddingVector, "erasmus", "Education", collector);
-
-                                //CAREER INDEX
-                                pineconeClient.queryIndex(embeddingVector, "career", "career", collector);
-                                pineconeClient.queryIndex(embeddingVector, "countries", "career", collector);
-                                pineconeClient.queryIndex(embeddingVector, "it_fields", "career", collector);
+                                        }, 7000);
                             }
 
                             @Override
@@ -211,6 +301,8 @@ public class OpenAIChatClient {
                             ChatCallback callback) {
 
         Log.d("OpenAI", "Calling OpenAI...");
+        long openAIStart = System.currentTimeMillis();
+        Log.d("PERF", "OpenAI call started");
 
         try {
 
@@ -256,6 +348,8 @@ public class OpenAIChatClient {
                 public void onResponse(@NonNull Call call,
                                        @NonNull Response response) {
 
+                    long openAIEnd = System.currentTimeMillis();
+                    Log.d("PERF", "OpenAI finished in ms: " + (openAIEnd - openAIStart));
                     try {
 
                         if (!response.isSuccessful()) {

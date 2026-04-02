@@ -108,7 +108,7 @@ public class MasterChatActivity extends AppCompatActivity {
             edtUserInput.setText("");
             btnSend.setEnabled(false);
 
-            chatClient.sendMessage(userMsg, new OpenAIChatClient.ChatCallback() {
+            chatClient.sendMessage(1, userMsg, new OpenAIChatClient.ChatCallback() {
                 @Override
                 public void onSuccess(String reply) {
                     runOnUiThread(() -> {

@@ -108,7 +108,7 @@ public class CareerChatActivity extends AppCompatActivity {
             edtUserInput.setText("");
             btnSend.setEnabled(false);
 
-            chatClient.sendMessage(userMsg, new OpenAIChatClient.ChatCallback() {
+            chatClient.sendMessage(2, userMsg, new OpenAIChatClient.ChatCallback() {
                 @Override
                 public void onSuccess(String reply) {
                     runOnUiThread(() -> {

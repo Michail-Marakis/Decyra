@@ -507,8 +507,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
         for (int i = 0; i < questions.size(); i++) {
             if (!answers.get(i).isEmpty()) {
                 sb.append("- ")
-                        .append(questions.get(i))
-                        .append(" Απάντηση: ")
+                        //.append(questions.get(i))
+                        //.append(" Απάντηση: ")
                         .append(answers.get(i))
                         .append("\n");
             }
