@@ -2,21 +2,28 @@ package com.example.phasmatic.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
@@ -80,6 +87,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         requestNotificationPermissionIfNeeded();
 
+        if(!isConnected(this)){
+            showCustomDialog();
+        }
 
         edtEmailAddressLog = findViewById(R.id.edtEmailAddressLog);
         edtPasswordLog = findViewById(R.id.edtPasswordLog);
@@ -140,6 +150,40 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void showCustomDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setMessage("Please Connect to the Internet to proceed further").
+                setCancelable(false).
+                setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        finish();
+                    }
+                });
+        builder.show();
+    }
+
+    private boolean isConnected(LoginActivity loginActivity) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) loginActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo wifiConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if((wifiConnection!=null && wifiConnection.isConnected()) || (mobileConnection!=null && mobileConnection.isConnected())){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     private void requestNotificationPermissionIfNeeded() {
