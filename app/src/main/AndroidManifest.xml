@@ -58,6 +58,7 @@
 
 
 
+        <activity android:name=".ui.notes.NotesActivity"/>
 
         <activity android:name=".ui.notes.AddNoteActivity"
             tools:ignore="Instantiatable" />

@@ -5,15 +5,17 @@ public class Note {
     private String title;
     private String description;
     private long createdTime;
+    private String user_id;
 
     public Note() {
     }
 
-    public Note(String id, String title, String description, long createdTime) {
+    public Note(String id, String title, String description, long createdTime, String user_id) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdTime = createdTime;
+        this.user_id = user_id;
     }
 
     public String getId() {
@@ -46,5 +48,13 @@ public class Note {
 
     public void setCreatedTime(long createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }

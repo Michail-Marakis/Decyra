@@ -2,7 +2,6 @@ package com.example.phasmatic.ui.notes;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
@@ -22,13 +21,19 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
+    public interface OnNoteClickListener {
+        void onNoteClick(Note note);
+    }
+
     private Context context;
     private List<Note> notesList;
     private DatabaseReference notesRef;
+    private OnNoteClickListener listener;
 
-    public MyAdapter(Context context, List<Note> notesList) {
+    public MyAdapter(Context context, List<Note> notesList, OnNoteClickListener listener) {
         this.context = context;
         this.notesList = notesList;
+        this.listener = listener;
 
         FirebaseDatabase firebaseDb = FirebaseDatabase.getInstance(
                 "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
@@ -52,6 +57,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         String formattedTime = DateFormat.getDateTimeInstance().format(note.getCreatedTime());
         holder.timeOutput.setText(formattedTime);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onNoteClick(note);
+            }
+        });
 
         holder.itemView.setOnLongClickListener(v -> {
             PopupMenu menu = new PopupMenu(context, v);

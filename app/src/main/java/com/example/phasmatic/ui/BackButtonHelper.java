@@ -11,6 +11,7 @@ import com.example.phasmatic.ui.Chat.ChatActivity;
 import com.example.phasmatic.ui.Chat.UsersActivity;
 import com.example.phasmatic.ui.Forum.ForumActivity;
 import com.example.phasmatic.ui.Profile_Menu.PublicProfileActivity;
+import com.example.phasmatic.ui.notes.NotesActivity;
 
 public class BackButtonHelper {
 
@@ -64,6 +65,26 @@ public class BackButtonHelper {
 
         btnBack.setOnClickListener(v -> {
             Intent i = new Intent(activity, ModeSelectionActivity.class);
+            i.putExtra("userId", userId);
+            i.putExtra("userFullName", fullName);
+            i.putExtra("userEmail", email);
+            i.putExtra("userPhone", phone);
+            activity.startActivity(i);
+            activity.finish();
+        });
+    }
+
+    public static void attachToGoNotes(Activity activity,
+                                               int buttonId,
+                                               String userId,
+                                               String fullName,
+                                               String email,
+                                               String phone) {
+        ImageButton btnBack = activity.findViewById(buttonId);
+        if (btnBack == null) return;
+
+        btnBack.setOnClickListener(v -> {
+            Intent i = new Intent(activity, NotesActivity.class);
             i.putExtra("userId", userId);
             i.putExtra("userFullName", fullName);
             i.putExtra("userEmail", email);
