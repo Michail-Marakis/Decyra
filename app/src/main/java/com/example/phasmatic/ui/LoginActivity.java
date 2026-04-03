@@ -28,9 +28,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.phasmatic.R;
-import com.example.phasmatic.data.ai.PineconeIndexer;
 import com.example.phasmatic.data.model.User;
-import com.example.phasmatic.ui.Profile_Menu.ForgetActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.database.*;
 
@@ -81,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         requestNotificationPermissionIfNeeded();
-        
+
 
         edtEmailAddressLog = findViewById(R.id.edtEmailAddressLog);
         edtPasswordLog = findViewById(R.id.edtPasswordLog);
@@ -381,7 +379,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_LONG).show();
 //                            String sh = "hey score is " + bestScore;
 //                            Toast.makeText(LoginActivity.this, sh, Toast.LENGTH_LONG).show();
-                              openNextActivity();
+                            openNextActivity();
 
                         } else {
 

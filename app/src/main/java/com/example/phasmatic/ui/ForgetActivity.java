@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu;
+package com.example.phasmatic.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.phasmatic.R;
-import com.example.phasmatic.ui.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgetActivity extends AppCompatActivity {
