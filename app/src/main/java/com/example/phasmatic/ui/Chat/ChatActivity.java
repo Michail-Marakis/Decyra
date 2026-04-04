@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.Message;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import com.google.firebase.database.DataSnapshot;
@@ -61,6 +62,8 @@ public class ChatActivity extends AppCompatActivity {
     private String conversationKey = null;
     private DatabaseReference usersRef;
 
+    private InternetConnection inter = new InternetConnection();
+
     private final FirebaseDatabase db = FirebaseDatabase.getInstance(
             "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
     );
@@ -69,6 +72,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_with_someone);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         btnBack     = findViewById(R.id.btnBack);
         btnSend     = findViewById(R.id.btnSend);

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.UserInfo;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.ui.BackButtonHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,10 +43,18 @@ public class EditUserInfoActivity extends AppCompatActivity {
 
     private String selectedAdvisorType = null;
 
+    private InternetConnection inter = new InternetConnection();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_info);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
+
 
         btnBack = findViewById(R.id.btnBack);
         spnUniversity = findViewById(R.id.spnUniversity);

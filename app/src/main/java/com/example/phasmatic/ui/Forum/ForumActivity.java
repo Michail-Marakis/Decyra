@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.ForumReview;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.ui.BackButtonHelper;
 import com.example.phasmatic.ui.Chat.ChatActivity;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
@@ -63,11 +64,18 @@ public class ForumActivity extends AppCompatActivity {
     private final List<String> countryList = new ArrayList<>();
     private final List<String> uniList = new ArrayList<>();
     private DatabaseReference usersRef;
+    private InternetConnection inter = new InternetConnection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forum);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
+
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");

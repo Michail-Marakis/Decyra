@@ -18,6 +18,7 @@ import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.ReviewComment;
 import com.example.phasmatic.data.model.User;
 import com.example.phasmatic.data.model.UserInfo;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.ui.BackButtonHelper;
 import com.example.phasmatic.ui.Profile_Menu.AccountActivity;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
@@ -70,11 +71,18 @@ public class ReviewDetailActivity extends AppCompatActivity {
     int commentsCount = 0;
     private DatabaseReference forumRef;
 
+    private InternetConnection inter = new InternetConnection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_detail);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
+
 
         btnBack = findViewById(R.id.btnBack);
         imgProfile = findViewById(R.id.imgProfile);

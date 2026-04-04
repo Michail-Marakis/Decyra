@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.User;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.ModeSelectionActivity;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
@@ -50,11 +51,19 @@ public class GeneralConferenceActivity extends AppCompatActivity {
     public List<User> userList = new ArrayList<>();
     List<User> fullUserList = new ArrayList<>();
 
+    private InternetConnection inter = new InternetConnection();
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_conference);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
+
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
