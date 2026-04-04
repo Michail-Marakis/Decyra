@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.phasmatic.R;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Chat.ChatActivity;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,10 +33,18 @@ public class PublicProfileActivity extends AppCompatActivity {
     private TextView txtUniversity, txtAcademicLevel, txtField,
             txtLanguages, txtGpa, txtBudget, txtYearOfStudies, txtAdvisorType;
 
+    private InternetConnection inter = new InternetConnection();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_profile);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
+
 
         Intent intent = getIntent();
 

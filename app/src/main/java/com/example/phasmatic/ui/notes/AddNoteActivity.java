@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.Note;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.BackButtonHelper;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
@@ -34,11 +35,18 @@ public class AddNoteActivity extends AppCompatActivity {
     private ProfileMenuHelper profileMenuHelper;
     private String editingNoteId = null;
     private long editingCreatedTime = 0L;
+    private InternetConnection inter = new InternetConnection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
+
 
         titleInput = findViewById(R.id.titleinput);
         descriptionInput = findViewById(R.id.descriptioninput);

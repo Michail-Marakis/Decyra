@@ -30,6 +30,7 @@ import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.FaceGuideOverlay;
 import com.example.phasmatic.data.model.User;
 import com.example.phasmatic.data.model.User_Face_Embedding;
+import com.example.phasmatic.extras.InternetConnection;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -90,10 +91,18 @@ public class RegisterActivity extends AppCompatActivity {
 
     private List<List<Double>> finalEmbeddingsList = new ArrayList<>();
 
+    private InternetConnection inter = new InternetConnection();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
+
 
         edtEmailAddressReg = findViewById(R.id.edtEmailAddressReg);
         edtPasswordReg     = findViewById(R.id.edtPasswordReg);

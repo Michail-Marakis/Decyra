@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.phasmatic.R;
+import com.example.phasmatic.extras.InternetConnection;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgetActivity extends AppCompatActivity {
@@ -19,12 +20,16 @@ public class ForgetActivity extends AppCompatActivity {
     private ImageButton btnBack;
 
     private FirebaseAuth mAuth;
+    InternetConnection inter = new InternetConnection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
 
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
         btnSendResetEmail = findViewById(R.id.btnVerifyViaEmail);
         editEmailForMapping = findViewById(R.id.editEmailForMap);
         btnBack = findViewById(R.id.btnBack);
@@ -32,6 +37,11 @@ public class ForgetActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         btnBack.setOnClickListener(v -> {
+
+            if(!inter.isConnected(this)){
+                inter.showCustomDialog(this);
+            }
+
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });

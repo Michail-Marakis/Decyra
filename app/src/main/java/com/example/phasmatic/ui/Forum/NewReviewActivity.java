@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.ForumReview;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.ui.BackButtonHelper;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import com.google.firebase.database.DataSnapshot;
@@ -63,10 +64,17 @@ public class NewReviewActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "forum_reviews_channel";
     private NotificationManager notificationManager;
 
+    private InternetConnection inter = new InternetConnection();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_review);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");

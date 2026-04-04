@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.ai.OpenAIChatClient;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import com.google.firebase.database.DatabaseReference;
@@ -45,6 +46,8 @@ public class CareerChatActivity extends AppCompatActivity {
 
     private String userExpectations;
 
+    private InternetConnection inter = new InternetConnection();
+
     @SuppressLint("SetTextI18n") //AFAIREI WARNINGS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,11 @@ public class CareerChatActivity extends AppCompatActivity {
             v.setPadding(sys.left, sys.top, sys.right, sys.bottom);
             return insets;
         });
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");

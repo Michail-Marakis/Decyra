@@ -12,9 +12,11 @@ import android.widget.MediaController;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.processing.SurfaceProcessorNode;
 
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.ui.Forum.ForumActivity;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import android.graphics.Bitmap;
@@ -33,13 +35,17 @@ public class ModeSelectionActivity extends AppCompatActivity {
     private ProfileMenuHelper profileMenuHelper;
     private VideoView videoView;
     private DatabaseReference usersRef;
-
+    private InternetConnection inter = new InternetConnection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mode_selection);
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");

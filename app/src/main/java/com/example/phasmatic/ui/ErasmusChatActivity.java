@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.ai.OpenAIChatClient;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import android.graphics.Bitmap;
@@ -47,12 +48,19 @@ public class ErasmusChatActivity extends AppCompatActivity {
 
     private String userExpectations;
 
+    private InternetConnection inter = new InternetConnection();
+
     @SuppressLint("SetTextI18n") //AFAIREI WARNINGS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_erasmus_chat);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());

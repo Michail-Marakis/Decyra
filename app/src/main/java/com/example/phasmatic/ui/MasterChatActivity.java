@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.ai.OpenAIChatClient;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import android.graphics.Bitmap;
 import com.example.phasmatic.extras.ProfileImageManager;
@@ -44,12 +45,19 @@ public class MasterChatActivity extends AppCompatActivity {
 
     private String userExpectations;
 
+    private InternetConnection inter = new InternetConnection();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_master_chat);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());

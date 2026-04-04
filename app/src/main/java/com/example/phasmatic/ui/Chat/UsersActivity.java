@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.Conversation;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.BackButtonHelper;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
@@ -45,10 +46,17 @@ public class UsersActivity extends AppCompatActivity {
     );
     private DatabaseReference conversationsRef, usersRef;
 
+    private InternetConnection inter = new InternetConnection();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         Intent intent = getIntent();
         userId       = intent.getStringExtra("userId");

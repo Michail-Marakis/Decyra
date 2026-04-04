@@ -11,9 +11,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.processing.SurfaceProcessorNode;
 
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.UserInfo;
+import com.example.phasmatic.extras.InternetConnection;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,11 +42,18 @@ public class UserInfoActivity extends AppCompatActivity {
     private ImageView imgAdvisorMale, imgAdvisorFemale, imgAdvisorRobot;
     private String advisorType; //male,female,robot
 
+    private InternetConnection inter = new InternetConnection();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");

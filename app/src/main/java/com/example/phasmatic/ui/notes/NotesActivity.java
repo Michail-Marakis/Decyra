@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.Note;
+import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.BackButtonHelper;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
@@ -41,10 +42,17 @@ public class NotesActivity extends AppCompatActivity {
     private String userId, userFullName, userEmail, userPhone;
     private ProfileMenuHelper profileMenuHelper;
 
+    private InternetConnection inter = new InternetConnection();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
+
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
