@@ -27,6 +27,8 @@ public class PineconeClient {
     private static final String WORK_INDEX_BASE_URL =
             "https://decyra-work-index-trb4i0f.svc.aped-4627-b74a.pinecone.io";
 
+    private static final String HISTORY_INDEX_BASE_URL =
+            "https://decyra-llm-history-trb4i0f.svc.aped-4627-b74a.pinecone.io";
     private final OkHttpClient httpClient;
 
     public PineconeClient() {
@@ -45,6 +47,9 @@ public class PineconeClient {
 
         if (indexName.equals("career")) {
             return WORK_INDEX_BASE_URL;
+        }
+        if(indexName.equals("history")){
+            return HISTORY_INDEX_BASE_URL;
         }
 
         throw new IllegalArgumentException("Invalid index name provided");
@@ -212,6 +217,69 @@ public class PineconeClient {
 
         } catch (Exception exception) {
             callback.onError(exception.getMessage());
+        }
+    }
+
+    public void upsertChatHistory(
+            float[] embedding,
+            String messageId,
+            String userFullName,
+            String role,
+            String text,
+            String conversationId,
+            Long timestamp
+    ) {
+        try {
+
+            String baseUrl = resolveBaseUrl("history");
+            String url = baseUrl + "/vectors/upsert";
+            JSONObject metadata = new JSONObject();
+            metadata.put("role", role);
+            metadata.put("text", text);
+            metadata.put("conversationId", conversationId);
+            metadata.put("timestamp", timestamp);
+
+            JSONArray values = new JSONArray();
+            for (float v : embedding) {
+                values.put(v);
+            }
+
+            JSONObject vector = new JSONObject();
+            vector.put("id", conversationId);
+            vector.put("values", values);
+            vector.put("metadata", metadata);
+
+            JSONObject body = new JSONObject();
+            body.put("vectors", new JSONArray().put(vector));
+            body.put("namespace", userFullName);
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("Api-Key", API_KEY)
+                    .addHeader("Content-Type", "application/json")
+                    .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
+                    .build();
+
+            httpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("PINECONE_HISTORY", "FAIL: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String res = response.body() != null ? response.body().string() : "";
+
+                    if (response.isSuccessful()) {
+                        Log.d("PINECONE_HISTORY", "SUCCESS: " + res);
+                    } else {
+                        Log.e("PINECONE_HISTORY", "ERROR: " + res);
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e("PINECONE_HISTORY", "EXCEPTION", e);
         }
     }
 }

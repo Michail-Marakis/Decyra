@@ -117,12 +117,12 @@ public class ErasmusChatActivity extends AppCompatActivity {
             appendToChat("You: " + userMsg);
             edtUserInput.setText("");
             btnSend.setEnabled(false);
-
-            chatClient.sendMessage(0, userMsg, new OpenAIChatClient.ChatCallback() {
+            String ConvoId = userFullName + "-ERASMUS";
+            chatClient.sendMessage(0, ConvoId,userMsg,userFullName, new OpenAIChatClient.ChatCallback() {
                 @Override
                 public void onSuccess(String reply) {
                     runOnUiThread(() -> {
-                        appendToChat("Assistant: " + reply);
+                        appendToChat("Assistant: \n" + reply);
                         btnSend.setEnabled(true);
                     });
                 }

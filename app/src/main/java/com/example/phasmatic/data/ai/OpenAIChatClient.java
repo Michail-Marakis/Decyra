@@ -1,14 +1,13 @@
 package com.example.phasmatic.data.ai;
 
 import android.content.Context;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.phasmatic.data.model.MessageLLM;
+import com.google.firebase.database.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,9 +26,15 @@ public class OpenAIChatClient {
 
     private final OkHttpClient client = new OkHttpClient();
     private final FirebaseDatabase firebaseDb;
+    private final PineconeClient pineconeClient = new PineconeClient();
 
     public interface ChatCallback {
         void onSuccess(String reply);
+        void onError(String error);
+    }
+
+    public interface MessagesCallback {
+        void onSuccess(java.util.ArrayList<MessageLLM> messages);
         void onError(String error);
     }
 
@@ -57,7 +62,6 @@ public class OpenAIChatClient {
                             Request request = new Request.Builder()
                                     .url("https://api.openai.com/v1/embeddings")
                                     .addHeader("Authorization", "Bearer " + apiKey)
-                                    .addHeader("Content-Type", "application/json")
                                     .post(RequestBody.create(body.toString(), JSON))
                                     .build();
 
@@ -72,21 +76,18 @@ public class OpenAIChatClient {
                                 public void onResponse(@NonNull Call call, @NonNull Response response) {
 
                                     try {
-                                        String res = response.body().string();
+                                        JSONObject json = new JSONObject(response.body().string());
+                                        JSONArray emb = json.getJSONArray("data")
+                                                .getJSONObject(0)
+                                                .getJSONArray("embedding");
 
-                                        JSONObject json = new JSONObject(res);
-                                        JSONArray data = json.getJSONArray("data");
+                                        float[] vector = new float[emb.length()];
 
-                                        JSONArray embArray =
-                                                data.getJSONObject(0).getJSONArray("embedding");
-
-                                        float[] embedding = new float[embArray.length()];
-
-                                        for (int i = 0; i < embArray.length(); i++) {
-                                            embedding[i] = (float) embArray.getDouble(i);
+                                        for (int i = 0; i < emb.length(); i++) {
+                                            vector[i] = (float) emb.getDouble(i);
                                         }
 
-                                        callback.onSuccess(embedding);
+                                        callback.onSuccess(vector);
 
                                     } catch (Exception e) {
                                         callback.onError(e.getMessage());
@@ -105,186 +106,56 @@ public class OpenAIChatClient {
                     }
                 });
     }
+    private MessageLLM saveMessage(String conversationId, String role, String content) {
 
+        DatabaseReference ref = firebaseDb.getReference("messages_llm").push();
 
-    public void sendMessage(int num, String userMessage, ChatCallback callback) {
+        MessageLLM msg = new MessageLLM(
+                ref.getKey(),
+                conversationId,
+                role,
+                content,
+                System.currentTimeMillis()
+        );
 
-        long globalStart = System.currentTimeMillis();
-        Log.d("PERF", "==== NEW REQUEST ====");
+        ref.setValue(msg);
 
-        firebaseDb.getReference("api_keys/0/api_key")
+        return msg;
+    }
+
+    private void getLastMessages(
+            String conversationId,
+            int limit,
+            MessagesCallback callback
+    ) {
+
+        firebaseDb.getReference("messages_llm")
+                .orderByChild("conversationId")
+                .equalTo(conversationId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        String apiKey = snapshot.getValue(String.class);
+                        java.util.ArrayList<MessageLLM> list = new java.util.ArrayList<>();
 
-                        if (apiKey == null || apiKey.isEmpty()) {
-                            callback.onError("API key not found");
-                            return;
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+
+                            MessageLLM m = ds.getValue(MessageLLM.class);
+                            if (m != null) list.add(m);
                         }
 
-                        long embeddingStart = System.currentTimeMillis();
-                        Log.d("PERF", "Embedding started");
+                        list.sort((a, b) ->
+                                Long.compare(a.getTimestamp(), b.getTimestamp())
+                        );
 
-                        getEmbedding(userMessage, new EmbeddingCallback() {
+                        if (list.size() > limit) {
+                            list = new java.util.ArrayList<>(
+                                    list.subList(list.size() - limit, list.size())
+                            );
+                        }
 
-                            @Override
-                            public void onSuccess(float[] embeddingVector) {
-
-                                long embeddingEnd = System.currentTimeMillis();
-                                Log.d("PERF", "Embedding finished in ms: " + (embeddingEnd - embeddingStart));
-
-                                PineconeClient pineconeClient = new PineconeClient();
-
-                                StringBuilder finalContext = new StringBuilder();
-
-                                String[] namespaces;
-                                String[] indexes;
-
-                                if (num == 0) {
-
-                                    //logic gia erasmus
-                                    namespaces = new String[]{
-                                            "erasmus",
-                                            "universities"
-                                    };
-
-                                    indexes = new String[]{
-                                            "Education",
-                                            "Education"
-                                    };
-
-                                } else if (num == 1) {
-
-                                    //logic gia master
-                                    namespaces = new String[]{
-                                            "master",
-                                            "universities"
-                                    };
-
-                                    indexes = new String[]{
-                                            "Education",
-                                            "Education"
-                                    };
-
-                                } else if (num == 2) {
-
-                                    //logic gia career
-                                    namespaces = new String[]{
-                                            "career",
-                                            "it_fields"
-                                    };
-
-                                    indexes = new String[]{
-                                            "career",
-                                            "career"
-                                    };
-
-                                } else {
-
-                                    callback.onError("Invalid category num");
-                                    return;
-                                }
-                                Log.d("FLOW", "Mode: " + num);
-
-                                int totalQueries = namespaces.length;
-                                int[] completedQueries = {0};
-
-                                for (int i = 0; i < namespaces.length; i++) {
-
-                                    final int index = i;
-                                    final long queryStart = System.currentTimeMillis();
-
-                                    Log.d("PERF", "Query START: " + namespaces[index]);
-
-                                    pineconeClient.queryIndex(
-                                            embeddingVector,
-                                            namespaces[index],
-                                            indexes[index],
-                                            new PineconeClient.PineconeCallback() {
-
-                                                @Override
-                                                public void onSuccess(String context) {
-
-                                                    long queryEnd = System.currentTimeMillis();
-
-                                                    Log.d("PERF", "Query DONE: " + namespaces[index]
-                                                            + " in ms: " + (queryEnd - queryStart));
-
-                                                    synchronized (finalContext) {
-                                                        finalContext.append(context).append("\n");
-                                                    }
-
-                                                    handleCompletion();
-                                                }
-
-                                                @Override
-                                                public void onError(String error) {
-
-                                                    long queryEnd = System.currentTimeMillis();
-
-                                                    Log.e("PERF", "Query ERROR: " + namespaces[index]
-                                                            + " after ms: " + (queryEnd - queryStart)
-                                                            + " error: " + error);
-
-                                                    handleCompletion();
-                                                }
-
-                                                private void handleCompletion() {
-
-                                                    synchronized (completedQueries) {
-                                                        completedQueries[0]++;
-
-                                                        Log.d("PERF", "Completed: "
-                                                                + completedQueries[0] + "/" + totalQueries);
-
-                                                        if (completedQueries[0] == totalQueries) {
-
-                                                            long totalTime = System.currentTimeMillis() - globalStart;
-
-                                                            Log.d("PERF", "ALL QUERIES DONE in ms: " + totalTime);
-
-                                                            String enrichedPrompt =
-                                                                    "Use ONLY the following context:\n\n"
-                                                                            + finalContext.toString()
-                                                                            + "\nUser question: "
-                                                                            + userMessage;
-
-                                                            callOpenAI(apiKey, enrichedPrompt, callback);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                    );
-                                }
-
-                                //FAILSAFE TIMEOUT
-                                new android.os.Handler(android.os.Looper.getMainLooper())
-                                        .postDelayed(() -> {
-
-                                            if (completedQueries[0] < totalQueries) {
-
-                                                Log.e("PERF", "TIMEOUT TRIGGERED. Completed: "
-                                                        + completedQueries[0] + "/" + totalQueries);
-
-                                                String fallbackPrompt =
-                                                        "Use the following partial context:\n\n"
-                                                                + finalContext.toString()
-                                                                + "\nUser question: " + userMessage;
-
-                                                callOpenAI(apiKey, fallbackPrompt, callback);
-                                            }
-
-                                        }, 7000);
-                            }
-
-                            @Override
-                            public void onError(String error) {
-                                callback.onError("Embedding error: " + error);
-                            }
-                        });
+                        callback.onSuccess(list);
                     }
 
                     @Override
@@ -294,107 +165,242 @@ public class OpenAIChatClient {
                 });
     }
 
-    private void callOpenAI(String apiKey,
-                            String userMessage,
-                            ChatCallback callback) {
+    public void sendMessage(
+            int num,
+            String conversationId,
+            String userMessage,
+            String userFullName,
+            ChatCallback callback
+    ) {
+        MessageLLM userMsg = saveMessage(conversationId, "user", userMessage);
 
-        Log.d("OpenAI", "Calling OpenAI...");
-        long openAIStart = System.currentTimeMillis();
-        Log.d("PERF", "OpenAI call started");
+        getEmbedding(userMessage, new EmbeddingCallback() {
+            @Override
+            public void onSuccess(float[] embedding) {
+
+                //pinecone history
+                pineconeClient.upsertChatHistory(
+                        embedding,
+                        userMsg.getId(),
+                        userFullName,
+                        "user",
+                        userMessage,
+                        conversationId,
+                        userMsg.getTimestamp()
+                );
+
+                runRag(num, embedding, conversationId, userMessage, callback, userFullName);
+            }
+
+            @Override
+            public void onError(String error) {
+                runRag(num, null, conversationId, userMessage, callback, userFullName);
+            }
+        });
+    }
+
+    private void runRag(
+            int num,
+            float[] embedding,
+            String conversationId,
+            String userMessage,
+            ChatCallback callback,
+            String userFullName
+    ) {
+
+        firebaseDb.getReference("api_keys/0/api_key")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        String apiKey = snapshot.getValue(String.class);
+
+                        if (embedding == null) {
+                            buildPrompt(apiKey, conversationId, userMessage, "", callback, userFullName);
+                            return;
+                        }
+
+                        String[] namespaces;
+                        String[] indexes;
+
+                        if (num == 0) {
+                            namespaces = new String[]{"erasmus", "universities"};
+                            indexes = new String[]{"Education", "Education"};
+                        } else if (num == 1) {
+                            namespaces = new String[]{"master", "universities"};
+                            indexes = new String[]{"Education", "Education"};
+                        } else {
+                            namespaces = new String[]{"career", "it_fields"};
+                            indexes = new String[]{"career", "career"};
+                        }
+
+                        queryNext(0, namespaces, indexes, embedding, new StringBuilder(),
+                                apiKey, conversationId, userMessage, callback);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        callback.onError(error.getMessage());
+                    }
+                });
+    }
+    private void queryNext(
+            int index,
+            String[] namespaces,
+            String[] indexes,
+            float[] embedding,
+            StringBuilder context,
+            String apiKey,
+            String conversationId,
+            String userMessage,
+            ChatCallback callback
+    ) {
+
+        if (index == namespaces.length) {
+            // DONE → build prompt once
+            buildPrompt(apiKey, conversationId, userMessage, context.toString(), callback, userMessage);
+            return;
+        }
+
+        pineconeClient.queryIndex(
+                embedding,
+                namespaces[index],
+                indexes[index],
+                new PineconeClient.PineconeCallback() {
+
+                    @Override
+                    public void onSuccess(String ctx) {
+                        context.append(ctx).append("\n");
+                        queryNext(index + 1, namespaces, indexes, embedding,
+                                context, apiKey, conversationId, userMessage, callback);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        queryNext(index + 1, namespaces, indexes, embedding,
+                                context, apiKey, conversationId, userMessage, callback);
+                    }
+                }
+        );
+    }
+    private void buildPrompt(
+            String apiKey,
+            String conversationId,
+            String userMessage,
+            String ragContext,
+            ChatCallback callback,
+            String userFullName
+    ) {
+
+        getLastMessages(conversationId, 2, new MessagesCallback() {
+
+            @Override
+            public void onSuccess(java.util.ArrayList<MessageLLM> history) {
+
+                try {
+
+                    JSONArray messages = new JSONArray();
+
+                    messages.put(new JSONObject()
+                            .put("role", "system")
+                            .put("content", "You are a helpful assistant."));
+
+                    messages.put(new JSONObject()
+                            .put("role", "system")
+                            .put("content", "RAG CONTEXT:\n" + ragContext));
+
+                    for (MessageLLM m : history) {
+                        messages.put(new JSONObject()
+                                .put("role", m.getRole())
+                                .put("content", m.getContent()));
+                    }
+
+                    messages.put(new JSONObject()
+                            .put("role", "user")
+                            .put("content", userMessage));
+
+                    callOpenAI(apiKey, messages, conversationId, callback,userFullName);
+                } catch (Exception e) {
+                    callback.onError(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+    private void callOpenAI(
+            String apiKey,
+            JSONArray messages,
+            String conversationId,
+            ChatCallback callback,
+            String userFullName
+    ) {
 
         try {
 
             JSONObject body = new JSONObject();
             body.put("model", "gpt-4o-mini");
-
-            JSONArray messages = new JSONArray();
-
-            JSONObject systemMsg = new JSONObject();
-            systemMsg.put("role", "system");
-            systemMsg.put("content",
-                    "You are a helpful assistant for study planning.");
-
-            JSONObject userMsg = new JSONObject();
-            userMsg.put("role", "user");
-            userMsg.put("content", userMessage);
-
-            messages.put(systemMsg);
-            messages.put(userMsg);
-
             body.put("messages", messages);
-
-            RequestBody reqBody =
-                    RequestBody.create(body.toString(), JSON);
 
             Request request = new Request.Builder()
                     .url(OPENAI_URL)
                     .addHeader("Authorization", "Bearer " + apiKey)
-                    .addHeader("Content-Type", "application/json")
-                    .post(reqBody)
+                    .post(RequestBody.create(body.toString(), JSON))
                     .build();
 
             client.newCall(request).enqueue(new Callback() {
 
                 @Override
-                public void onFailure(@NonNull Call call,
-                                      @NonNull IOException e) {
-
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     callback.onError(e.getMessage());
                 }
 
                 @Override
-                public void onResponse(@NonNull Call call,
-                                       @NonNull Response response) {
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
 
-                    long openAIEnd = System.currentTimeMillis();
-                    Log.d("PERF", "OpenAI finished in ms: " + (openAIEnd - openAIStart));
                     try {
 
-                        if (!response.isSuccessful()) {
+                        String content = new JSONObject(response.body().string())
+                                .getJSONArray("choices")
+                                .getJSONObject(0)
+                                .getJSONObject("message")
+                                .getString("content");
 
-                            String bodyText = response.body() != null
-                                    ? response.body().string()
-                                    : "";
+                        MessageLLM assistant = saveMessage(conversationId, "assistant", content);
 
-                            callback.onError(
-                                    "HTTP " + response.code() + " " + bodyText);
+                        getEmbedding(content, new EmbeddingCallback() {
+                            @Override
+                            public void onSuccess(float[] embeddingVector) {
 
-                            return;
-                        }
+                                pineconeClient.upsertChatHistory(
+                                        embeddingVector,
+                                        assistant.getId(),
+                                        userFullName+"-SystemResp",
+                                        "assistant",
+                                        content,
+                                        conversationId,
+                                        Long.valueOf(String.valueOf(assistant.getTimestamp()))
+                                );
+                            }
 
-                        if (response.body() == null) {
-                            callback.onError("Empty response body");
-                            return;
-                        }
+                            @Override
+                            public void onError(String error) {}
+                        });
 
-                        String respBody = response.body().string();
+                        callback.onSuccess(content);
 
-                        JSONObject json = new JSONObject(respBody);
-                        JSONArray choices = json.getJSONArray("choices");
-
-                        if (choices.length() == 0) {
-                            callback.onError("No response choices");
-                            return;
-                        }
-
-                        JSONObject message =
-                                choices.getJSONObject(0)
-                                        .getJSONObject("message");
-
-                        String content = message.getString("content");
-
-                        callback.onSuccess(content.trim());
-
-                    } catch (Exception ex) {
-                        callback.onError("Parse error: " + ex.getMessage());
-                    } finally {
-                        response.close();
+                    } catch (Exception e) {
+                        callback.onError(e.getMessage());
                     }
                 }
             });
 
         } catch (Exception e) {
-            callback.onError("Client error: " + e.getMessage());
+            callback.onError(e.getMessage());
         }
     }
 }
