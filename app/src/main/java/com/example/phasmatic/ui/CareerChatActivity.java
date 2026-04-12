@@ -115,12 +115,12 @@ public class CareerChatActivity extends AppCompatActivity {
             appendToChat("You: " + userMsg);
             edtUserInput.setText("");
             btnSend.setEnabled(false);
-
-            chatClient.sendMessage(2, userMsg, new OpenAIChatClient.ChatCallback() {
+            String ConvoId = userFullName + "-CAREER";
+            chatClient.sendMessage(2, ConvoId, userMsg, userFullName, new OpenAIChatClient.ChatCallback() {
                 @Override
                 public void onSuccess(String reply) {
                     runOnUiThread(() -> {
-                        appendToChat("Assistant: " + reply);
+                        appendToChat("Assistant: \n" + reply);
                         btnSend.setEnabled(true);
                     });
                 }
