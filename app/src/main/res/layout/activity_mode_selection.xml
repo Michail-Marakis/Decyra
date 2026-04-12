@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -9,25 +8,14 @@
     android:background="#FF1E3A5F"
     tools:context=".ui.ModeSelectionActivity">
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="12dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/baseline_arrow_back_24"
-        app:tint="@android:color/black" />
-
     <ImageView
+        android:paddingTop="1dp"
         android:id="@+id/imgProfile"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="12dp"
         android:background="@drawable/profile_circle_bg"
         android:scaleType="centerCrop"
@@ -37,15 +25,16 @@
 
 
     <LinearLayout
+
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btnBack"
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
-        android:paddingTop="32dp">
+        android:paddingTop="37dp">
 
         <TextView
+            android:paddingTop="20dp"
             android:id="@+id/txtTitleMode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,6 +44,7 @@
             android:textColor="@android:color/black" />
 
         <TextView
+            android:paddingTop="17dp"
             android:id="@+id/txtSubtitleMode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

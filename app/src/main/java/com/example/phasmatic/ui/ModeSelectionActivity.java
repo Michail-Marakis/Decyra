@@ -28,7 +28,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class ModeSelectionActivity extends AppCompatActivity {
 
     Button btnErasmus, btnMaster, btnForum, btnCarrer;
-    ImageButton btnBack;
     TextView txtTitle, txtSubtitle;
     ImageView imgProfile;
     private String userId, userFullName, userEmail, userPhone;
@@ -78,17 +77,6 @@ public class ModeSelectionActivity extends AppCompatActivity {
         btnCarrer = findViewById(R.id.btnCareerMode);
         videoView = findViewById(R.id.videoView);
         btnForum = findViewById(R.id.btnForum);
-
-
-
-        BackButtonHelper.attachToGoModeSelection(
-                this,
-                R.id.btnBack,
-                userId,
-                userFullName,
-                userEmail,
-                userPhone
-        );
 
 
         btnErasmus.setOnClickListener(v -> {

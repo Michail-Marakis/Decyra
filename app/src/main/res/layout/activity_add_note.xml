@@ -64,10 +64,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="#3000B0FF"
+            android:background="@android:color/darker_gray"
             android:hint="Title"
-            android:textColor="@android:color/white"
-            android:textColorHint="#CCFFFFFF"
+            android:textColor="@android:color/black"
+            android:textColorHint="#000000"
             android:padding="10dp" />
 
         <EditText
@@ -75,11 +75,11 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_margin="10dp"
-            android:background="#3000B0FF"
+            android:background="@android:color/darker_gray"
             android:gravity="top"
             android:hint="Description"
-            android:textColor="@android:color/white"
-            android:textColorHint="#CCFFFFFF"
+            android:textColor="@android:color/black"
+            android:textColorHint="#000000"
             android:padding="10dp" />
     </LinearLayout>
 
