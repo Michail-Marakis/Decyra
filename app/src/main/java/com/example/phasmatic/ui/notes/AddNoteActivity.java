@@ -109,7 +109,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 }
 
                 long createdTime = System.currentTimeMillis();
-                Note note = new Note(noteId, title, description, createdTime, userId);
+                Note note = new Note(noteId, title, description, createdTime, userId, false);
 
                 notesRef.child(noteId).setValue(note)
                         .addOnSuccessListener(unused -> {
@@ -126,7 +126,8 @@ public class AddNoteActivity extends AppCompatActivity {
                         title,
                         description,
                         editingCreatedTime == 0L ? System.currentTimeMillis() : editingCreatedTime,
-                        userId
+                        userId,
+                        false
                 );
 
                 notesRef.child(editingNoteId).setValue(note)

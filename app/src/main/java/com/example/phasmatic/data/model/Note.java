@@ -6,16 +6,26 @@ public class Note {
     private String description;
     private long createdTime;
     private String user_id;
+    private boolean pinned;
 
     public Note() {
     }
 
-    public Note(String id, String title, String description, long createdTime, String user_id) {
+    public Note(String id, String title, String description, long createdTime, String user_id, boolean pinned) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdTime = createdTime;
         this.user_id = user_id;
+        this.pinned = pinned;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 
     public String getId() {

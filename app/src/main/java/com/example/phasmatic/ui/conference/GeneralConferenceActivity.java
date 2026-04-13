@@ -210,7 +210,8 @@ public class GeneralConferenceActivity extends AppCompatActivity {
                                                 noteTitle,
                                                 noteDescription,
                                                 System.currentTimeMillis(),
-                                                participantId
+                                                participantId,
+                                                false
                                         );
 
                                         updates.put("/notes/" + noteId, note);

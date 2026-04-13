@@ -131,8 +131,13 @@ public class NotesActivity extends AppCompatActivity {
                             }
                         }
 
-                        Collections.sort(notesList, (n1, n2) ->
-                                Long.compare(n2.getCreatedTime(), n1.getCreatedTime()));
+                        Collections.sort(notesList, (n1, n2) -> {
+                            //prwta pinned
+                            if (n1.isPinned() && !n2.isPinned()) return -1;
+                            if (!n1.isPinned() && n2.isPinned()) return 1;
+                            //prwta pinned kai meta me createdTime
+                            return Long.compare(n2.getCreatedTime(), n1.getCreatedTime());
+                        });
 
                         myAdapter.notifyDataSetChanged();
                     }
