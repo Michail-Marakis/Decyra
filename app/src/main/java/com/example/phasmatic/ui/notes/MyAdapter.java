@@ -52,7 +52,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Note note = notesList.get(position);
 
-        holder.titleOutput.setText(note.getTitle());
+        String noteTitle = note.getTitle();
+        if (note.isPinned()) {
+            noteTitle = "📌 " + noteTitle;
+        }
+
+        holder.titleOutput.setText(noteTitle);
         holder.descriptionOutput.setText(note.getDescription());
 
         String formattedTime = DateFormat.getDateTimeInstance().format(note.getCreatedTime());
@@ -68,8 +73,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             PopupMenu menu = new PopupMenu(context, v);
             menu.getMenu().add("DELETE");
 
+            String pinTitle = note.isPinned() ? "UNPIN" : "PIN";
+            menu.getMenu().add(pinTitle);
+
             menu.setOnMenuItemClickListener(item -> {
-                if ("DELETE".contentEquals(item.getTitle())) {
+                String menuAction = item.getTitle().toString();
+
+                if ("DELETE".equals(menuAction)) {
                     if (note.getId() != null) {
                         notesRef.child(note.getId()).removeValue()
                                 .addOnSuccessListener(unused ->
@@ -80,7 +90,30 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 );
                     }
                     return true;
+                } else if ("PIN".equals(menuAction)) {
+                    if (note.getId() != null) {
+                        notesRef.child(note.getId()).child("pinned").setValue(true)
+                                .addOnSuccessListener(unused ->
+                                        Toast.makeText(context, "Note pinned", Toast.LENGTH_SHORT).show()
+                                )
+                                .addOnFailureListener(e ->
+                                        Toast.makeText(context, "Pin failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                );
+                    }
+                    return true;
+                } else if ("UNPIN".equals(menuAction)) {
+                    if (note.getId() != null) {
+                        notesRef.child(note.getId()).child("pinned").setValue(false)
+                                .addOnSuccessListener(unused ->
+                                        Toast.makeText(context, "Note unpinned", Toast.LENGTH_SHORT).show()
+                                )
+                                .addOnFailureListener(e ->
+                                        Toast.makeText(context, "Unpin failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                );
+                    }
+                    return true;
                 }
+
                 return false;
             });
 
