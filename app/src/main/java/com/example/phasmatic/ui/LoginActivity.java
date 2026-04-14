@@ -2,28 +2,21 @@ package com.example.phasmatic.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
@@ -35,7 +28,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.phasmatic.R;
-import com.example.phasmatic.data.ai.PineconeIndexer;
+import com.example.phasmatic.data.ai.PineconeIndexerMaster_Career;
+import com.example.phasmatic.data.ai.PineconeIndexerErasmus;
 import com.example.phasmatic.data.model.User;
 import com.example.phasmatic.extras.InternetConnection;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -144,12 +138,21 @@ public class LoginActivity extends AppCompatActivity {
 
             loginWithFirebase(email, password);
 
-//            PineconeIndexer indexer = new PineconeIndexer(this);
+            //POTE UNCOMMENT. MONO OTAN EINAI EDIT TO PINECONE
+//            PineconeIndexerMaster_Career indexer = new PineconeIndexerMaster_Career(this);
 //            indexer.indexMasterPrograms();
-//            indexer.indexErasmus();
-//            indexer.indexUniversities();
 //            indexer.indexCareer();
-//            indexer.indexITFields();
+//
+//            PineconeIndexerErasmus indexerErasmus = new PineconeIndexerErasmus(this);
+//            indexerErasmus.indexErasmusARISTOTLE();
+//            indexerErasmus.indexErasmusHAROKOPIO();
+//            indexerErasmus.indexErasmusAUEB();
+//            indexerErasmus.indexErasmusCRETE();
+//            indexerErasmus.indexErasmusEKPA();
+//            indexerErasmus.indexErasmusIONIAN();
+//            indexerErasmus.indexErasmusPAPEI();
+//            indexerErasmus.indexErasmusPELLOPONESE();
+//            indexerErasmus.indexErasmusTHESSALY();
 
         });
 
