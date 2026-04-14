@@ -29,6 +29,10 @@ public class PineconeClient {
 
     private static final String HISTORY_INDEX_BASE_URL =
             "https://decyra-llm-history-trb4i0f.svc.aped-4627-b74a.pinecone.io";
+
+    private static final String MASTER_INDEX_BASE_URL =
+            "https://decyra-master-trb4i0f.svc.aped-4627-b74a.pinecone.io";
+
     private final OkHttpClient httpClient;
 
     public PineconeClient() {
@@ -50,6 +54,9 @@ public class PineconeClient {
         }
         if(indexName.equals("history")){
             return HISTORY_INDEX_BASE_URL;
+        }
+        if(indexName.equals("master")){
+            return MASTER_INDEX_BASE_URL;
         }
 
         throw new IllegalArgumentException("Invalid index name provided");
