@@ -225,14 +225,44 @@ public class OpenAIChatClient {
                         String[] indexes;
 
                         if (num == 0) {
-                            namespaces = new String[]{"erasmus", "universities"};
-                            indexes = new String[]{"Education", "Education"};
+                            namespaces = new String[]{"erasmus-AUEB"};
+                            indexes = new String[]{"Education"};
                         } else if (num == 1) {
-                            namespaces = new String[]{"master", "universities"};
-                            indexes = new String[]{"Education", "Education"};
-                        } else {
-                            namespaces = new String[]{"career", "it_fields"};
-                            indexes = new String[]{"career", "career"};
+                            namespaces = new String[]{"europe-master"};
+                            indexes = new String[]{"master"};
+                        } else if(num == 2){
+                            namespaces = new String[]{"main-career"};
+                            indexes = new String[]{"career"};
+                        }else if(num==4){
+                            namespaces = new String[]{"erasmus-THESSALY"};
+                            indexes = new String[]{"Education"};
+                        }else if(num==5){
+                            namespaces = new String[]{"erasmus-ARISTOTLE"};
+                            indexes = new String[]{"Education"};
+                        }
+                        else if(num==6){
+                            namespaces = new String[]{"erasmus-EKPA"};
+                            indexes = new String[]{"Education"};
+                        }
+                        else if(num==7){
+                            namespaces = new String[]{"erasmus-CRETE"};
+                            indexes = new String[]{"Education"};
+                        }
+                        else if(num==8){
+                            namespaces = new String[]{"erasmus-PAPEI"};
+                            indexes = new String[]{"Education"};
+                        }
+                        else if(num==9){
+                            namespaces = new String[]{"erasmus-PELLOPONESE"};
+                            indexes = new String[]{"Education"};
+                        }
+                        else if(num==10){
+                            namespaces = new String[]{"erasmus-HAROKOPIO"};
+                            indexes = new String[]{"Education"};
+                        }
+                        else{
+                            namespaces = new String[]{"erasmus-IONIAN"};
+                            indexes = new String[]{"Education"};
                         }
 
                         queryNext(0, namespaces, indexes, embedding, new StringBuilder(),

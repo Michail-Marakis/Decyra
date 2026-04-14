@@ -29,6 +29,7 @@ import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import android.graphics.Bitmap;
 import com.example.phasmatic.extras.ProfileImageManager;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -81,7 +82,7 @@ public class ErasmusChatActivity extends AppCompatActivity {
                 "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
         );
         usersRef = firebaseDb.getReference("users");
-
+        DatabaseReference userInfoRef = firebaseDb.getReference("user_info");
         profileMenuHelper = new ProfileMenuHelper(
                 this,
                 userId,
@@ -117,27 +118,69 @@ public class ErasmusChatActivity extends AppCompatActivity {
             appendToChat("You: " + userMsg);
             edtUserInput.setText("");
             btnSend.setEnabled(false);
+
             String ConvoId = userFullName + "-ERASMUS";
-            chatClient.sendMessage(0, ConvoId,userMsg,userFullName, new OpenAIChatClient.ChatCallback() {
-                @Override
-                public void onSuccess(String reply) {
-                    runOnUiThread(() -> {
-                        appendToChat("Assistant: \n" + reply);
-                        btnSend.setEnabled(true);
-                    });
+
+            userInfoRef.child(userId).get().addOnSuccessListener(snapshot -> {
+
+                int uniId = 0;
+
+                if (snapshot.exists()) {
+                    String university = snapshot.child("university").getValue(String.class);
+                    uniId = mapUniversityToId(university);
                 }
 
-                @Override
-                public void onError(String error) {
-                    runOnUiThread(() -> {
-                        appendToChat("Error: " + error);
-                        btnSend.setEnabled(true);
-                    });
-                }
+                chatClient.sendMessage(
+                        uniId,
+                        ConvoId,
+                        userMsg,
+                        userFullName,
+                        new OpenAIChatClient.ChatCallback() {
+                            @Override
+                            public void onSuccess(String reply) {
+                                runOnUiThread(() -> {
+                                    appendToChat("Assistant: \n" + reply);
+                                    btnSend.setEnabled(true);
+                                });
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                runOnUiThread(() -> {
+                                    appendToChat("Error: " + error);
+                                    btnSend.setEnabled(true);
+                                });
+                            }
+                        }
+                );
+
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Firebase error", Toast.LENGTH_SHORT).show();
+                btnSend.setEnabled(true);
             });
         });
 
         btnVoice.setOnClickListener(v -> startSpeechRecognizer());
+    }
+
+    private int mapUniversityToId(String university) {
+        if (university == null) return 0;
+
+        if (university.contains("Athens University of Economics and Business")){
+            return 0;
+        }
+        if (university.contains("University of Thessaly")) {
+            return 4;
+        }
+        if (university.contains("Aristotle University")) return 5;
+        if (university.contains("University of Athens")) return 6;
+        if (university.contains("University of Crete")) return 7;
+        if (university.contains("University of Piraeus")) return 8;
+        if (university.contains("University of Peloponnese")) return 9;
+        if (university.contains("Harokopio University")) return 10;
+        if (university.contains("Ionian University")) return 11;
+
+        return 0;
     }
 
     private void loadProfilePhoto() {
