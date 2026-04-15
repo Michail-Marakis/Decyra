@@ -36,7 +36,7 @@ CREATE TABLE `countries` (
 
 LOCK TABLES `countries` WRITE;
 /*!40000 ALTER TABLE `countries` DISABLE KEYS */;
-INSERT INTO `countries` VALUES (15,'Austria'),(16,'Belgium'),(25,'Bulgaria'),(23,'Croatia'),(30,'Cyprus'),(21,'Czech Republic'),(19,'Denmark'),(29,'Estonia'),(13,'Finland'),(6,'France'),(2,'Germany'),(3,'Greece'),(22,'Hungary'),(20,'Ireland'),(11,'Italy'),(28,'Latvia'),(27,'Lithuania'),(1,'Netherlands'),(9,'Norway'),(10,'Poland'),(18,'Portugal'),(14,'Romania'),(4,'Russia'),(24,'Serbia'),(26,'Slovakia'),(7,'Spain'),(8,'Sweden'),(17,'Switzerland'),(5,'Ukraine'),(12,'United Kingdom');
+INSERT INTO `countries` VALUES (15,'Αυστρία'),(16,'Βέλγιο'),(25,'Βουλγαρία'),(6,'Γαλλία'),(2,'Γερμανία'),(19,'Δανία'),(8,'Ελβετία'),(3,'Ελλάδα'),(29,'Εσθονία'),(1,'Ηνωμένο Βασίλειο'),(20,'Ιρλανδία'),(10,'Ισπανία'),(11,'Ιταλία'),(23,'Κροατία'),(30,'Κύπρος'),(27,'Λετονία'),(28,'Λιθουανία'),(18,'Νορβηγία'),(5,'Ολλανδία'),(22,'Ουγγαρία'),(9,'Ουκρανία'),(26,'Πολωνία'),(12,'Πορτογαλία'),(24,'Ρουμανία'),(7,'Ρωσία'),(17,'Σλοβακία'),(14,'Σουηδία'),(4,'Τουρκία'),(21,'Τσεχία'),(13,'Φινλανδία');
 /*!40000 ALTER TABLE `countries` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-14 23:19:43
+-- Dump completed on 2026-04-15 19:54:34
