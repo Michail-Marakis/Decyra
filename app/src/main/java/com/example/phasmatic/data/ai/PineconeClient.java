@@ -133,17 +133,17 @@ public class PineconeClient {
             String indexName,
             PineconeCallback callback
     ) {
-
         try {
-
             String baseUrl = resolveBaseUrl(indexName);
             String url = baseUrl + "/query";
 
             JSONObject requestBodyJson = new JSONObject();
             requestBodyJson.put("vector", new JSONArray(embeddingVector));
-            requestBodyJson.put("topK", 10);
+            requestBodyJson.put("topK", 1);
             requestBodyJson.put("includeMetadata", true);
             requestBodyJson.put("namespace", namespace);
+
+            Log.d("RAG_DEBUG", "Querying Pinecone -> Index: " + indexName + " | Namespace: " + namespace);
 
             Request request = new Request.Builder()
                     .url(url)
@@ -156,73 +156,66 @@ public class PineconeClient {
                     .build();
 
             httpClient.newCall(request).enqueue(new Callback() {
-
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException exception) {
+                    Log.e("RAG_DEBUG", "Pinecone Query Failed: " + exception.getMessage());
                     callback.onError(exception.getMessage());
                 }
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
-
                     try {
-
                         if (!response.isSuccessful()) {
+                            String errorBody = response.body() != null ? response.body().string() : "No error body";
+                            Log.e("RAG_DEBUG", "Pinecone Query HTTP Error: " + response.code() + " | " + errorBody);
                             callback.onError("HTTP error code: " + response.code());
                             return;
                         }
 
                         String responseBody = response.body().string();
-                        JSONObject responseJson = new JSONObject(responseBody);
+                        Log.d("RAG_DEBUG", "Pinecone Raw Response: " + responseBody);
 
+                        JSONObject responseJson = new JSONObject(responseBody);
                         JSONArray matchesArray = responseJson.optJSONArray("matches");
 
-                        if (matchesArray == null) {
-                            callback.onError("Matches array not found");
+                        if (matchesArray == null || matchesArray.length() == 0) {
+                            Log.w("RAG_DEBUG", "No matches found in Pinecone!");
+                            callback.onError("Matches array not found or empty");
                             return;
                         }
 
                         StringBuilder contextBuilder = new StringBuilder();
 
                         for (int i = 0; i < matchesArray.length(); i++) {
-
                             JSONObject matchObject = matchesArray.getJSONObject(i);
                             JSONObject metadataObject = matchObject.optJSONObject("metadata");
 
                             if (metadataObject != null) {
-                                contextBuilder.append("Name: ").append(metadataObject.optString("name")).append("\n");
+                                contextBuilder.append("ΕΠΙΛΟΓΗ ").append(i + 1).append(":\n");
 
-                                if (metadataObject.has("description")) {
-                                    contextBuilder.append("Description: ")
-                                            .append(metadataObject.optString("description"))
-                                            .append("\n");
+                                java.util.Iterator<String> keys = metadataObject.keys();
+                                while (keys.hasNext()) {
+                                    String key = keys.next();
+                                    String value = metadataObject.optString(key);
+                                    contextBuilder.append("- ").append(key).append(": ").append(value).append("\n");
                                 }
-
-                                if (metadataObject.has("salary_with_master")) {
-                                    contextBuilder.append("Salary with master: ")
-                                            .append(metadataObject.optString("salary_with_master"))
-                                            .append("\n");
-                                }
-
-                                if (metadataObject.has("salary_without_master")) {
-                                    contextBuilder.append("Salary without master: ")
-                                            .append(metadataObject.optString("salary_without_master"))
-                                            .append("\n");
-                                }
-
                                 contextBuilder.append("\n");
                             }
                         }
 
-                        callback.onSuccess(contextBuilder.toString());
+                        String finalContext = contextBuilder.toString();
+                        Log.d("RAG_DEBUG", "Final Extracted Context for LLM:\n" + finalContext);
+                        callback.onSuccess(finalContext);
 
                     } catch (Exception exception) {
+                        Log.e("RAG_DEBUG", "Error parsing Pinecone response", exception);
                         callback.onError(exception.getMessage());
                     }
                 }
             });
 
         } catch (Exception exception) {
+            Log.e("RAG_DEBUG", "Exception sending Pinecone query", exception);
             callback.onError(exception.getMessage());
         }
     }

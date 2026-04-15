@@ -639,8 +639,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
             sb.append("- ").append(formatted).append("\n");
 
             if ("erasmus".equals(modeType)) {
-                sb.append("\nΔώσε 10 προγράμματα Erasmus που ταιριάζουν στο προφίλ. ");
-                sb.append("Μόνο όνομα πανεπιστημίου, χώρα και 1 σύντομη φράση. Χωρίς ανάλυση.");
+                sb.append("\nΔώσε 1 προτεινόμενο πρόγραμμα Erasmus που ταιριάζει καλύτερα στο προφίλ.");
+                sb.append("Πάρε υπόψη μόνο τις διαθέσιμες πληροφορίες από το context.");
+                sb.append("Απάντησε με:");
+                sb.append(" - Πανεπιστήμιο");
+                sb.append(" - Χώρα");
+                sb.append(" - Χρηματοδοτηση");
+                sb.append(" - Σύντομη αιτιολόγηση (1-2 προτάσεις γιατί είναι η καλύτερη επιλογή για το προφίλ)");
             } else if ("master".equals(modeType)) {
                 sb.append("\nΔώσε 10 προγράμματα μεταπτυχιακών που ταιριάζουν στο προφίλ. ");
                 sb.append("Μόνο όνομα προγράμματος, πανεπιστήμιο, χώρα και 1 σύντομη φράση. Χωρίς ανάλυση.");
@@ -701,57 +706,53 @@ public class QuestionnaireActivity extends AppCompatActivity {
         if ("erasmus".equals(mode)) {
             switch (index) {
                 case 0:
-                    return "Erasmus – Preferred Region: " + answer;
+                    return "Erasmus – Προτιμώμενη Περιοχή: " + answer;
                 case 1:
-                    return "Erasmus – Language of Studies: " + answer;
+                    return "Erasmus – Γλώσσα Σπουδών: " + answer;
                 case 2:
-                    return "Erasmus – Importance of Financial Support: " + answer;
+                    return "Erasmus – Σημασία Οικονομικής Ενίσχυσης: " + answer;
                 case 3:
-                    return "Erasmus – Type of University: " + answer;
+                    return "Erasmus – Τύπος Πανεπιστημίου: " + answer;
                 case 4:
-                    return "Erasmus – Preferred City Type: " + answer;
+                    return "Erasmus – Προτιμώμενος Τύπος Πόλης: " + answer;
                 case 5:
-                    return "Erasmus – Student Life Importance: " + answer;
+                    return "Erasmus – Σημασία Φοιτητικής Ζωής: " + answer;
                 case 6:
-                    return "Erasmus – Main Goal from the Experience: " + answer;
+                    return "Erasmus – Κύριος Στόχος από την Εμπειρία: " + answer;
                 default:
                     return "";
             }
-        }
-
-        else if ("master".equals(mode)) {
+        } else if ("master".equals(mode)) {
             switch (index) {
                 case 0:
-                    return "Master – Preferred Region: " + answer;
+                    return "Master – Προτιμώμενη Περιοχή: " + answer;
                 case 1:
-                    return "Master – Teaching Language Preference: " + answer;
+                    return "Master – Προτίμηση Γλώσσας Διδασκαλίας: " + answer;
                 case 2:
-                    return "Master – Cost Sensitivity: " + answer;
+                    return "Master – Ευαισθησία στο Κόστος: " + answer;
                 case 3:
-                    return "Master – University Ranking / Reputation Importance: " + answer;
+                    return "Master – Σημασία Κατάταξης / Φήμης Πανεπιστημίου: " + answer;
                 case 4:
-                    return "Master – Preferred Program Type: " + answer;
+                    return "Master – Προτιμώμενος Τύπος Προγράμματος: " + answer;
                 case 5:
-                    return "Master – Connection with Job Market: " + answer;
+                    return "Master – Σύνδεση με την Αγορά Εργασίας: " + answer;
                 case 6:
-                    return "Master – Main Goal from the Master: " + answer;
+                    return "Master – Κύριος Στόχος από το Master: " + answer;
                 default:
                     return "";
             }
-        }
-
-        else if ("career".equals(mode)) {
+        } else if ("career".equals(mode)) {
             switch (index) {
                 case 0:
-                    return "Career – Preferred IT Field: " + answer;
+                    return "Καριέρα – Προτιμώμενος Τομέας IT: " + answer;
                 case 1:
-                    return "Career – Salary Importance: " + answer;
+                    return "Καριέρα – Σημασία Μισθού: " + answer;
                 case 2:
-                    return "Career – Interest in Doing a Master: " + answer;
+                    return "Καριέρα – Ενδιαφέρον για Master: " + answer;
                 case 3:
-                    return "Career – Preferred Work Location: " + answer;
+                    return "Καριέρα – Προτιμώμενη Τοποθεσία Εργασίας: " + answer;
                 case 4:
-                    return "Career – Most Important Aspect in a Career: " + answer;
+                    return "Καριέρα – Πιο Σημαντικός Παράγοντας στην Καριέρα: " + answer;
                 default:
                     return "";
             }
