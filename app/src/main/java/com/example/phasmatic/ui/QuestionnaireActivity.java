@@ -37,7 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionnaireActivity extends AppCompatActivity {
+public class  QuestionnaireActivity extends AppCompatActivity {
 
     private TextView txtProgress, txtQuestion;
     private Button btnPrev, btnNext, btnVoice;
