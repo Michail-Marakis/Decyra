@@ -105,9 +105,10 @@ public class PineconeIndexerErasmus {
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     String uniName = item.child("university_name").getValue(String.class);
-                    if (!Objects.equals(uniName, "University of Athens")) continue;
+                    if (!Objects.equals(uniName, "Εθνικό και Καποδιστριακό Πανεπιστήμιο Αθηνών")) continue;
 
-                    String id = item.child("id").getValue(String.class);
+                    Long longid3 = item.child("id").getValue(Long.class);
+                    String id = String.valueOf(longid3);
                     String city = item.child("city").getValue(String.class);
                     String country = item.child("country").getValue(String.class);
                     String name = item.child("name").getValue(String.class);
@@ -176,9 +177,10 @@ public class PineconeIndexerErasmus {
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     String uniName = item.child("university_name").getValue(String.class);
-                    if (!Objects.equals(uniName, "University of Piraeus")) continue;
+                    if (!Objects.equals(uniName, "Πανεπιστήμιο Πειραιώς")) continue;
 
-                    String id = item.child("id").getValue(String.class);
+                    Long longid5 = item.child("id").getValue(Long.class);
+                    String id = String.valueOf(longid5);
                     String city = item.child("city").getValue(String.class);
                     String country = item.child("country").getValue(String.class);
                     String name = item.child("name").getValue(String.class);
@@ -247,9 +249,10 @@ public class PineconeIndexerErasmus {
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     String uniName = item.child("university_name").getValue(String.class);
-                    if (!Objects.equals(uniName, "University of Crete")) continue;
+                    if (!Objects.equals(uniName, "Πανεπιστήμιο Κρήτης")) continue;
 
-                    String id = item.child("id").getValue(String.class);
+                    Long longid2 = item.child("id").getValue(Long.class);
+                    String id = String.valueOf(longid2);
                     String city = item.child("city").getValue(String.class);
                     String country = item.child("country").getValue(String.class);
                     String name = item.child("name").getValue(String.class);
@@ -318,9 +321,10 @@ public class PineconeIndexerErasmus {
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     String uniName = item.child("university_name").getValue(String.class);
-                    if (!Objects.equals(uniName, "Aristotle University")) continue;
+                    if (!Objects.equals(uniName, "Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης")) continue;
 
-                    String id = item.child("id").getValue(String.class);
+                    Long longid = item.child("id").getValue(Long.class);
+                    String id = String.valueOf(longid);
                     String city = item.child("city").getValue(String.class);
                     String country = item.child("country").getValue(String.class);
                     String name = item.child("name").getValue(String.class);
@@ -389,9 +393,11 @@ public class PineconeIndexerErasmus {
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     String uniName = item.child("university_name").getValue(String.class);
-                    if (!Objects.equals(uniName, "Harokopio University")) continue;
+                    if (!Objects.equals(uniName, "Χαροκόπειο Πανεπιστήμιο")) continue;
 
-                    String id = item.child("id").getValue(String.class);
+                    Long longid = item.child("id").getValue(Long.class);
+                    String id = String.valueOf(longid);
+
                     String city = item.child("city").getValue(String.class);
                     String country = item.child("country").getValue(String.class);
                     String name = item.child("name").getValue(String.class);
@@ -460,9 +466,10 @@ public class PineconeIndexerErasmus {
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     String uniName = item.child("university_name").getValue(String.class);
-                    if (!Objects.equals(uniName, "Ionian University")) continue;
+                    if (!Objects.equals(uniName, "Ιόνιο Πανεπιστήμιο")) continue;
 
-                    String id = item.child("id").getValue(String.class);
+                    Long longid4 = item.child("id").getValue(Long.class);
+                    String id = String.valueOf(longid4);
                     String city = item.child("city").getValue(String.class);
                     String country = item.child("country").getValue(String.class);
                     String name = item.child("name").getValue(String.class);
@@ -531,9 +538,10 @@ public class PineconeIndexerErasmus {
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     String uniName = item.child("university_name").getValue(String.class);
-                    if (!Objects.equals(uniName, "University of Thessaly")) continue;
+                    if (!Objects.equals(uniName, "Πανεπιστήμιο Θεσσαλίας")) continue;
 
-                    String id = item.child("id").getValue(String.class);
+                    Long longid7 = item.child("id").getValue(Long.class);
+                    String id = String.valueOf(longid7);
                     String city = item.child("city").getValue(String.class);
                     String country = item.child("country").getValue(String.class);
                     String name = item.child("name").getValue(String.class);
@@ -602,9 +610,10 @@ public class PineconeIndexerErasmus {
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     String uniName = item.child("university_name").getValue(String.class);
-                    if (!Objects.equals(uniName, "University of Peloponnese")) continue;
+                    if (!Objects.equals(uniName, "Πανεπιστήμιο Πελοποννήσου")) continue;
 
-                    String id = item.child("id").getValue(String.class);
+                    Long longid6 = item.child("id").getValue(Long.class);
+                    String id = String.valueOf(longid6);
                     String city = item.child("city").getValue(String.class);
                     String country = item.child("country").getValue(String.class);
                     String name = item.child("name").getValue(String.class);
