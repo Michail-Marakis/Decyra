@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.ai.OpenAIChatClient;
 import com.example.phasmatic.extras.InternetConnection;
+import com.example.phasmatic.extras.PDF;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import android.graphics.Bitmap;
@@ -39,7 +40,7 @@ public class ErasmusChatActivity extends AppCompatActivity {
 
     TextView txtChatTitle, txtChatLog;
     EditText edtUserInput;
-    Button btnSend, btnVoice;
+    Button btnSend, btnVoice, btnPdf;
     ImageButton btnBack;
     OpenAIChatClient chatClient;
     ImageView imgProfile;
@@ -48,7 +49,7 @@ public class ErasmusChatActivity extends AppCompatActivity {
     private DatabaseReference usersRef;
 
     private String userExpectations;
-
+    private String LLMRep = "";
     private InternetConnection inter = new InternetConnection();
 
     @SuppressLint("SetTextI18n") //AFAIREI WARNINGS
@@ -99,6 +100,7 @@ public class ErasmusChatActivity extends AppCompatActivity {
         edtUserInput = findViewById(R.id.edtUserInput);
         btnSend = findViewById(R.id.btnSend);
         btnVoice = findViewById(R.id.btnVoice);
+        btnPdf = findViewById(R.id.btnpdf);
 
         txtChatTitle.setText("DECYRA Erasmus Assistant");
 
@@ -110,6 +112,19 @@ public class ErasmusChatActivity extends AppCompatActivity {
             edtUserInput.setText(userExpectations);
             edtUserInput.setSelection(userExpectations.length());
         }
+
+        btnPdf.setOnClickListener(v->{
+            try {
+                String path = PDF.exportToPdf(
+                        ErasmusChatActivity.this,
+                        "llm_" + System.currentTimeMillis(),
+                        LLMRep
+                );
+                Log.d("PDF_PATH", "Saved at: " + path);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        });
 
         btnSend.setOnClickListener(v -> {
             String userMsg = edtUserInput.getText().toString().trim();
@@ -139,8 +154,10 @@ public class ErasmusChatActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(String reply) {
                                 runOnUiThread(() -> {
-                                    appendToChat("Assistant: \n" + reply);
+
+                                    appendToChat("Assistant:\n" + reply);
                                     btnSend.setEnabled(true);
+                                    LLMRep = reply;
                                 });
                             }
 

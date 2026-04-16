@@ -41,7 +41,7 @@ import java.util.Locale;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private ImageButton btnBack, btnSend, btnVoice, btnVideoCall;
+    private ImageButton btnBack, btnSend, btnVoice;
     private TextView txtChatWith;
     private EditText etMessage;
     private RecyclerView rvMessages;
@@ -85,7 +85,6 @@ public class ChatActivity extends AppCompatActivity {
         etMessage   = findViewById(R.id.etMessage);
         rvMessages  = findViewById(R.id.rvMessages);
         imgProfile  = findViewById(R.id.imgProfile);
-        btnVideoCall = findViewById(R.id.btnvideoCall);
 
         currentUid = getIntent().getStringExtra("userId");
         otherUid   = getIntent().getStringExtra("otherUid");
