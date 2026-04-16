@@ -105,6 +105,10 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
+    //pdf
+    implementation 'com.itextpdf:itext7-core:7.2.5'
+
+    //pinecone client
     implementation "io.pinecone:pinecone-client:5.1.0"
 
     //rtc
@@ -112,8 +116,4 @@ dependencies {
 
     //zego cloud
     implementation 'com.github.ZEGOCLOUD:zego_uikit_prebuilt_video_conference_android:latest.release'
-
-
-    //pdf
-    implementation 'com.itextpdf:itext7-core:7.2.5'
 }
