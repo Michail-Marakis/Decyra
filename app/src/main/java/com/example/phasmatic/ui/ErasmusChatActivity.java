@@ -28,9 +28,6 @@ import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.PDF;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
-import android.graphics.Bitmap;
-import com.example.phasmatic.extras.ProfileImageManager;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -51,6 +48,8 @@ public class ErasmusChatActivity extends AppCompatActivity {
     private String userExpectations;
     private String LLMRep = "";
     private InternetConnection inter = new InternetConnection();
+
+    private static final int CREATE_PDF_FILE = 2001;
 
     @SuppressLint("SetTextI18n") //AFAIREI WARNINGS
     @Override
@@ -113,17 +112,17 @@ public class ErasmusChatActivity extends AppCompatActivity {
             edtUserInput.setSelection(userExpectations.length());
         }
 
-        btnPdf.setOnClickListener(v->{
-            try {
-                String path = PDF.exportToPdf(
-                        ErasmusChatActivity.this,
-                        "llm_" + System.currentTimeMillis(),
-                        LLMRep
-                );
-                Log.d("PDF_PATH", "Saved at: " + path);
-            }catch(Exception e){
-                e.printStackTrace();
+        btnPdf.setOnClickListener(v -> {
+            if (LLMRep == null || LLMRep.trim().isEmpty()) {
+                Toast.makeText(this, "No response to export", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            Intent pdfIntent  = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            pdfIntent .addCategory(Intent.CATEGORY_OPENABLE);
+            pdfIntent .setType("application/pdf");
+            pdfIntent .putExtra(Intent.EXTRA_TITLE, "llm_" + System.currentTimeMillis() + ".pdf");
+            startActivityForResult(pdfIntent , CREATE_PDF_FILE);
         });
 
         btnSend.setOnClickListener(v -> {
@@ -247,21 +246,34 @@ public class ErasmusChatActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        int REQUEST_SPEECH_RECOGNIZER = 3000;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i("DEMO-REQUESTCODE", Integer.toString(requestCode));
-        Log.i("DEMO-RESULTCODE", Integer.toString(resultCode));
+        Log.i("DEMO-REQUESTCODE", String.valueOf(requestCode));
+        Log.i("DEMO-RESULTCODE", String.valueOf(resultCode));
 
-        if (requestCode == REQUEST_SPEECH_RECOGNIZER && resultCode == Activity.RESULT_OK && data != null) {
-            ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            edtUserInput.setText(text.get(0));
+        if (requestCode == CREATE_PDF_FILE) {
+            if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                boolean success = PDF.exportToPdf(this, data.getData(), LLMRep);
+                if (!success) {
+                    Toast.makeText(this, "PDF export failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+            return;
+        }
 
-            Log.i("DEMO-ANSWER", text.get(0));
+        int REQUEST_SPEECH_RECOGNIZER = 3000;
 
-        } else {
-            System.out.println("Recognizer API error");
+        if (requestCode == REQUEST_SPEECH_RECOGNIZER) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                if (text != null && !text.isEmpty()) {
+                    edtUserInput.setText(text.get(0));
+                    Log.i("DEMO-ANSWER", text.get(0));
+                }
+            } else {
+                Log.i("DEMO", "Recognizer API error");
+            }
         }
     }
 
