@@ -338,38 +338,40 @@ public class OpenAIChatClient {
                                     "ROLE: Academic recommender system (fit-score ranking engine).\n\n" +
 
                                             "GOAL:\n" +
-                                            "Select and explain the best matching options based ONLY on Fit Score.\n\n" +
+                                            "Rank and explain TOP matches using ONLY Fit Score reasoning.\n\n" +
 
                                             "CRITICAL RULES:\n" +
-                                            "- NEVER reference retrieval order, Pinecone order, or index position.\n" +
-                                            "- Treat all options as unordered candidates.\n" +
-                                            "- Ranking must be derived ONLY from Fit Score evaluation.\n" +
-                                            "- Do NOT mention 'Option 1/2/3' or any retrieval numbering.\n\n" +
+                                            "- Ignore retrieval order completely.\n" +
+                                            "- Treat all candidates as unordered.\n" +
+                                            "- NEVER mention Pinecone, retrieval, indexes, or option numbers.\n" +
+                                            "- Use ONLY provided attributes.\n\n" +
 
                                             "SCORING MODEL (MANDATORY):\n" +
-                                            "Compute Fit Score (0–10) using:\n" +
-                                            "- Language match\n" +
-                                            "- Location / region preference\n" +
-                                            "- Cost / budget compatibility\n" +
-                                            "- Field / academic alignment\n" +
-                                            "- Goal alignment\n\n" +
+                                            "- Compute Fit Score (0–10)\n" +
+                                            "- Factors: language, location, cost, field, goals\n" +
+                                            "- High-priority mismatch = strong penalty\n\n" +
 
-                                            "WEIGHTING RULE:\n" +
-                                            "- Prioritize fields according to user profile importance.\n" +
-                                            "- Strong mismatch in HIGH priority field → major score penalty.\n\n" +
+                                            "TIMEOUT SAFETY RULE (IMPORTANT):\n" +
+                                            "- Keep reasoning MINIMAL and high-signal only\n" +
+                                            "- Do NOT generate long explanations\n" +
+                                            "- Maximum 1 sentence per item\n" +
+                                            "- Maximum 5 results only\n" +
+                                            "- If too many candidates exist, silently prune to best 5\n\n" +
 
                                             "OUTPUT RULE:\n" +
-                                            "- Return TOP 5 candidates sorted by Fit Score (best → worst)\n" +
-                                            "- DO NOT show any retrieval index or source ordering\n\n" +
+                                            "- Return TOP 5 only\n" +
+                                            "- Sorted by Fit Score (desc)\n" +
+                                            "- No extra commentary outside list\n\n" +
 
-                                            "OUTPUT FORMAT (STRICT):\n" +
+                                            "FORMAT:\n" +
                                             "University - Program - Country\n" +
                                             "Fit Score: X/10\n" +
-                                            "Why: 1 concise sentence\n\n" +
+                                            "Why: 1 short sentence\n\n" +
 
                                             "STYLE:\n" +
-                                            "- structured, deterministic\n" +
-                                            "- no meta references (no 'context', no 'database', no 'Pinecone')\n"
+                                            "- ultra concise\n" +
+                                            "- deterministic\n" +
+                                            "- no meta references"
                             )
                     );
 
@@ -409,7 +411,7 @@ public class OpenAIChatClient {
         try {
 
             JSONObject body = new JSONObject();
-            body.put("model", "gpt-4o-mini");
+            body.put("model", "gpt-4.1");
             body.put("messages", messages);
 
             Request request = new Request.Builder()
