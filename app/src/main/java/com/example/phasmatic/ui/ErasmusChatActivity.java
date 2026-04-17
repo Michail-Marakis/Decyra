@@ -33,6 +33,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import org.json.JSONObject;
+
 public class ErasmusChatActivity extends AppCompatActivity {
 
     TextView txtChatTitle, txtChatLog;
@@ -50,6 +58,12 @@ public class ErasmusChatActivity extends AppCompatActivity {
     private InternetConnection inter = new InternetConnection();
 
     private static final int CREATE_PDF_FILE = 2001;
+
+    private OkHttpClient httpClient = new OkHttpClient();
+
+    // Βάλε τα δικά σου values
+    private static final String SUPABASE_FUNCTION_URL = "https://sbzxqcwvbbgbpykyvmfa.supabase.co/functions/v1/send-email";
+    private static final String APP_SHARED_SECRET = "decyra_email"; //uparxei sto supabase
 
     @SuppressLint("SetTextI18n") //AFAIREI WARNINGS
     @Override
@@ -118,11 +132,25 @@ public class ErasmusChatActivity extends AppCompatActivity {
                 return;
             }
 
+            //PDF export
             Intent pdfIntent  = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-            pdfIntent .addCategory(Intent.CATEGORY_OPENABLE);
-            pdfIntent .setType("application/pdf");
-            pdfIntent .putExtra(Intent.EXTRA_TITLE, "llm_" + System.currentTimeMillis() + ".pdf");
-            startActivityForResult(pdfIntent , CREATE_PDF_FILE);
+            pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            pdfIntent.setType("application/pdf");
+            pdfIntent.putExtra(Intent.EXTRA_TITLE, "llm_" + System.currentTimeMillis() + ".pdf");
+            startActivityForResult(pdfIntent, CREATE_PDF_FILE);
+
+            //Email send mesw Supabase
+            if (userEmail == null || userEmail.trim().isEmpty()) {
+                Toast.makeText(this, "No email for this user", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String subject = "DECYRA Erasmus Results";
+            String html = "<h2>DECYRA Erasmus Assistant</h2>"
+                    + "<p>Dear " + (userFullName != null ? userFullName : "student") + ",</p>"
+                    + "<p>" + LLMRep.replace("\n", "<br>") + "</p>";
+
+            sendEmailwithSupabase(userEmail, subject, html);
         });
 
         btnSend.setOnClickListener(v -> {
@@ -177,6 +205,64 @@ public class ErasmusChatActivity extends AppCompatActivity {
         });
 
         btnVoice.setOnClickListener(v -> startSpeechRecognizer());
+    }
+
+    private void sendEmailwithSupabase(String to, String subject, String html) {
+        new Thread(() -> {
+            try {
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+                JSONObject json = new JSONObject();
+                json.put("to", to);
+                json.put("subject", subject);
+                json.put("html", html);
+
+                RequestBody body = RequestBody.create(json.toString(), JSON);
+
+                Request request = new Request.Builder()
+                        .url(SUPABASE_FUNCTION_URL)
+                        .post(body)
+                        .addHeader("Content-Type", "application/json")
+                        .addHeader("x-app-secret", APP_SHARED_SECRET)
+                        .build();
+
+                Response response = httpClient.newCall(request).execute();
+
+                int code = response.code();
+                String respBody = response.body() != null ? response.body().string() : "";
+
+                Log.i("EMAIL_DEBUG", "code=" + code + " body=" + respBody);
+
+                if (response.isSuccessful()) {
+                    runOnUiThread(() ->
+                            Toast.makeText(
+                                    ErasmusChatActivity.this,
+                                    "Email sent successfully",
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                    );
+                } else {
+                    String msg = "Email failed: " + code;
+                    runOnUiThread(() ->
+                            Toast.makeText(
+                                    ErasmusChatActivity.this,
+                                    msg,
+                                    Toast.LENGTH_LONG
+                            ).show()
+                    );
+                }
+
+            } catch (Exception e) {
+                Log.e("EMAIL_DEBUG", "Exception: " + e.getMessage(), e);
+                runOnUiThread(() ->
+                        Toast.makeText(
+                                ErasmusChatActivity.this,
+                                "Email error: " + e.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show()
+                );
+            }
+        }).start();
     }
 
     private int mapUniversityToId(String university) {
