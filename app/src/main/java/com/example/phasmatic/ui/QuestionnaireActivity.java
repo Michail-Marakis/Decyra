@@ -635,7 +635,7 @@ public class  QuestionnaireActivity extends AppCompatActivity {
                 }
             }
 
-            profile.append("- GPA: ").append(gpa).append("\n");
+            //profile.append("- GPA: ").append(gpa).append("\n");
 
             //afto vlepei o user
             userText.append("\nΤα στοιχεία μου:\n");
