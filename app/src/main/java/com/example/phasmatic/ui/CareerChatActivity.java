@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.ai.OpenAIChatClient;
+import com.example.phasmatic.extras.HTMLFileExporter;
 import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
@@ -32,13 +33,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import com.example.phasmatic.extras.PDF;
 
 public class CareerChatActivity extends AppCompatActivity {
 
     TextView txtChatTitle, txtChatLog;
     EditText edtUserInput;
-    Button btnSend, btnVoice, btnPdf;
+    Button btnSend, btnVoice, btnsave;
     ImageButton btnBack;
     OpenAIChatClient chatClient;
     ImageView imgProfile;
@@ -51,7 +51,7 @@ public class CareerChatActivity extends AppCompatActivity {
     private InternetConnection inter = new InternetConnection();
 
     private String LLMRep = "";
-    private static final int CREATE_PDF_FILE = 2001;
+    private static final int CREATE_HTML_FILE = 2003;
 
 
     @SuppressLint("SetTextI18n") //AFAIREI WARNINGS
@@ -102,7 +102,7 @@ public class CareerChatActivity extends AppCompatActivity {
         edtUserInput = findViewById(R.id.edtUserInput);
         btnSend = findViewById(R.id.btnSend);
         btnVoice = findViewById(R.id.btnVoice);
-        btnPdf = findViewById(R.id.btnpdf);
+        btnsave = findViewById(R.id.btnsave);
 
         txtChatTitle.setText("DECYRA Career Assistant");
 
@@ -115,17 +115,18 @@ public class CareerChatActivity extends AppCompatActivity {
             edtUserInput.setSelection(userExpectations.length());
         }
 
-        btnPdf.setOnClickListener(v -> {
+        btnsave.setOnClickListener(v -> {
             if (LLMRep == null || LLMRep.trim().isEmpty()) {
                 Toast.makeText(this, "No response to export", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            Intent pdfIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-            pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            pdfIntent.setType("application/pdf");
-            pdfIntent.putExtra(Intent.EXTRA_TITLE, "career_" + System.currentTimeMillis() + ".pdf");
-            startActivityForResult(pdfIntent, CREATE_PDF_FILE);
+            Intent htmlIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            htmlIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            htmlIntent.setType("text/html");
+            htmlIntent.putExtra(Intent.EXTRA_TITLE, "career_" + System.currentTimeMillis() + ".html");
+
+            startActivityForResult(htmlIntent, CREATE_HTML_FILE);
         });
 
 
@@ -215,11 +216,12 @@ public class CareerChatActivity extends AppCompatActivity {
         Log.i("DEMO-REQUESTCODE", Integer.toString(requestCode));
         Log.i("DEMO-RESULTCODE", Integer.toString(resultCode));
 
-        if (requestCode == CREATE_PDF_FILE) {
+        if (requestCode == CREATE_HTML_FILE) {
             if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-                boolean success = PDF.exportToPdf(this, data.getData(), LLMRep);
+                boolean success = HTMLFileExporter.exportToHtml(this, data.getData(), LLMRep);
+
                 if (!success) {
-                    Toast.makeText(this, "PDF export failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "HTML export failed", Toast.LENGTH_SHORT).show();
                 }
             }
             return;
