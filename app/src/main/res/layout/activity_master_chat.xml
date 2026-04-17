@@ -125,11 +125,11 @@
             android:textAllCaps="false"/>
 
         <Button
-            android:id="@+id/btnpdf"
+            android:id="@+id/btnsave"
             android:layout_width="92dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
-            android:text="PDF"
+            android:text="Save"
             android:textAllCaps="false"/>
     </LinearLayout>
 
