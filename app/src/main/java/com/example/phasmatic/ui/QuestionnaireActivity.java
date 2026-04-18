@@ -750,12 +750,30 @@ public class  QuestionnaireActivity extends AppCompatActivity {
         } else {
 
             sb.append("MODE: CAREER\n");
-            sb.append("Priority: Field fit > Salary > Balance > Location\n\n");
+
+            sb.append("PRIORITY:\n");
+            sb.append("Priority: Field > Career > Location > Language > Salary impact > Work-life preference\n\n");
+
+            sb.append("DECISION RULE:\n");
+            sb.append("- Evaluate BOTH paths: work directly vs Master\n");
+            sb.append("- Use salary difference (with vs without master) as key signal\n");
+            sb.append("- If Master significantly improves outcome → recommend Master\n");
+            sb.append("- Otherwise → recommend entering job market\n\n");
+
+            sb.append("REASONING RULE:\n");
+            sb.append("- Combine multiple attributes (NOT simple matching)\n");
+            sb.append("- Derive insights (e.g. high salary growth → strong ROI for Master)\n");
+            sb.append("- Prefer high-impact conclusions over listing data\n\n");
 
             sb.append("OUTPUT:\n");
-            sb.append("Title\n");
-            sb.append("Score\n");
-            sb.append("1-line reason\n");
+
+            sb.append("- Career Path - Country\n");
+            sb.append("  Score: X/10\n");
+            sb.append("  Decision: Work / Master\n");
+            sb.append("  Why:\n");
+            sb.append("  • 2-3 bullets με βασικούς λόγους (salary + field + goals)\n");
+            sb.append("  Advice:\n");
+            sb.append("  • 1 σύντομη πρακτική συμβουλή σαν mentor\n\n");
         }
 
         return sb.toString().trim();

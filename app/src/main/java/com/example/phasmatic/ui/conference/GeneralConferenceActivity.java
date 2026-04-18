@@ -199,7 +199,7 @@ public class GeneralConferenceActivity extends AppCompatActivity {
                                         String noteId = notesRef.push().getKey();
                                         if (noteId == null) continue;
 
-                                        String noteTitle = "You have a new meeting";
+                                        String noteTitle = "You have a new Video Conference";
                                         String noteDescription =
                                                 "Code: " + code +
                                                         "\nCreated by: " + userFullName +
