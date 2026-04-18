@@ -56,6 +56,7 @@ public class ChatActivity extends AppCompatActivity {
     private String currentUid;
     private String otherUid;
     private String otherName;
+    private String userFullName;
 
 
     private ProfileMenuHelper profileMenuHelper;
@@ -79,17 +80,18 @@ public class ChatActivity extends AppCompatActivity {
             inter.showCustomDialog(this);
         }
 
-        btnBack     = findViewById(R.id.btnBack);
-        btnSend     = findViewById(R.id.btnSend);
+        btnBack = findViewById(R.id.btnBack);
+        btnSend = findViewById(R.id.btnSend);
         btnVoice = findViewById(R.id.btnVoice);
         txtChatWith = findViewById(R.id.txtChatWith);
-        etMessage   = findViewById(R.id.etMessage);
-        rvMessages  = findViewById(R.id.rvMessages);
-        imgProfile  = findViewById(R.id.imgProfile);
+        etMessage = findViewById(R.id.etMessage);
+        rvMessages = findViewById(R.id.rvMessages);
+        imgProfile = findViewById(R.id.imgProfile);
 
         currentUid = getIntent().getStringExtra("userId");
         otherUid   = getIntent().getStringExtra("otherUid");
         otherName  = getIntent().getStringExtra("otherName");
+        userFullName = getIntent().getStringExtra("userFullName");
         String userEmail = getIntent().getStringExtra("userEmail");
         String userPhone = getIntent().getStringExtra("userPhone");
 
@@ -303,7 +305,7 @@ public class ChatActivity extends AppCompatActivity {
         conversationsRef.child(conversationKey).child("lastMessage").setValue(text);
         conversationsRef.child(conversationKey).child("timeLastMessage").setValue(now);
 
-        String senderName = otherName != null ? otherName : "User";
+        String senderName = userFullName != null ? userFullName : "User";
         db.getReference("users").child(otherUid).child("fcmToken")
                 .get().addOnSuccessListener(snapshot -> {
                     String token = snapshot.getValue(String.class);
