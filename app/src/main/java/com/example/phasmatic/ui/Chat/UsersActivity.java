@@ -183,6 +183,7 @@ public class UsersActivity extends AppCompatActivity {
             i.putExtra("otherName", otherName);
             i.putExtra("userEmail", userEmail);
             i.putExtra("userPhone", userPhone);
+            i.putExtra("userFullName", userFullName);
             startActivity(i);
         });
     }

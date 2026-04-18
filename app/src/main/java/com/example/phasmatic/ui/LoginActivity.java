@@ -90,6 +90,16 @@ public class LoginActivity extends AppCompatActivity {
             inter.showCustomDialog(this);
         }
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        1001
+                );
+            }
+        }
+
         edtEmailAddressLog = findViewById(R.id.edtEmailAddressLog);
         edtPasswordLog = findViewById(R.id.edtPasswordLog);
         btnLoginLog = findViewById(R.id.btnLoginLog);
