@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.Message;
 import com.example.phasmatic.extras.InternetConnection;
+import com.example.phasmatic.extras.NotificationSender;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import com.google.firebase.database.DataSnapshot;
@@ -301,6 +302,15 @@ public class ChatActivity extends AppCompatActivity {
         newMsgRef.setValue(msg);
         conversationsRef.child(conversationKey).child("lastMessage").setValue(text);
         conversationsRef.child(conversationKey).child("timeLastMessage").setValue(now);
+
+        String senderName = otherName != null ? otherName : "User";
+        db.getReference("users").child(otherUid).child("fcmToken")
+                .get().addOnSuccessListener(snapshot -> {
+                    String token = snapshot.getValue(String.class);
+                    if (token != null && !token.isEmpty()) {
+                        NotificationSender.send(token, senderName, text);
+                    }
+                });
 
         etMessage.setText("");
     }

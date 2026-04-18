@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -240,6 +241,16 @@ public class LoginActivity extends AppCompatActivity {
 
                                     authenticatedUserId = uid;
                                     authenticatedUser = user;
+
+                                    FirebaseMessaging.getInstance().getToken()
+                                            .addOnSuccessListener(token -> {
+                                                FirebaseDatabase.getInstance(
+                                                                "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+                                                        ).getReference("users")
+                                                        .child(uid)
+                                                        .child("fcmToken")
+                                                        .setValue(token);
+                                            });
 
                                     if(email.equals("admin@admin.com") && password.equals("admin1")){
                                         openNextActivity();
