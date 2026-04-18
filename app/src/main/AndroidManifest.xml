@@ -79,6 +79,13 @@
         <activity android:name=".ui.conference.GeneralConferenceActivity" />
         <activity android:name=".ui.CareerChatActivity" />
 
+        <service
+            android:name=".extras.FCMTokenService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"

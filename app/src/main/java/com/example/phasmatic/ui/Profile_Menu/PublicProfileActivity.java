@@ -2,17 +2,21 @@ package com.example.phasmatic.ui.Profile_Menu;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.graphics.Bitmap;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.Chat.ChatActivity;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class PublicProfileActivity extends AppCompatActivity {
@@ -34,6 +38,8 @@ public class PublicProfileActivity extends AppCompatActivity {
             txtLanguages, txtGpa, txtBudget, txtYearOfStudies, txtAdvisorType;
 
     private InternetConnection inter = new InternetConnection();
+
+    private DatabaseReference usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +80,15 @@ public class PublicProfileActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> onBackPressed());
 
+        FirebaseDatabase firebaseDb = FirebaseDatabase.getInstance(
+                "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+        );
+        usersRef = firebaseDb.getReference("users");
+
         if (profileUid != null && !profileUid.isEmpty()) {
             loadUserBasic();
             loadUserInfo();
-            Bitmap bitmap = ProfileImageManager.loadBitmap(this, profileUid);
-            if (bitmap != null) imgProfilePhoto.setImageBitmap(bitmap);
-            else imgProfilePhoto.setImageResource(R.drawable.baseline_face_24);
+            loadProfilePhoto();
         }
 
 
@@ -100,6 +109,35 @@ public class PublicProfileActivity extends AppCompatActivity {
             startActivity(i);
         });
 
+    }
+
+    private void loadProfilePhoto() {
+        if (profileUid == null || profileUid.isEmpty()) {
+            imgProfilePhoto.setImageResource(R.drawable.baseline_face_24);
+            return;
+        }
+
+        usersRef.child(profileUid).get().addOnSuccessListener(snapshot -> {
+            String profileImageUrl = snapshot.child("profileImageUrl").getValue(String.class);
+
+            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                String displayUrl = profileImageUrl + "?t=" + System.currentTimeMillis();
+
+                Glide.with(this)
+                        .load(displayUrl)
+                        .placeholder(R.drawable.baseline_face_24)
+                        .error(R.drawable.baseline_face_24)
+                        .into(imgProfilePhoto);
+            } else {
+                // fallback se local cache an uparxei
+                Bitmap bitmap = ProfileImageManager.loadBitmap(this, profileUid);
+                if (bitmap != null) {
+                    imgProfilePhoto.setImageBitmap(bitmap);
+                } else {
+                    imgProfilePhoto.setImageResource(R.drawable.baseline_face_24);
+                }
+            }
+        });
     }
 
     private void loadUserBasic() {
@@ -129,9 +167,9 @@ public class PublicProfileActivity extends AppCompatActivity {
 
                     String university    = snapshot.child("university").getValue(String.class);
                     String academicLevel = snapshot.child("academicLevel").getValue(String.class);
-                    String field         = snapshot.child("field").getValue(String.class);
-                    String languages     = snapshot.child("languages").getValue(String.class);
-                    Double gpa           = snapshot.child("gpa").getValue(Double.class);
+                    String field = snapshot.child("field").getValue(String.class);
+                    String languages = snapshot.child("languages").getValue(String.class);
+                    String gpa = snapshot.child("gpa").getValue(String.class);
                     Double budgetPerYear = snapshot.child("budgetPerYear").getValue(Double.class);
                     Integer yearOfStudies = snapshot.child("yearOfStudies").getValue(Integer.class);
                     String advisorType   = snapshot.child("advisorType").getValue(String.class);
