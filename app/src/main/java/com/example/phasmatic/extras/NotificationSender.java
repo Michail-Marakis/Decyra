@@ -11,7 +11,7 @@ import java.net.URL;
 public class NotificationSender {
 
     private static final String FCM_URL = "https://fcm.googleapis.com/fcm/send";
-    private static final String SERVER_KEY = "ΤΟ_SERVER_KEY_ΑΠΟ_FIREBASE_CONSOLE";
+    private static final String SERVER_KEY = "to server key prepei na bei edw";
 
     public static void send(String toToken, String senderName, String messageText) {
         new Thread(() -> {
