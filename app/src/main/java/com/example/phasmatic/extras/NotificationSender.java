@@ -17,7 +17,7 @@ public class NotificationSender {
     private static final String FUNCTION_URL =
             "https://sbzxqcwvbbgbpykyvmfa.supabase.co/functions/v1/send-email";
 
-    public static void send(String toToken, String senderName, String messageText) {
+    public static void send(String toToken, String type, String title, String body) {
         new Thread(() -> {
             try {
                 Log.d("SUPABASE_FCM", "Step 1 - start");
@@ -33,8 +33,9 @@ public class NotificationSender {
 
                 JSONObject payload = new JSONObject();
                 payload.put("token", toToken);
-                payload.put("title", senderName);
-                payload.put("body", messageText);
+                payload.put("type", type);
+                payload.put("title", title);
+                payload.put("body", body);
 
                 Log.d("SUPABASE_FCM", "Step 4 - payload: " + payload);
 
