@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.User;
 import com.example.phasmatic.extras.InternetConnection;
+import com.example.phasmatic.extras.NotificationSender;
 import com.example.phasmatic.extras.ProfileImageManager;
 import com.example.phasmatic.ui.ModeSelectionActivity;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
@@ -215,6 +216,20 @@ public class GeneralConferenceActivity extends AppCompatActivity {
                                         );
 
                                         updates.put("/notes/" + noteId, note);
+
+                                        String senderName = userFullName != null ? userFullName : "User";
+                                        firebaseDb.getReference("users").child(participantId).child("fcmToken")
+                                                .get().addOnSuccessListener(snapshot -> {
+                                                    String token = snapshot.getValue(String.class);
+                                                    if (token != null && !token.isEmpty()) {
+                                                        NotificationSender.send(
+                                                                token,
+                                                                "new_meeting",
+                                                                senderName,
+                                                                "Invited to a new Conference"
+                                                        );
+                                                    }
+                                                });
                                     }
 
                                     rootRef.updateChildren(updates)

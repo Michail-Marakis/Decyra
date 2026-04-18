@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -15,6 +14,8 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.phasmatic.R;
 import com.example.phasmatic.ui.Chat.ChatActivity;
+import com.example.phasmatic.ui.conference.GeneralConferenceActivity;
+import com.example.phasmatic.ui.conference.GeneralConferenceActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -22,7 +23,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class FCMTokenService extends FirebaseMessagingService {
 
-    private static final String CHANNEL_ID = "chat_messages_channel";
+    private static final String CHAT_CHANNEL_ID = "chat_messages_channel";
+    private static final String MEETING_CHANNEL_ID = "meeting_notifications_channel";
 
     @Override
     public void onNewToken(String token) {
@@ -43,7 +45,15 @@ public class FCMTokenService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        String title = "New message";
+        String type = "new_message";
+        if (remoteMessage.getData() != null && !remoteMessage.getData().isEmpty()) {
+            String incomingType = remoteMessage.getData().get("type");
+            if (incomingType != null && !incomingType.isEmpty()) {
+                type = incomingType;
+            }
+        }
+
+        String title = "Notification";
         String body = "";
 
         if (remoteMessage.getNotification() != null) {
@@ -55,19 +65,35 @@ public class FCMTokenService extends FirebaseMessagingService {
             }
         }
 
-        createNotificationChannel();
+        createNotificationChannels();
 
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent;
+        String channelId;
+        int requestCode;
+
+        if ("new_meeting".equals(type)) {
+            intent = new Intent(this, GeneralConferenceActivity.class);
+            channelId = MEETING_CHANNEL_ID;
+            requestCode = 2;
+        } else {
+            intent = new Intent(this, ChatActivity.class);
+            channelId = CHAT_CHANNEL_ID;
+            requestCode = 1;
+        }
+
+        intent.putExtra("notification_type", type);
+        intent.putExtra("notification_title", title);
+        intent.putExtra("notification_body", body);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this,
-                0,
+                requestCode,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(body)
@@ -76,25 +102,35 @@ public class FCMTokenService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
         notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
 
-    private void createNotificationChannel() {
+    private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager == null) return;
+
+            NotificationChannel chatChannel = new NotificationChannel(
+                    CHAT_CHANNEL_ID,
                     "Chat Messages",
                     NotificationManager.IMPORTANCE_HIGH
             );
-            channel.setDescription("Notifications for incoming chat messages");
+            chatChannel.setDescription("Notifications for incoming chat messages");
 
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            if (manager != null) {
-                manager.createNotificationChannel(channel);
-            }
+            NotificationChannel meetingChannel = new NotificationChannel(
+                    MEETING_CHANNEL_ID,
+                    "Meetings",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            meetingChannel.setDescription("Notifications for meeting invitations and updates");
+
+            manager.createNotificationChannel(chatChannel);
+            manager.createNotificationChannel(meetingChannel);
         }
     }
 }

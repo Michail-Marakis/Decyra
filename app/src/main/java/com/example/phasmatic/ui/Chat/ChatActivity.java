@@ -310,7 +310,12 @@ public class ChatActivity extends AppCompatActivity {
                 .get().addOnSuccessListener(snapshot -> {
                     String token = snapshot.getValue(String.class);
                     if (token != null && !token.isEmpty()) {
-                        NotificationSender.send(token, senderName, text);
+                        NotificationSender.send(
+                                token,
+                                "new_message",
+                                senderName,
+                                text
+                        );
                     }
                 });
 
