@@ -236,7 +236,7 @@ public class GeneralConferenceActivity extends AppCompatActivity {
                                             .addOnSuccessListener(unused -> {
                                                 Toast.makeText(
                                                         this,
-                                                        "Scheduled at " + eventDate + " " + timeText,
+                                                        "Scheduled at " + eventDate,
                                                         Toast.LENGTH_LONG
                                                 ).show();
                                                 adapter.markConfirmedUsers(selected);
@@ -246,11 +246,6 @@ public class GeneralConferenceActivity extends AppCompatActivity {
                                                     Toast.makeText(this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                                             );
 
-                                    Toast.makeText(
-                                            this,
-                                            "Scheduled at " + eventDate + " " + timeText,
-                                            Toast.LENGTH_LONG
-                                    ).show();
                                     adapter.markConfirmedUsers(selected);
                                     adapter.notifyDataSetChanged();
 
@@ -307,11 +302,26 @@ public class GeneralConferenceActivity extends AppCompatActivity {
                         startActivity(i);
                     } else {
                         long diffMillis = allowedJoinTime - now;
-                        long minutes = diffMillis / 60000;
-                        long seconds = (diffMillis % 60000) / 1000;
+
+                        long totalMinutes = diffMillis / 60000;
+
+                        long days = totalMinutes / 1440;
+                        long hours = (totalMinutes % 1440) / 60;
+                        long minutes = totalMinutes % 60;
+
+                        String message;
+
+                        if (days >= 1) {
+                            message = "Join opens in " + days + " days " + hours + " hours";
+                        } else if (hours >= 1) {
+                            message = "Join opens in " + hours + " hours " + minutes + " minutes";
+                        } else {
+                            message = "Join opens in " + minutes + " minutes";
+                        }
+
                         android.widget.Toast.makeText(
                                 GeneralConferenceActivity.this,
-                                "Join opens in " + minutes + "m " + seconds + "s",
+                                message,
                                 android.widget.Toast.LENGTH_LONG
                         ).show();
                     }
