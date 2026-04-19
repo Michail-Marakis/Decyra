@@ -8,6 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.speech.tts.TextToSpeech;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -48,6 +51,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
@@ -65,15 +69,19 @@ public class RegisterActivity extends AppCompatActivity {
     DatabaseReference usersfaceembeddingRef;
     private FirebaseAuth mAuth;
 
+    TextToSpeech textToSpeech;
+
 
     private static final int CAMERA_PERMISSION_CODE = 100;
 
     private PreviewView viewFinder;
     private FrameLayout cameraLayout;
     private long lastCaptureTime = 0;
+    int cnt1 = 0;
 
     private int framesCapturedForAction = 0;
     private static final int FRAMES_PER_ACTION = 3;
+    int cnt = 0;
 
     private List<List<Double>> centerEmbeddings = new ArrayList<>();
     private List<List<Double>> actionEmbeddings = new ArrayList<>();
@@ -117,6 +125,15 @@ public class RegisterActivity extends AppCompatActivity {
         cameraLayout       = findViewById(R.id.cameraLayout);
         registerLayout     = findViewById(R.id.registerLayout);
         viewFinder         = findViewById(R.id.viewFinder);
+
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR){
+                    textToSpeech.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
 
         // Firebase
         FirebaseDatabase firebaseDb = FirebaseDatabase.getInstance(
@@ -366,20 +383,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         framesCapturedForAction++;
 
-        showToast("Photo " + framesCapturedForAction + "/" + FRAMES_PER_ACTION);
 
         if(framesCapturedForAction >= FRAMES_PER_ACTION){
             framesCapturedForAction = 0;
             currentAction = getNextAction(currentAction);
         }
-    }
-    private void showToast(String msg) {
-
-        if(currentToast != null)
-            currentToast.cancel();
-
-        currentToast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
-        currentToast.show();
     }
 
 
@@ -393,8 +401,10 @@ public class RegisterActivity extends AppCompatActivity {
             case CENTER:
 
                 faceGuideOverlay.setAction(FaceAction.CENTER);
-                showToast("Look straight");
-
+                if(cnt == 0) {
+                    textToSpeech.speak("Look straight", TextToSpeech.QUEUE_FLUSH, null);
+                    cnt++;
+                }
                 if (Math.abs(yaw) < 10 && Math.abs(pitch) < 10) {
                     return true;
                 }
@@ -444,12 +454,17 @@ public class RegisterActivity extends AppCompatActivity {
                         face.getLeftEyeOpenProbability() < 0.3) {
 
                     currentAction = FaceAction.DONE;
+
                     return true;
                 }
                 break;
 
             case DONE:
-                return false;
+                if(cnt1 == 0) {
+                    textToSpeech.speak("Operation Completed", TextToSpeech.QUEUE_FLUSH, null);
+                    cnt1++;
+                }
+        return false;
         }
 
         return false;
@@ -460,27 +475,82 @@ public class RegisterActivity extends AppCompatActivity {
         switch (action){
 
             case CENTER:
-                showToast("Turn your head left");
+                textToSpeech.speak("After 5 seconds turn your head left ",
+                        TextToSpeech.QUEUE_FLUSH, null);
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(() ->
+                        textToSpeech.speak("4", TextToSpeech.QUEUE_ADD, null), 3000);
+                handler.postDelayed(() ->
+                        textToSpeech.speak("3", TextToSpeech.QUEUE_ADD, null), 4000);
+
+                handler.postDelayed(() ->
+                        textToSpeech.speak("2", TextToSpeech.QUEUE_ADD, null), 5000);
+
+                handler.postDelayed(() ->
+                        textToSpeech.speak("1", TextToSpeech.QUEUE_ADD, null), 6000);
+
                 return FaceAction.LOOK_LEFT;
 
             case LOOK_LEFT:
-                showToast("Turn your head right");
+                textToSpeech.speak("After 5 seconds turn your head right ", TextToSpeech.QUEUE_FLUSH, null);
+                Handler handler2 = new Handler(Looper.getMainLooper());
+                handler2.postDelayed(() ->
+                        textToSpeech.speak("4", TextToSpeech.QUEUE_ADD, null), 3000);
+                handler2.postDelayed(() ->
+                        textToSpeech.speak("3", TextToSpeech.QUEUE_ADD, null), 4000);
+
+                handler2.postDelayed(() ->
+                        textToSpeech.speak("2", TextToSpeech.QUEUE_ADD, null), 5000);
+
+                handler2.postDelayed(() ->
+                        textToSpeech.speak("1", TextToSpeech.QUEUE_ADD, null), 6000);
                 return FaceAction.LOOK_RIGHT;
 
             case LOOK_RIGHT:
-                showToast("Look up");
+                textToSpeech.speak("After 5 seconds turn your head down ", TextToSpeech.QUEUE_FLUSH, null);
+                Handler handler3 = new Handler(Looper.getMainLooper());
+                handler3.postDelayed(() ->
+                        textToSpeech.speak("4", TextToSpeech.QUEUE_ADD, null), 3000);
+                handler3.postDelayed(() ->
+                        textToSpeech.speak("3", TextToSpeech.QUEUE_ADD, null), 4000);
+
+                handler3.postDelayed(() ->
+                        textToSpeech.speak("2", TextToSpeech.QUEUE_ADD, null), 5000);
+
+                handler3.postDelayed(() ->
+                        textToSpeech.speak("1", TextToSpeech.QUEUE_ADD, null), 6000);
                 return FaceAction.LOOK_UP;
 
             case LOOK_UP:
-                showToast("Look down");
+                textToSpeech.speak("After 5 seconds turn your head up", TextToSpeech.QUEUE_FLUSH, null);
+                Handler handler4 = new Handler(Looper.getMainLooper());
+                handler4.postDelayed(() ->
+                        textToSpeech.speak("4", TextToSpeech.QUEUE_ADD, null), 3000);
+                handler4.postDelayed(() ->
+                        textToSpeech.speak("3", TextToSpeech.QUEUE_ADD, null), 4000);
+
+                handler4.postDelayed(() ->
+                        textToSpeech.speak("2", TextToSpeech.QUEUE_ADD, null), 5000);
+
+                handler4.postDelayed(() ->
+                        textToSpeech.speak("1", TextToSpeech.QUEUE_ADD, null), 6000);
                 return FaceAction.LOOK_DOWN;
 
             case LOOK_DOWN:
-                showToast("Blink your eyes");
-                return FaceAction.BLINK;
+                Handler handler5 = new Handler(Looper.getMainLooper());
+                handler5.postDelayed(() ->
+                        textToSpeech.speak("4", TextToSpeech.QUEUE_ADD, null), 3000);
+                handler5.postDelayed(() ->
+                        textToSpeech.speak("3", TextToSpeech.QUEUE_ADD, null), 4000);
 
-            case BLINK:
-                return FaceAction.DONE;
+                handler5.postDelayed(() ->
+                        textToSpeech.speak("2", TextToSpeech.QUEUE_ADD, null), 5000);
+
+                handler5.postDelayed(() ->
+                        textToSpeech.speak("1", TextToSpeech.QUEUE_ADD, null), 6000);
+                textToSpeech.speak("After 5 seconds blink your eyes ", TextToSpeech.QUEUE_FLUSH, null);
+                return FaceAction.BLINK;
 
             default:
                 return FaceAction.DONE;
@@ -509,22 +579,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
         }
-
-        Toast.makeText(this, "Face captured", Toast.LENGTH_SHORT).show();
-    }
-
-    private Bitmap changeBrightness(Bitmap bmp, float factor) {
-        Bitmap newBitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
-        for (int x = 0; x < bmp.getWidth(); x++) {
-            for (int y = 0; y < bmp.getHeight(); y++) {
-                int pixel = bmp.getPixel(x, y);
-                int r = Math.min(255, (int)(((pixel >> 16) & 0xFF) * factor));
-                int g = Math.min(255, (int)(((pixel >> 8) & 0xFF) * factor));
-                int b = Math.min(255, (int)((pixel & 0xFF) * factor));
-                newBitmap.setPixel(x, y, (0xFF << 24) | (r << 16) | (g << 8) | b);
-            }
-        }
-        return newBitmap;
     }
 
 
