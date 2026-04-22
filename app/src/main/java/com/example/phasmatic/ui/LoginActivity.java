@@ -29,13 +29,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.phasmatic.R;
-import com.example.phasmatic.data.ai.PineconeIndexerMaster_Career;
-import com.example.phasmatic.data.ai.PineconeIndexerErasmus;
 import com.example.phasmatic.data.model.User;
 import com.example.phasmatic.extras.InternetConnection;
-import com.example.phasmatic.extras.StayLoggedHelper;
+import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
 

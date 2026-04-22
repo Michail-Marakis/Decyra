@@ -2,15 +2,14 @@ package com.example.phasmatic.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.view.View;
 import android.widget.ImageButton;
 
-import com.example.phasmatic.R;
 import com.example.phasmatic.ui.Chat.ChatActivity;
 //import com.example.phasmatic.ui.Chat.UsersActivity;
 import com.example.phasmatic.ui.Chat.UsersActivity;
 import com.example.phasmatic.ui.Forum.ForumActivity;
 import com.example.phasmatic.ui.Profile_Menu.PublicProfileActivity;
+import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity;
 import com.example.phasmatic.ui.notes.NotesActivity;
 
 public class BackButtonHelper {

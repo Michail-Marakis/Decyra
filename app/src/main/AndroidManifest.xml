@@ -37,11 +37,11 @@
             android:exported="false" />
 
         <activity android:name=".ui.UserInfoActivity" />
-
+        <activity android:name=".ui.modeSelection.ModeSelectionComposeActivity" />
         <activity android:name=".ui.LoginActivity" />
 
         <activity
-            android:name=".ui.ModeSelectionActivity"
+            android:name=".ui.modeSelection.ModeSelectionActivity"
             android:exported="false" />
 
         <activity android:name=".ui.ErasmusChatActivity" />

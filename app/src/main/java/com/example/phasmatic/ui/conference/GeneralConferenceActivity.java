@@ -28,7 +28,7 @@ import com.example.phasmatic.data.model.User;
 import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.extras.NotificationSender;
 import com.example.phasmatic.extras.ProfileImageManager;
-import com.example.phasmatic.ui.ModeSelectionActivity;
+import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;

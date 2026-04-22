@@ -1,11 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
     namespace 'com.example.phasmatic'
-    compileSdk 36
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.example.phasmatic"
@@ -32,6 +34,15 @@ android {
     buildFeatures {
         viewBinding true
         mlModelBinding false
+        compose true
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.5.14"
     }
 
     aaptOptions {
@@ -40,12 +51,8 @@ android {
 
     packagingOptions {
         resources {
-            // Αγνοούμε το INDEX.LIST
             excludes += "META-INF/INDEX.LIST"
-            // Αγνοούμε το Netty versions properties (ή παίρνουμε το πρώτο αν χρειάζεται)
             pickFirsts += "META-INF/io.netty.versions.properties"
-
-            // Λύνουμε το conflict με τα jakarta mail/activation
             excludes += "META-INF/LICENSE.md"
             excludes += "META-INF/NOTICE.md"
         }
@@ -80,9 +87,20 @@ dependencies {
     // ML Kit face detection
     implementation 'com.google.mlkit:face-detection:16.1.7'
 
-    // Kotlin & Lifecycle
-    implementation("androidx.concurrent:concurrent-futures-ktx:1.1.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
+    // Kotlin & compose
+    implementation platform("androidx.compose:compose-bom:2026.03.01")
+
+    implementation "androidx.activity:activity-compose:1.9.0"
+
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.ui:ui-tooling-preview"
+
+    implementation "androidx.compose.material3:material3"
+
+    // icons
+    implementation "androidx.compose.material:material-icons-extended"
+
+    debugImplementation "androidx.compose.ui:ui-tooling"
 
     // Testing
     testImplementation libs.junit

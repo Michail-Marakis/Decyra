@@ -6,16 +6,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.processing.SurfaceProcessorNode;
 
 import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.UserInfo;
 import com.example.phasmatic.extras.InternetConnection;
+import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
