@@ -1,5 +1,6 @@
 package com.example.phasmatic.ui.modeSelection
 
+import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -10,19 +11,33 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.ImageView
+import androidx.compose.ui.text.font.Font
 import com.bumptech.glide.Glide
+import kotlin.math.sin
+
+// --- PREMIUM COLOR PALETTE ---
+val InkBlack = Color(0xFF000000)
+val InkDeep = Color(0xFF1E1B4B)
+val HeroIndigoEnd = Color(0xFF312E81)
+val OrchidPrimary = Color(0xFFD946EF)
+val OrchidLight = Color(0xFFFDF4FF)
+val SoftPinkGlow = Color(0xFFFFE4FF)
+val PureWhite = Color(0xFFFFFFFF)
 
 @Composable
 fun ModeSelectionScreen(
@@ -40,235 +55,333 @@ fun ModeSelectionScreen(
     onLogoutClick: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
-
-    // Deep Cinematic Background
-    val backgroundBrush = Brush.verticalGradient(
-        0.0f to Color(0xFF040B14),
-        0.5f to Color(0xFF0A192F),
-        1.0f to Color(0xFF040B14)
-    )
+    // Καλούμε το Haptic Feedback
+    val haptic = LocalHapticFeedback.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = Color.Transparent
-    ) { padding ->
+        containerColor = PureWhite
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(backgroundBrush)
+                .padding(innerPadding)
         ) {
-            // Ambient Glows
-            GlowOrb(Modifier.align(Alignment.TopStart).offset(x = (-50).dp, y = 100.dp), Color(0xFF64FFDA).copy(0.15f))
-            GlowOrb(Modifier.align(Alignment.BottomEnd).offset(x = 50.dp, y = (-100).dp), Color(0xFF7C4DFF).copy(0.2f))
+            AnimatedMeshBackground()
 
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 24.dp),
-                contentPadding = PaddingValues(top = 60.dp, bottom = 40.dp)
+                    .padding(horizontal = 20.dp),
+                contentPadding = PaddingValues(top = 24.dp, bottom = 40.dp)
             ) {
-                // Header Row
+                // --- TOP BAR ---
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column {
-                            Text(
-                                "Welcome back,",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White.copy(alpha = 0.6f)
-                            )
-                            Text(
-                                userFullName?.split(" ")?.firstOrNull() ?: "Explorer",
-                                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                                color = Color.White
-                            )
-                        }
-
-                        // Profile Avatar with Pulse Effect
+                        Text(
+                            text = "DECYRA",
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                fontWeight = FontWeight.Black,
+                                fontSize = 28.sp, // Μεγαλύτερο για να γεμίσει το κενό
+                                letterSpacing = 8.sp, // Wide spacing για premium look
+                                brush = Brush.linearGradient(
+                                    colors = listOf(InkDeep, OrchidPrimary) // Gradient που ενώνει Indigo και Pink
+                                )
+                            ),
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
                         Box {
                             ProfileAvatar(
                                 imageUrl = profileImageUrl,
-                                onClick = { menuExpanded = true }
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    menuExpanded = true
+                                }
                             )
+
                             ProfileMenuDropdown(
                                 expanded = menuExpanded,
                                 onDismiss = { menuExpanded = false },
-                                onChatClick = onChatClick,
-                                onConferenceClick = onConferenceClick,
-                                onNotesClick = onNotesClick,
-                                onLogoutClick = onLogoutClick,
-                                onAccountClick = onProfileClick
+                                onChatClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onChatClick()
+                                },
+                                onConferenceClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onConferenceClick()
+                                },
+                                onNotesClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onNotesClick()
+                                },
+                                onLogoutClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onLogoutClick()
+                                },
+                                onAccountClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onProfileClick()
+                                }
                             )
+                        }
+                    }
+                }
+
+                item { Spacer(Modifier.height(32.dp)) }
+
+                item {
+                    HeroGlassCard(name = userFullName?.split(" ")?.firstOrNull() ?: "Scholar")
+                }
+
+                item { Spacer(Modifier.height(48.dp)) }
+
+                // --- MISSIONS SECTION ---
+                item {
+                    Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+                        AnimatedShimmerTitle(text = "CHOOSE YOUR MISSION")
+
+                        Spacer(Modifier.height(24.dp))
+
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            ModeCard(
+                                title = "Erasmus+",
+                                subtitle = "Global Academic Mobility",
+                                icon = Icons.Default.Public
+                            ) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onModeSelected("erasmus")
+                            }
+                            ModeCard(
+                                title = "Master's Degree",
+                                subtitle = "Higher Education Research",
+                                icon = Icons.Default.School
+                            ) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onModeSelected("master")
+                            }
+                            ModeCard(
+                                title = "Career Path",
+                                subtitle = "Professional Placement",
+                                icon = Icons.Default.AutoGraph
+                            ) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onModeSelected("career")
+                            }
                         }
                     }
                 }
 
                 item { Spacer(Modifier.height(40.dp)) }
 
-                // Hero Section
                 item {
-                    Text(
-                        "Explore Your Future",
-                        style = MaterialTheme.typography.displaySmall.copy(
-                            fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = (-1).sp
-                        ),
-                        color = Color.White
-                    )
-                    Text(
-                        "Select a path to begin your journey",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.5f)
-                    )
-                }
-
-                item { Spacer(Modifier.height(32.dp)) }
-
-                // Interactive Mode Cards
-                item {
-                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        ModeCard(
-                            title = "Erasmus",
-                            subtitle = "International Education",
-                            icon = Icons.Default.Public,
-                            mainColor = Color(0xFF00E5FF),
-                            onClick = { onModeSelected("erasmus") }
-                        )
-                        ModeCard(
-                            title = "Master",
-                            subtitle = "Specialized Knowledge",
-                            icon = Icons.Default.School,
-                            mainColor = Color(0xFFFF4081),
-                            onClick = { onModeSelected("master") }
-                        )
-                        ModeCard(
-                            title = "Career",
-                            subtitle = "Professional Growth",
-                            icon = Icons.Default.Work,
-                            mainColor = Color(0xFF7C4DFF),
-                            onClick = { onModeSelected("career") }
-                        )
-                    }
-                }
-
-                item { Spacer(Modifier.height(32.dp)) }
-
-                // Enhanced Video Preview / Feature Card
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(28.dp))
-                            .background(Color.White.copy(alpha = 0.05f))
-                            .border(1.dp, Color.White.copy(alpha = 0.1f), RoundedCornerShape(28.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.PlayCircleFilled, null, tint = Color.White, modifier = Modifier.size(48.dp))
-                            Spacer(Modifier.height(8.dp))
-                            Text("Introductory Video", color = Color.White.copy(0.7f))
-                        }
-                    }
-                }
-
-                item { Spacer(Modifier.height(24.dp)) }
-
-                // Forum Action
-                item {
-                    Button(
-                        onClick = onForumClick,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(64.dp),
-                        shape = RoundedCornerShape(20.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-                    ) {
-                        Icon(Icons.Default.Forum, null, tint = Color.Black)
-                        Spacer(Modifier.width(12.dp))
-                        Text("Open Community Forum", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                    }
+                    ExtremeForumButtonUnified(onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onForumClick()
+                    })
                 }
             }
         }
     }
 }
 
-@Composable
-fun ModeCard(title: String, subtitle: String, icon: ImageVector, mainColor: Color, onClick: () -> Unit) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(if (isPressed) 0.96f else 1f, label = "scale")
+// --- Υπόλοιπα Composables με ενσωματωμένο feedback ---
 
+@Composable
+fun HeroGlassCard(name: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .scale(scale)
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color.White.copy(alpha = 0.03f))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(24.dp))
-            .clickable(interactionSource = interactionSource, indication = null) { onClick() }
-            .padding(20.dp)
+            .height(180.dp)
+            .clip(RoundedCornerShape(32.dp))
+            .background(
+                Brush.linearGradient(
+                    colors = listOf(InkDeep, HeroIndigoEnd),
+                    start = Offset(0f, 0f),
+                    end = Offset(1000f, 1000f)
+                )
+            )
+            .padding(24.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .background(mainColor.copy(alpha = 0.15f), CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(icon, null, tint = mainColor, modifier = Modifier.size(28.dp))
-            }
-            Spacer(Modifier.width(20.dp))
+        Box(
+            modifier = Modifier
+                .size(140.dp)
+                .offset(x = 160.dp, y = (-40).dp)
+                .background(OrchidPrimary.copy(alpha = 0.25f), CircleShape)
+                .blur(45.dp)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            NeuralPrismAura()
+            Spacer(Modifier.width(24.dp))
             Column {
-                Text(title, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = Color.White)
-                Text(subtitle, fontSize = 14.sp, color = Color.White.copy(alpha = 0.5f))
+                Text("Welcome back,", style = MaterialTheme.typography.bodyLarge, color = Color.White.copy(0.6f))
+                Text(name, style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Black, color = Color.White))
             }
-            Spacer(Modifier.weight(1f))
-            Icon(Icons.Default.ChevronRight, null, tint = Color.White.copy(alpha = 0.3f))
         }
+    }
+}
+
+@Composable
+fun ModeCard(title: String, subtitle: String, icon: ImageVector, onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.98f else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessLow), label = "scale"
+    )
+
+    Surface(
+        onClick = onClick,
+        interactionSource = interactionSource,
+        modifier = Modifier.fillMaxWidth().height(90.dp).scale(scale),
+        shape = RoundedCornerShape(20.dp),
+        color = Color.White,
+        border = BorderStroke(1.dp, Color(0xFFF1F5F9))
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Canvas(modifier = Modifier.fillMaxSize().align(Alignment.CenterEnd)) {
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(OrchidPrimary.copy(alpha = 0.04f), Color.Transparent),
+                        center = Offset(size.width, size.height / 2),
+                        radius = size.width * 0.6f
+                    )
+                )
+            }
+
+            Row(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+                Box(modifier = Modifier.size(48.dp).clip(RoundedCornerShape(14.dp)).background(OrchidLight), contentAlignment = Alignment.Center) {
+                    Icon(icon, null, tint = OrchidPrimary, modifier = Modifier.size(24.dp))
+                }
+                Spacer(Modifier.width(16.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(title, fontWeight = FontWeight.Bold, fontSize = 17.sp, color = InkDeep)
+                    Text(subtitle, fontSize = 12.sp, color = Color.Gray)
+                }
+                Icon(Icons.Default.ArrowForward, null, tint = Color.LightGray.copy(0.6f), modifier = Modifier.size(18.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun ExtremeForumButtonUnified(onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(if (isPressed) 0.94f else 1f, label = "scale")
+
+    val infiniteTransition = rememberInfiniteTransition(label = "neon")
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(if (isPressed) 1200 else 4000, easing = LinearEasing)), label = "rot"
+    )
+
+    Box(
+        modifier = Modifier.fillMaxWidth().height(72.dp).scale(scale)
+            .shadow(if (isPressed) 10.dp else 25.dp, RoundedCornerShape(28.dp), spotColor = OrchidPrimary)
+            .clip(RoundedCornerShape(28.dp))
+            .background(Brush.linearGradient(colors = listOf(InkDeep, HeroIndigoEnd)))
+            .clickable(interactionSource = interactionSource, indication = null) { onClick() }
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize().rotate(rotation)) {
+            drawRoundRect(
+                brush = Brush.sweepGradient(0.0f to OrchidPrimary, 0.5f to Color.Transparent, 1.0f to OrchidPrimary, center = center),
+                style = Stroke(width = 3.dp.toPx()),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(28.dp.toPx())
+            )
+        }
+        Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+            Icon(Icons.Default.Diversity3, null, tint = OrchidPrimary, modifier = Modifier.size(24.dp))
+            Spacer(Modifier.width(16.dp))
+            Text("ACCESS COMMUNITY", fontWeight = FontWeight.Black, letterSpacing = 2.sp, color = Color.White)
+        }
+    }
+}
+
+@Composable
+fun AnimatedShimmerTitle(text: String) {
+    val shimmerColors = listOf(InkBlack, InkBlack, OrchidPrimary, InkBlack, InkBlack)
+    val transition = rememberInfiniteTransition(label = "shimmer")
+    val translateAnim by transition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(3000, easing = LinearEasing)), label = "s"
+    )
+
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelLarge.copy(
+            fontWeight = FontWeight.Black,
+            letterSpacing = 2.sp,
+            brush = Brush.linearGradient(
+                colors = shimmerColors,
+                start = Offset(translateAnim - 500f, translateAnim - 500f),
+                end = Offset(translateAnim, translateAnim)
+            )
+        )
+    )
+}
+
+@Composable
+fun AnimatedMeshBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "mesh")
+    val wave by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(10000, easing = LinearEasing), RepeatMode.Reverse), label = "wave"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(OrchidPrimary.copy(alpha = 0.12f), Color.Transparent),
+                center = Offset(size.width * (0.85f + (0.05f * sin(wave * 2 * Math.PI.toFloat()))), size.height * 0.1f),
+                radius = 1100f
+            )
+        )
+    }
+}
+
+@Composable
+fun NeuralPrismAura() {
+    val infiniteTransition = rememberInfiniteTransition(label = "prism")
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(15000, easing = LinearEasing)), label = "rot"
+    )
+    Box(
+        modifier = Modifier.size(85.dp).rotate(rotation)
+            .drawBehind {
+                drawCircle(brush = Brush.sweepGradient(listOf(OrchidPrimary, Color.Transparent, OrchidPrimary)), style = Stroke(width = 6f, cap = StrokeCap.Round))
+                drawCircle(brush = Brush.radialGradient(listOf(OrchidPrimary.copy(0.3f), Color.Transparent)), radius = size.width / 1.5f)
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(Icons.Default.Layers, null, tint = OrchidPrimary, modifier = Modifier.size(30.dp))
     }
 }
 
 @Composable
 fun ProfileAvatar(imageUrl: String?, onClick: () -> Unit) {
     Box(
-        modifier = Modifier
-            .size(52.dp)
-            .clip(CircleShape)
-            .background(Color.White.copy(alpha = 0.1f))
-            .border(1.5.dp, Brush.linearGradient(listOf(Color(0xFF00E5FF), Color(0xFF7C4DFF))), CircleShape)
-            .clickable { onClick() }
+        modifier = Modifier.size(48.dp).clip(CircleShape).background(SoftPinkGlow).border(2.dp, OrchidPrimary, CircleShape).clickable { onClick() }
     ) {
         if (!imageUrl.isNullOrEmpty()) {
-            AndroidView(
-                factory = { context ->
-                    ImageView(context).apply {
-                        scaleType = ImageView.ScaleType.CENTER_CROP
-                        Glide.with(context).load(imageUrl).circleCrop().into(this)
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            )
+            AndroidView(factory = { context ->
+                ImageView(context).apply {
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                    Glide.with(context).load(imageUrl).circleCrop().into(this)
+                }
+            }, modifier = Modifier.fillMaxSize())
         } else {
-            Icon(Icons.Default.AccountCircle, null, tint = Color.White, modifier = Modifier.fillMaxSize().padding(8.dp))
+            Icon(Icons.Default.Person, null, tint = OrchidPrimary, modifier = Modifier.fillMaxSize().padding(8.dp))
         }
     }
-}
-
-@Composable
-fun GlowOrb(modifier: Modifier, color: Color) {
-    Box(
-        modifier = modifier
-            .size(300.dp)
-            .background(color, CircleShape)
-            .blur(100.dp)
-    )
 }
 
 @Composable
@@ -279,43 +392,19 @@ fun ProfileMenuDropdown(
     onChatClick: () -> Unit,
     onConferenceClick: () -> Unit,
     onNotesClick: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    onAccountClickAction: () -> Unit = onAccountClick
 ) {
-    MaterialTheme(
-        colorScheme = darkColorScheme(surface = Color(0xFF161B22)),
-        shapes = Shapes(extraSmall = RoundedCornerShape(16.dp))
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismiss,
+        modifier = Modifier.width(220.dp).background(PureWhite).border(1.dp, SoftPinkGlow, RoundedCornerShape(16.dp))
     ) {
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = onDismiss,
-            modifier = Modifier.width(200.dp).border(0.5.dp, Color.White.copy(0.1f), RoundedCornerShape(16.dp))
-        ) {
-            DropdownMenuItem(
-                text = { Text("Account") },
-                leadingIcon = { Icon(Icons.Default.Person, null) },
-                onClick = { onDismiss(); onAccountClick() }
-            )
-            DropdownMenuItem(
-                text = { Text("Messages") },
-                leadingIcon = { Icon(Icons.Default.Chat, null) },
-                onClick = { onDismiss(); onChatClick() }
-            )
-            DropdownMenuItem(
-                text = { Text("Conferences") },
-                leadingIcon = { Icon(Icons.Default.VideoCall, null) },
-                onClick = { onDismiss(); onConferenceClick() }
-            )
-            DropdownMenuItem(
-                text = { Text("Notes") },
-                leadingIcon = { Icon(Icons.Default.Description, null) },
-                onClick = { onDismiss(); onNotesClick() }
-            )
-            Divider(modifier = Modifier.padding(vertical = 4.dp), color = Color.White.copy(0.05f))
-            DropdownMenuItem(
-                text = { Text("Logout", color = Color(0xFFFF5252)) },
-                leadingIcon = { Icon(Icons.Default.Logout, null, tint = Color(0xFFFF5252)) },
-                onClick = { onDismiss(); onLogoutClick() }
-            )
-        }
+        DropdownMenuItem(text = { Text("My Account") }, leadingIcon = { Icon(Icons.Outlined.AccountCircle, null, tint = OrchidPrimary) }, onClick = onAccountClickAction)
+        DropdownMenuItem(text = { Text("Messages") }, leadingIcon = { Icon(Icons.Outlined.ChatBubbleOutline, null, tint = OrchidPrimary) }, onClick = onChatClick)
+        DropdownMenuItem(text = { Text("Conferences") }, leadingIcon = { Icon(Icons.Outlined.VideoCall, null, tint = OrchidPrimary) }, onClick = onConferenceClick)
+        DropdownMenuItem(text = { Text("Notes") }, leadingIcon = { Icon(Icons.Outlined.Description, null, tint = OrchidPrimary) }, onClick = onNotesClick)
+        Divider(modifier = Modifier.padding(vertical = 4.dp), color = SoftPinkGlow)
+        DropdownMenuItem(text = { Text("Logout", color = Color(0xFFEF4444), fontWeight = FontWeight.Bold) }, leadingIcon = { Icon(Icons.Default.Logout, null, tint = Color(0xFFEF4444)) }, onClick = onLogoutClick)
     }
 }
