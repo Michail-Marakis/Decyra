@@ -21,12 +21,18 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
 import com.example.phasmatic.data.model.ReviewComment
+import com.example.phasmatic.ui.modeSelection.OrchidPrimary
+import com.example.phasmatic.ui.modeSelection.ProfileAvatar
+import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
+import com.example.phasmatic.ui.modeSelection.PureWhite
+import com.example.phasmatic.ui.modeSelection.SoftPinkGlow
 import kotlin.math.sin
 
 val InkBlack = Color(0xFF000000)
@@ -57,9 +63,15 @@ fun ReviewDetailScreen(
     onCommentTextChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onSendCommentClick: () -> Unit,
-    onCommentUserClick: (ReviewComment) -> Unit
+    onCommentUserClick: (ReviewComment) -> Unit,
+    onProfileClick: () -> Unit,
+    onChatClick: () -> Unit,
+    onConferenceClick: () -> Unit,
+    onNotesClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
+    var menuExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -92,11 +104,41 @@ fun ReviewDetailScreen(
                             )
                         }
 
-                        ProfileAvatar(
-                            imageUrl = profileImageUrl,
-                            bitmap = profileBitmap,
-                            onClick = {}
-                        )
+                        Box {
+                            ProfileAvatar(
+                                imageUrl = profileImageUrl,
+                                profileBitmap = profileBitmap,
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    menuExpanded = true
+                                }
+                            )
+
+                            ProfileMenuDropdown(
+                                expanded = menuExpanded,
+                                onDismiss = { menuExpanded = false },
+                                onChatClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onChatClick()
+                                },
+                                onConferenceClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onConferenceClick()
+                                },
+                                onNotesClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onNotesClick()
+                                },
+                                onLogoutClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onLogoutClick()
+                                },
+                                onAccountClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onProfileClick()
+                                }
+                            )
+                        }
                     }
                 }
 
@@ -132,6 +174,11 @@ fun ReviewDetailScreen(
                             userNameMap = userNameMap,
                             userAcademicMap = userAcademicMap,
                             onClick = {
+
+                                haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
+                                onCommentUserClick(comment)
+                            },
+                            onAvatarClick = {
                                 haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
                                 onCommentUserClick(comment)
                             }
@@ -259,7 +306,8 @@ fun CommentCard(
     comment: ReviewComment,
     userNameMap: Map<String, String>,
     userAcademicMap: Map<String, String>,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onAvatarClick: () -> Unit
 ) {
     val name = userNameMap[comment.user_id] ?: comment.user_name ?: "User"
     val academic = userAcademicMap[comment.user_id] ?: comment.academic_profile ?: ""
@@ -275,7 +323,10 @@ fun CommentCard(
             modifier = Modifier.padding(14.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            CommentUserAvatar(userId = comment.user_id)
+            CommentUserAvatar(
+                userId = comment.user_id,
+                onClick = onAvatarClick
+            )
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -307,7 +358,10 @@ fun CommentCard(
 }
 
 @Composable
-fun CommentUserAvatar(userId: String?) {
+fun CommentUserAvatar(
+    userId: String?,
+    onClick: () -> Unit
+) {
     var avatarUrl by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(userId) {
@@ -331,6 +385,7 @@ fun CommentUserAvatar(userId: String?) {
             .clip(CircleShape)
             .background(SoftPinkGlow)
             .border(1.5.dp, OrchidPrimary, CircleShape)
+            .clickable { onClick() }
     ) {
         if (!avatarUrl.isNullOrEmpty()) {
             AndroidView(
@@ -354,7 +409,6 @@ fun CommentUserAvatar(userId: String?) {
         }
     }
 }
-
 @Composable
 fun EmptyCommentsState() {
     Column(

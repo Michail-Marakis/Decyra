@@ -22,12 +22,18 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
 import com.example.phasmatic.data.model.ForumReview
+import com.example.phasmatic.ui.modeSelection.OrchidPrimary
+import com.example.phasmatic.ui.modeSelection.ProfileAvatar
+import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
+import com.example.phasmatic.ui.modeSelection.PureWhite
+import com.example.phasmatic.ui.modeSelection.SoftPinkGlow
 import kotlin.math.sin
 
 val InkBlack = Color(0xFF000000)
@@ -57,8 +63,14 @@ fun ForumScreen(
     onAddReviewClick: () -> Unit,
     onReviewClick: (ForumReview) -> Unit,
     onLikeToggle: (ForumReview, Boolean) -> Unit,
-    isReviewLiked: (ForumReview) -> Boolean
+    isReviewLiked: (ForumReview) -> Boolean,
+    onProfileClick: () -> Unit,
+    onChatClick: () -> Unit,
+    onConferenceClick: () -> Unit,
+    onNotesClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
+    var menuExpanded by remember { mutableStateOf(false) }
     var showCountryDropdown by remember { mutableStateOf(false) }
     var showUniversityDropdown by remember { mutableStateOf(false) }
 
@@ -114,11 +126,41 @@ fun ForumScreen(
                                 )
                             )
                         }
-                        ProfileAvatar(
-                            imageUrl = profileImageUrl,
-                            bitmap = profileBitmap,
-                            onClick = {}
-                        )
+                        Box {
+                            ProfileAvatar(
+                                imageUrl = profileImageUrl,
+                                profileBitmap = profileBitmap,
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    menuExpanded = true
+                                }
+                            )
+
+                            ProfileMenuDropdown(
+                                expanded = menuExpanded,
+                                onDismiss = { menuExpanded = false },
+                                onChatClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onChatClick()
+                                },
+                                onConferenceClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onConferenceClick()
+                                },
+                                onNotesClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onNotesClick()
+                                },
+                                onLogoutClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onLogoutClick()
+                                },
+                                onAccountClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onProfileClick()
+                                }
+                            )
+                        }
                     }
                 }
 

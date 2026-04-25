@@ -25,12 +25,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
 import com.example.phasmatic.R
+import com.example.phasmatic.ui.modeSelection.ProfileAvatar
+import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
 import kotlin.math.sin
 
 val InkBlack = Color(0xFF000000)
@@ -53,8 +57,14 @@ fun AddNoteScreen(
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    onChatClick: () -> Unit,
+    onConferenceClick: () -> Unit,
+    onNotesClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,12 +83,15 @@ fun AddNoteScreen(
             AddNoteTopBar(
                 onBackClick = onBackClick,
                 profileImageUrl = profileImageUrl,
-                profileBitmap = profileBitmap
+                profileBitmap = profileBitmap,
+                onProfileClick = onProfileClick,
+                onChatClick = onChatClick,
+                onConferenceClick = onConferenceClick,
+                onNotesClick = onNotesClick,
+                onLogoutClick = onLogoutClick
             )
 
             Spacer(Modifier.height(24.dp))
-
-            AddNoteHero(isEditing = isEditing)
 
             Spacer(Modifier.height(24.dp))
 
@@ -110,8 +123,18 @@ fun AddNoteScreen(
 fun AddNoteTopBar(
     onBackClick: () -> Unit,
     profileImageUrl: String?,
-    profileBitmap: Bitmap?
+    profileBitmap: Bitmap?,
+    onProfileClick: () -> Unit,
+    onChatClick: () -> Unit,
+    onConferenceClick: () -> Unit,
+    onNotesClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
+
+    var menuExpanded by remember { mutableStateOf(false) }
+    // Καλούμε το Haptic Feedback
+    val haptic = LocalHapticFeedback.current
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -137,65 +160,40 @@ fun AddNoteTopBar(
             )
         )
 
-        ProfileAvatar(
-            imageUrl = profileImageUrl,
-            profileBitmap = profileBitmap,
-            size = 46.dp
-        )
-    }
-}
-
-@Composable
-fun AddNoteHero(isEditing: Boolean) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(170.dp)
-            .clip(RoundedCornerShape(32.dp))
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(InkDeep, HeroIndigoEnd),
-                    start = Offset(0f, 0f),
-                    end = Offset(1000f, 1000f)
-                )
+        Box {
+            ProfileAvatar(
+                imageUrl = profileImageUrl,
+                profileBitmap = profileBitmap,
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    menuExpanded = true
+                }
             )
-            .padding(24.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(130.dp)
-                .offset(x = 190.dp, y = (-40).dp)
-                .background(OrchidPrimary.copy(alpha = 0.23f), CircleShape)
-                .blur(42.dp)
-        )
 
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            NeuralPrismAura()
-            Spacer(Modifier.width(22.dp))
-            Column {
-                Text(
-                    if (isEditing) "Refine your" else "Capture a new",
-                    color = Color.White.copy(alpha = 0.7f),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    if (isEditing) "Note" else "Note",
-                    color = Color.White,
-                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Black)
-                )
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    if (isEditing)
-                        "Update your note title and description with the same clean workflow."
-                    else
-                        "Write down an idea, reminder, or insight in your personal space.",
-                    color = Color.White.copy(alpha = 0.78f),
-                    fontSize = 13.sp
-                )
-            }
+            ProfileMenuDropdown(
+                expanded = menuExpanded,
+                onDismiss = { menuExpanded = false },
+                onChatClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onChatClick()
+                },
+                onConferenceClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onConferenceClick()
+                },
+                onNotesClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onNotesClick()
+                },
+                onLogoutClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLogoutClick()
+                },
+                onAccountClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onProfileClick()
+                }
+            )
         }
     }
 }

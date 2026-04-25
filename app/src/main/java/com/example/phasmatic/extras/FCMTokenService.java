@@ -13,9 +13,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.phasmatic.R;
-import com.example.phasmatic.ui.Chat.ChatActivity;
-import com.example.phasmatic.ui.conference.GeneralConferenceActivity;
-import com.example.phasmatic.ui.conference.GeneralConferenceActivity;
+import com.example.phasmatic.ui.Chat.chat.ChatActivity;
+import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;

@@ -70,6 +70,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -79,6 +81,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
 import com.example.phasmatic.R
 import com.example.phasmatic.data.model.Note
+import com.example.phasmatic.ui.modeSelection.ProfileAvatar
+import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
 import java.text.DateFormat
 import kotlin.math.sin
 
@@ -100,7 +104,12 @@ fun NotesScreen(
     onNoteClick: (Note) -> Unit,
     onDeleteNote: (Note) -> Unit,
     onPinNote: (Note) -> Unit,
-    onUnpinNote: (Note) -> Unit
+    onUnpinNote: (Note) -> Unit,
+    onProfileClick: () -> Unit,
+    onChatClick: () -> Unit,
+    onConferenceClick: () -> Unit,
+    onNotesClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -119,12 +128,15 @@ fun NotesScreen(
             NotesTopBar(
                 profileImageUrl = profileImageUrl,
                 profileBitmap = profileBitmap,
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
+                onProfileClick = onProfileClick,
+                onChatClick = onChatClick,
+                onConferenceClick = onConferenceClick,
+                onNotesClick = onNotesClick,
+                onLogoutClick = onLogoutClick
             )
 
             Spacer(Modifier.height(24.dp))
-
-            NotesHero()
 
             Spacer(Modifier.height(18.dp))
 
@@ -159,8 +171,17 @@ fun NotesScreen(
 fun NotesTopBar(
     profileImageUrl: String?,
     profileBitmap: Bitmap?,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    onChatClick: () -> Unit,
+    onConferenceClick: () -> Unit,
+    onNotesClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
+
+    var menuExpanded by remember { mutableStateOf(false) }
+    // Καλούμε το Haptic Feedback
+    val haptic = LocalHapticFeedback.current
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -190,64 +211,40 @@ fun NotesTopBar(
             )
         )
 
-        ProfileAvatar(
-            imageUrl = profileImageUrl,
-            profileBitmap = profileBitmap,
-            size = 46.dp
-        )
-    }
-}
-
-@Composable
-fun NotesHero() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(170.dp)
-            .clip(RoundedCornerShape(32.dp))
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(InkDeep, HeroIndigoEnd),
-                    start = Offset(0f, 0f),
-                    end = Offset(1000f, 1000f)
-                )
+        Box {
+            ProfileAvatar(
+                imageUrl = profileImageUrl,
+                profileBitmap = profileBitmap,
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    menuExpanded = true
+                }
             )
-            .padding(24.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(130.dp)
-                .offset(x = 190.dp, y = (-40).dp)
-                .background(OrchidPrimary.copy(alpha = 0.23f), CircleShape)
-                .blur(42.dp)
-        )
 
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            NeuralPrismAura()
-            Spacer(Modifier.width(22.dp))
-            Column {
-                Text(
-                    "Capture your",
-                    color = Color.White.copy(alpha = 0.7f),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    "Notes",
-                    color = Color.White,
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        fontWeight = FontWeight.Black
-                    )
-                )
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    "Organize ideas, keep pinned priorities first, and edit anytime.",
-                    color = Color.White.copy(alpha = 0.78f),
-                    fontSize = 13.sp
-                )
-            }
+            ProfileMenuDropdown(
+                expanded = menuExpanded,
+                onDismiss = { menuExpanded = false },
+                onChatClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onChatClick()
+                },
+                onConferenceClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onConferenceClick()
+                },
+                onNotesClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onNotesClick()
+                },
+                onLogoutClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLogoutClick()
+                },
+                onAccountClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onProfileClick()
+                }
+            )
         }
     }
 }
@@ -342,7 +339,7 @@ fun NoteCard(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = note.title?.let { if (note.isPinned) "📌 $it" else it } ?: "Untitled note",
+                            text = note.title,
                             color = InkDeep,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,

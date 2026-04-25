@@ -28,6 +28,11 @@ import com.example.phasmatic.R
 import com.example.phasmatic.data.model.ForumReview
 import com.example.phasmatic.extras.InternetConnection
 import com.example.phasmatic.extras.ProfileImageManager
+import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
+import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
+import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
+import com.example.phasmatic.ui.login.LoginActivity
+import com.example.phasmatic.ui.notes.Notes.NotesActivity
 import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -143,9 +148,75 @@ class NewReviewComposeActivity : AppCompatActivity() {
                         ).show()
                     }
                 },
-                onSaveClick = { saveReview() }
+                onSaveClick = { saveReview() },
+
+                onProfileClick = {
+                    startActivity(
+                        Intent(this, AccountActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                },
+
+                onChatClick = {
+                    startActivity(
+                        Intent(this, UsersActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                    finish()
+                },
+
+                onConferenceClick = {
+                    startActivity(
+                        Intent(this, GeneralConferenceActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                    finish()
+                },
+
+                onNotesClick = {
+                    startActivity(
+                        Intent(this, NotesActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                    finish()
+                },
+
+                onLogoutClick = {
+                    logout(userId)
+                }
             )
         }
+    }
+
+    private fun Intent.putUserExtras(
+        userId: String?,
+        userFullName: String?,
+        userEmail: String?,
+        userPhone: String?
+    ): Intent {
+        putExtra("userId", userId)
+        putExtra("userFullName", userFullName)
+        putExtra("userEmail", userEmail)
+        putExtra("userPhone", userPhone)
+        return this
+    }
+
+    private fun logout(userId: String?) {
+        if (userId.isNullOrEmpty()) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
+        usersRef.child(userId).child("remember").setValue(0)
+            .addOnCompleteListener {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
     }
 
     private fun loadProfilePhoto() {

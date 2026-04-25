@@ -10,7 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.phasmatic.extras.InternetConnection
 import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.ChatActivity
+import com.example.phasmatic.ui.Chat.chat.ChatActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

@@ -96,10 +96,18 @@
 
         <activity android:name=".ui.Profile_Menu.public_profile.PublicProfileActivity" />
 
-        <activity android:name=".ui.Chat.UsersActivity" />
-        <activity android:name=".ui.Chat.ChatActivity"/>
-        <activity android:name=".ui.conference.ConferenceActivity"/>
-        <activity android:name=".ui.conference.GeneralConferenceActivity" />
+        <activity android:name=".ui.Chat.users_to_chat.UsersActivity" />
+        <activity android:name=".ui.Chat.users_to_chat.UsersComposeActivity" />
+        <activity android:name=".ui.Chat.chat.ChatActivity"/>
+        <activity android:name=".ui.Chat.chat.ChatComposeActivity"/>
+
+        <activity android:name=".ui.conference.conference_1_N.ConferenceActivity"/>
+        <activity android:name=".ui.conference.conference_1_N.ConferenceComposeActivity"/>
+
+
+        <activity android:name=".ui.conference.general_conference.GeneralConferenceActivity" />
+        <activity android:name=".ui.conference.general_conference.GeneralConferenceComposeActivity" />
+
         <activity android:name=".ui.CareerChatActivity" />
 
         <service
