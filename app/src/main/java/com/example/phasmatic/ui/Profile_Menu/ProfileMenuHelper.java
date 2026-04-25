@@ -9,7 +9,7 @@ import androidx.appcompat.widget.PopupMenu;
 import com.example.phasmatic.R;
 import com.example.phasmatic.ui.conference.GeneralConferenceActivity;
 import com.example.phasmatic.ui.Chat.UsersActivity;
-import com.example.phasmatic.ui.LoginActivity;
+import com.example.phasmatic.ui.login.LoginActivity;
 import com.example.phasmatic.ui.notes.NotesActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

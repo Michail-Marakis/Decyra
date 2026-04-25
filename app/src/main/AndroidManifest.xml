@@ -33,12 +33,16 @@
         </activity>
 
         <activity
-            android:name=".ui.RegisterActivity"
+            android:name=".ui.register.RegisterActivity"
             android:exported="false" />
+        <activity android:name=".ui.register.RegisterComposeActivity" />
 
-        <activity android:name=".ui.UserInfoActivity" />
+        <activity android:name=".ui.userinfo.UserInfoActivity" />
+        <activity android:name=".ui.userinfo.UserInfoComposeActivity" />
         <activity android:name=".ui.modeSelection.ModeSelectionComposeActivity" />
-        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.login.LoginActivity" />
+        <activity android:name=".ui.login.LoginComposeActivity" />
+
 
         <activity
             android:name=".ui.modeSelection.ModeSelectionActivity"
@@ -71,7 +75,8 @@
         <activity android:name=".ui.Forum.NewReviewActivity" />
 
         <activity android:name=".ui.Forum.ReviewDetailActivity" />
-        <activity android:name=".ui.ForgetActivity" />
+        <activity android:name=".ui.forget.ForgetActivity" />
+        <activity android:name=".ui.forget.ForgetComposeActivity" />
 
         <activity android:name=".ui.Profile_Menu.PublicProfileActivity" />
 

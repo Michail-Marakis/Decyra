@@ -1,6 +1,5 @@
 package com.example.phasmatic.ui.modeSelection
 
-import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,9 +25,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.ImageView
-import androidx.compose.ui.text.font.Font
 import com.bumptech.glide.Glide
 import kotlin.math.sin
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.asImageBitmap
+import com.example.phasmatic.R
 
 // --- PREMIUM COLOR PALETTE ---
 val InkBlack = Color(0xFF000000)
@@ -46,6 +48,7 @@ fun ModeSelectionScreen(
     userEmail: String?,
     userPhone: String?,
     profileImageUrl: String?,
+    profileBitmap: Bitmap?,
     onModeSelected: (String) -> Unit,
     onForumClick: () -> Unit,
     onProfileClick: () -> Unit,
@@ -97,6 +100,7 @@ fun ModeSelectionScreen(
                         Box {
                             ProfileAvatar(
                                 imageUrl = profileImageUrl,
+                                profileBitmap = profileBitmap,
                                 onClick = {
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     menuExpanded = true
@@ -134,7 +138,7 @@ fun ModeSelectionScreen(
                 item { Spacer(Modifier.height(32.dp)) }
 
                 item {
-                    HeroGlassCard(name = userFullName?.split(" ")?.firstOrNull() ?: "Scholar")
+                    HeroGlassCard(name = userFullName?.split(" ")?.firstOrNull() ?: "User")
                 }
 
                 item { Spacer(Modifier.height(48.dp)) }
@@ -367,19 +371,55 @@ fun NeuralPrismAura() {
 }
 
 @Composable
-fun ProfileAvatar(imageUrl: String?, onClick: () -> Unit) {
+fun ProfileAvatar(
+    imageUrl: String?,
+    profileBitmap: Bitmap?,
+    onClick: () -> Unit
+) {
     Box(
-        modifier = Modifier.size(48.dp).clip(CircleShape).background(SoftPinkGlow).border(2.dp, OrchidPrimary, CircleShape).clickable { onClick() }
+        modifier = Modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(SoftPinkGlow)
+            .border(2.dp, OrchidPrimary, CircleShape)
+            .clickable { onClick() }
     ) {
-        if (!imageUrl.isNullOrEmpty()) {
-            AndroidView(factory = { context ->
-                ImageView(context).apply {
-                    scaleType = ImageView.ScaleType.CENTER_CROP
-                    Glide.with(context).load(imageUrl).circleCrop().into(this)
-                }
-            }, modifier = Modifier.fillMaxSize())
-        } else {
-            Icon(Icons.Default.Person, null, tint = OrchidPrimary, modifier = Modifier.fillMaxSize().padding(8.dp))
+        when {
+            !imageUrl.isNullOrEmpty() -> {
+                AndroidView(
+                    factory = { context ->
+                        ImageView(context).apply {
+                            scaleType = ImageView.ScaleType.CENTER_CROP
+                            Glide.with(context)
+                                .load(imageUrl)
+                                .placeholder(R.drawable.baseline_face_24)
+                                .error(R.drawable.baseline_face_24)
+                                .circleCrop()
+                                .into(this)
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            profileBitmap != null -> {
+                Image(
+                    bitmap = profileBitmap.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            else -> {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = null,
+                    tint = OrchidPrimary,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                )
+            }
         }
     }
 }

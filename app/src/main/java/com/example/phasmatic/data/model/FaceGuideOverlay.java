@@ -3,37 +3,63 @@ package com.example.phasmatic.data.model;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.phasmatic.ui.RegisterActivity;
+import androidx.annotation.Nullable;
 
 public class FaceGuideOverlay extends View {
 
-    private Paint ovalPaint;
-    private Paint arrowPaint;
-
-    private boolean showLeft = true;
-    private boolean showRight = true;
-    private boolean showUp = true;
-    private boolean showDown = true;
-
-    private RegisterActivity.FaceAction currentAction;
-
-    private boolean completed = false;
-
-    public FaceGuideOverlay(Context context, android.util.AttributeSet attrs) {
-        super(context, attrs);
-
-        ovalPaint = new Paint();
-        ovalPaint.setStyle(Paint.Style.STROKE);
-        ovalPaint.setStrokeWidth(8f);
-
-        arrowPaint = new Paint();
-        arrowPaint.setColor(0xFFFFFFFF);
-        arrowPaint.setStrokeWidth(6f);
+    public enum FaceAction {
+        CENTER, LOOK_LEFT, LOOK_RIGHT, LOOK_UP, LOOK_DOWN, BLINK, DONE
     }
 
+    private final Paint ovalPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint arrowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint guidePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+    private boolean showLeft;
+    private boolean showRight;
+    private boolean showUp;
+    private boolean showDown;
+    private boolean completed;
+
+    private FaceAction currentAction = FaceAction.CENTER;
+
+    public FaceGuideOverlay(Context context) {
+        super(context);
+        init();
+    }
+
+    public FaceGuideOverlay(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public FaceGuideOverlay(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+        ovalPaint.setStyle(Paint.Style.STROKE);
+        ovalPaint.setStrokeWidth(8f);
+        ovalPaint.setColor(0xFFFF4D6D);
+
+        arrowPaint.setStyle(Paint.Style.STROKE);
+        arrowPaint.setStrokeWidth(8f);
+        arrowPaint.setStrokeCap(Paint.Cap.ROUND);
+        arrowPaint.setStrokeJoin(Paint.Join.ROUND);
+        arrowPaint.setColor(0xFFFFFFFF);
+
+        guidePaint.setStyle(Paint.Style.STROKE);
+        guidePaint.setStrokeWidth(4f);
+        guidePaint.setColor(0x66FFFFFF);
+
+        updateStateForAction(currentAction);
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -42,35 +68,159 @@ public class FaceGuideOverlay extends View {
         float width = getWidth();
         float height = getHeight();
 
-        RectF oval = new RectF(
-                width * 0.25f,
-                height * 0.20f,
-                width * 0.75f,
-                height * 0.80f
-        );
+        float left = width * 0.22f;
+        float top = height * 0.18f;
+        float right = width * 0.78f;
+        float bottom = height * 0.82f;
 
-        if(completed)
-            ovalPaint.setColor(0xFF00FF00); // green
-        else
-            ovalPaint.setColor(0xFFFF0000); // red
+        RectF oval = new RectF(left, top, right, bottom);
 
+        ovalPaint.setColor(completed ? 0xFF22C55E : 0xFFD946EF);
+
+        canvas.drawOval(oval, guidePaint);
         canvas.drawOval(oval, ovalPaint);
 
-        if(showLeft)
-            canvas.drawLine(width*0.2f,height*0.5f,width*0.3f,height*0.5f,arrowPaint);
+        if (showLeft) {
+            drawArrow(canvas, width * 0.16f, height * 0.50f, width * 0.30f, height * 0.50f);
+        }
 
-        if(showRight)
-            canvas.drawLine(width*0.8f,height*0.5f,width*0.7f,height*0.5f,arrowPaint);
+        if (showRight) {
+            drawArrow(canvas, width * 0.84f, height * 0.50f, width * 0.70f, height * 0.50f);
+        }
 
-        if(showUp)
-            canvas.drawLine(width*0.5f,height*0.15f,width*0.5f,height*0.25f,arrowPaint);
+        if (showUp) {
+            drawArrow(canvas, width * 0.50f, height * 0.12f, width * 0.50f, height * 0.28f);
+        }
 
-        if(showDown)
-            canvas.drawLine(width*0.5f,height*0.85f,width*0.5f,height*0.75f,arrowPaint);
+        if (showDown) {
+            drawArrow(canvas, width * 0.50f, height * 0.88f, width * 0.50f, height * 0.72f);
+        }
+
+        if (currentAction == FaceAction.BLINK) {
+            drawBlinkGuide(canvas, width, height);
+        }
+
+        if (completed) {
+            drawCheck(canvas, width, height);
+        }
     }
 
-    public void setAction(RegisterActivity.FaceAction action){
-        this.currentAction = action;
+    private void drawArrow(Canvas canvas, float startX, float startY, float endX, float endY) {
+        canvas.drawLine(startX, startY, endX, endY, arrowPaint);
+
+        float dx = endX - startX;
+        float dy = endY - startY;
+        double angle = Math.atan2(dy, dx);
+
+        float arrowHeadLength = 24f;
+        float arrowHeadAngle = (float) Math.toRadians(28);
+
+        float x1 = (float) (endX - arrowHeadLength * Math.cos(angle - arrowHeadAngle));
+        float y1 = (float) (endY - arrowHeadLength * Math.sin(angle - arrowHeadAngle));
+
+        float x2 = (float) (endX - arrowHeadLength * Math.cos(angle + arrowHeadAngle));
+        float y2 = (float) (endY - arrowHeadLength * Math.sin(angle + arrowHeadAngle));
+
+        Path path = new Path();
+        path.moveTo(endX, endY);
+        path.lineTo(x1, y1);
+        path.moveTo(endX, endY);
+        path.lineTo(x2, y2);
+
+        canvas.drawPath(path, arrowPaint);
+    }
+
+    private void drawBlinkGuide(Canvas canvas, float width, float height) {
+        Paint blinkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        blinkPaint.setStyle(Paint.Style.STROKE);
+        blinkPaint.setStrokeWidth(6f);
+        blinkPaint.setColor(0xFFFFFFFF);
+
+        float eyeY = height * 0.42f;
+
+        canvas.drawArc(
+                width * 0.34f,
+                eyeY,
+                width * 0.44f,
+                eyeY + 30f,
+                0,
+                180,
+                false,
+                blinkPaint
+        );
+
+        canvas.drawArc(
+                width * 0.56f,
+                eyeY,
+                width * 0.66f,
+                eyeY + 30f,
+                0,
+                180,
+                false,
+                blinkPaint
+        );
+    }
+
+    private void drawCheck(Canvas canvas, float width, float height) {
+        Paint checkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        checkPaint.setColor(0xFF22C55E);
+        checkPaint.setStyle(Paint.Style.STROKE);
+        checkPaint.setStrokeWidth(10f);
+        checkPaint.setStrokeCap(Paint.Cap.ROUND);
+        checkPaint.setStrokeJoin(Paint.Join.ROUND);
+
+        Path check = new Path();
+        check.moveTo(width * 0.42f, height * 0.54f);
+        check.lineTo(width * 0.48f, height * 0.62f);
+        check.lineTo(width * 0.61f, height * 0.44f);
+
+        canvas.drawPath(check, checkPaint);
+    }
+
+    public void setAction(FaceAction action) {
+        if (action == null) return;
+        currentAction = action;
+        updateStateForAction(action);
         invalidate();
+    }
+
+    private void updateStateForAction(FaceAction action) {
+        showLeft = false;
+        showRight = false;
+        showUp = false;
+        showDown = false;
+        completed = false;
+
+        switch (action) {
+            case CENTER:
+                break;
+
+            case LOOK_LEFT:
+                showLeft = true;
+                break;
+
+            case LOOK_RIGHT:
+                showRight = true;
+                break;
+
+            case LOOK_UP:
+                showUp = true;
+                break;
+
+            case LOOK_DOWN:
+                showDown = true;
+                break;
+
+            case BLINK:
+                break;
+
+            case DONE:
+                completed = true;
+                break;
+        }
+    }
+
+    public FaceAction getCurrentAction() {
+        return currentAction;
     }
 }

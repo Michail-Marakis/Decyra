@@ -2,20 +2,24 @@ package com.example.phasmatic.ui.modeSelection
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import android.graphics.Bitmap
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.mutableStateOf
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.ui.Chat.ChatActivity
+import com.example.phasmatic.extras.ProfileImageManager
+import com.example.phasmatic.ui.Chat.UsersActivity
 import com.example.phasmatic.ui.Forum.ForumActivity
+import com.example.phasmatic.ui.Profile_Menu.AccountActivity
 import com.example.phasmatic.ui.QuestionnaireActivity
-import com.example.phasmatic.ui.conference.ConferenceActivity
+import com.example.phasmatic.ui.conference.GeneralConferenceActivity
+import com.example.phasmatic.ui.login.LoginActivity
 import com.example.phasmatic.ui.notes.NotesActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-class ModeSelectionComposeActivity : ComponentActivity() {
+class ModeSelectionComposeActivity : AppCompatActivity() {
 
     private val firebaseDb: FirebaseDatabase = FirebaseDatabase.getInstance(
         "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
@@ -24,6 +28,7 @@ class ModeSelectionComposeActivity : ComponentActivity() {
     private val usersRef: DatabaseReference = firebaseDb.getReference("users")
 
     private var profileUrl by mutableStateOf<String?>(null)
+    private var profileBitmap by mutableStateOf<Bitmap?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +38,9 @@ class ModeSelectionComposeActivity : ComponentActivity() {
         val userEmail = intent.getStringExtra("userEmail")
         val userPhone = intent.getStringExtra("userPhone")
 
-        loadProfileImage(userId) { url ->
+        loadProfileImage(userId) { url, bitmap ->
             profileUrl = url
+            profileBitmap = bitmap
         }
 
         setContent {
@@ -43,61 +49,120 @@ class ModeSelectionComposeActivity : ComponentActivity() {
                 userFullName = userFullName,
                 userEmail = userEmail,
                 userPhone = userPhone,
-                profileImageUrl = profileUrl, // 🔥 NEW
+                profileImageUrl = profileUrl,
+                profileBitmap = profileBitmap,
 
                 onModeSelected = { mode ->
                     startActivity(
                         Intent(this, QuestionnaireActivity::class.java).apply {
-                            putExtra("userId", userId)
-                            putExtra("userFullName", userFullName)
-                            putExtra("userEmail", userEmail)
-                            putExtra("userPhone", userPhone)
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
                             putExtra("modeType", mode)
                         }
                     )
                 },
 
                 onForumClick = {
-                    startActivity(Intent(this, ForumActivity::class.java))
+                    startActivity(
+                        Intent(this, ForumActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                    finish()
                 },
 
-                onProfileClick = {},
+                onProfileClick = {
+                    startActivity(
+                        Intent(this, AccountActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                },
 
                 onChatClick = {
-                    startActivity(Intent(this, ChatActivity::class.java))
+                    startActivity(
+                        Intent(this, UsersActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                    finish()
                 },
 
                 onConferenceClick = {
-                    startActivity(Intent(this, ConferenceActivity::class.java))
+                    startActivity(
+                        Intent(this, GeneralConferenceActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                    finish()
                 },
 
                 onNotesClick = {
-                    startActivity(Intent(this, NotesActivity::class.java))
+                    startActivity(
+                        Intent(this, NotesActivity::class.java).apply {
+                            putUserExtras(userId, userFullName, userEmail, userPhone)
+                        }
+                    )
+                    finish()
                 },
 
                 onLogoutClick = {
-                    finish()
+                    logout(userId)
                 }
             )
         }
     }
 
+    private fun Intent.putUserExtras(
+        userId: String?,
+        userFullName: String?,
+        userEmail: String?,
+        userPhone: String?
+    ): Intent {
+        putExtra("userId", userId)
+        putExtra("userFullName", userFullName)
+        putExtra("userEmail", userEmail)
+        putExtra("userPhone", userPhone)
+        return this
+    }
+
+    private fun logout(userId: String?) {
+        if (userId.isNullOrEmpty()) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
+        usersRef.child(userId).child("remember").setValue(0)
+            .addOnCompleteListener {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
+    }
+
     private fun loadProfileImage(
         userId: String?,
-        onResult: (String?) -> Unit
+        onResult: (String?, Bitmap?) -> Unit
     ) {
         if (userId.isNullOrEmpty()) {
-            onResult(null)
+            onResult(null, null)
             return
         }
 
         usersRef.child(userId).get()
             .addOnSuccessListener { snapshot ->
-                val url = snapshot.child("profileImageUrl").value as? String
-                onResult(url)
+                val profileImageUrl = snapshot.child("profileImageUrl").getValue(String::class.java)
+
+                if (!profileImageUrl.isNullOrEmpty()) {
+                    val displayUrl = "$profileImageUrl?t=${System.currentTimeMillis()}"
+                    onResult(displayUrl, null)
+                } else {
+                    val bitmap = ProfileImageManager.loadBitmap(this, userId)
+                    onResult(null, bitmap)
+                }
             }
             .addOnFailureListener {
-                onResult(null)
+                val bitmap = ProfileImageManager.loadBitmap(this, userId)
+                onResult(null, bitmap)
             }
     }
 }
