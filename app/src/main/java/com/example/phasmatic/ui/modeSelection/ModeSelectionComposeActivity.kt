@@ -10,7 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.phasmatic.extras.ProfileImageManager
 import com.example.phasmatic.ui.Chat.UsersActivity
-import com.example.phasmatic.ui.Forum.ForumActivity
+import com.example.phasmatic.ui.Forum.forum.ForumActivity
 import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
 import com.example.phasmatic.ui.QuestionnaireActivity
 import com.example.phasmatic.ui.conference.GeneralConferenceActivity

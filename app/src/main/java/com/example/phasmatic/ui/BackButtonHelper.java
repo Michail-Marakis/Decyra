@@ -7,7 +7,7 @@ import android.widget.ImageButton;
 import com.example.phasmatic.ui.Chat.ChatActivity;
 //import com.example.phasmatic.ui.Chat.UsersActivity;
 import com.example.phasmatic.ui.Chat.UsersActivity;
-import com.example.phasmatic.ui.Forum.ForumActivity;
+import com.example.phasmatic.ui.Forum.forum.ForumActivity;
 import com.example.phasmatic.ui.Profile_Menu.public_profile.PublicProfileActivity;
 import com.example.phasmatic.ui.login.LoginActivity;
 import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity;
