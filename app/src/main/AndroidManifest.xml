@@ -96,6 +96,8 @@
 
         <activity android:name=".ui.Profile_Menu.public_profile.PublicProfileActivity" />
 
+        <activity android:name=".ui.Profile_Menu.public_profile.PublicProfileComposeActivity"/>
+
         <activity android:name=".ui.Chat.users_to_chat.UsersActivity" />
         <activity android:name=".ui.Chat.users_to_chat.UsersComposeActivity" />
         <activity android:name=".ui.Chat.chat.ChatActivity"/>
