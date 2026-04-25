@@ -10,7 +10,7 @@ import android.provider.Settings;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.phasmatic.ui.LoginActivity;
+import com.example.phasmatic.ui.login.LoginActivity;
 
 public class InternetConnection {
 

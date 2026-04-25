@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF1E3A5F"
-    tools:context=".ui.ModeSelectionActivity">
+    tools:context=".ui.modeSelection.ModeSelectionActivity">
 
     <ImageView
         android:paddingTop="1dp"
