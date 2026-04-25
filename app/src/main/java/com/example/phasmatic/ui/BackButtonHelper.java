@@ -8,10 +8,10 @@ import com.example.phasmatic.ui.Chat.ChatActivity;
 //import com.example.phasmatic.ui.Chat.UsersActivity;
 import com.example.phasmatic.ui.Chat.UsersActivity;
 import com.example.phasmatic.ui.Forum.ForumActivity;
-import com.example.phasmatic.ui.Profile_Menu.PublicProfileActivity;
+import com.example.phasmatic.ui.Profile_Menu.public_profile.PublicProfileActivity;
 import com.example.phasmatic.ui.login.LoginActivity;
 import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity;
-import com.example.phasmatic.ui.notes.NotesActivity;
+import com.example.phasmatic.ui.notes.Notes.NotesActivity;
 import com.example.phasmatic.ui.userinfo.UserInfoActivity;
 
 public class BackButtonHelper {

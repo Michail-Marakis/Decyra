@@ -11,11 +11,11 @@ import androidx.compose.runtime.setValue
 import com.example.phasmatic.extras.ProfileImageManager
 import com.example.phasmatic.ui.Chat.UsersActivity
 import com.example.phasmatic.ui.Forum.ForumActivity
-import com.example.phasmatic.ui.Profile_Menu.AccountActivity
+import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
 import com.example.phasmatic.ui.QuestionnaireActivity
 import com.example.phasmatic.ui.conference.GeneralConferenceActivity
 import com.example.phasmatic.ui.login.LoginActivity
-import com.example.phasmatic.ui.notes.NotesActivity
+import com.example.phasmatic.ui.notes.Notes.NotesActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

@@ -54,23 +54,35 @@
 
         <activity android:name=".ui.QuestionnaireActivity" />
 
-        <activity android:name=".ui.Profile_Menu.AccountActivity" />
+        <activity android:name=".ui.Profile_Menu.account_settings.AccountActivity" />
+        <activity android:name=".ui.Profile_Menu.account_settings.AccountComposeActivity" />
 
-        <activity android:name=".ui.Profile_Menu.EditProfileActivity" />
+        <activity android:name=".ui.Profile_Menu.edit_account_settings.EditProfileActivity" />
+        <activity
+            android:name=".ui.Profile_Menu.edit_account_settings.EditProfileComposeActivity"/>
 
-        <activity android:name=".ui.Profile_Menu.EditUserInfoActivity" />
-        <activity android:name=".data.model.FaceGuideOverlay" />
+        <activity android:name=".ui.Profile_Menu.edit_academic_account_settings.EditUserInfoActivity" />
+        <activity android:name=".ui.Profile_Menu.edit_academic_account_settings.EditUserInfoComposeActivity"/>
+
+        <activity android:name=".data.model.FaceGuideOverlay"
+            tools:ignore="Instantiatable" />
 
         <activity android:name=".ui.Forum.ForumActivity" />
 
-        <activity android:name=".extras.InternetConnection" />
-
-
-
-        <activity android:name=".ui.notes.NotesActivity"/>
-
-        <activity android:name=".ui.notes.AddNoteActivity"
+        <activity android:name=".extras.InternetConnection"
             tools:ignore="Instantiatable" />
+
+
+
+        <activity android:name=".ui.notes.Notes.NotesActivity"/>
+        <activity android:name=".ui.notes.Notes.NotesComposeActivity"
+            tools:ignore="MissingClass" />
+
+        <activity android:name=".ui.notes.add_note.AddNoteActivity"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".ui.notes.add_note.AddNoteComposeActivity"
+            tools:ignore="MissingClass" />
 
         <activity android:name=".ui.Forum.NewReviewActivity" />
 
@@ -78,7 +90,7 @@
         <activity android:name=".ui.forget.ForgetActivity" />
         <activity android:name=".ui.forget.ForgetComposeActivity" />
 
-        <activity android:name=".ui.Profile_Menu.PublicProfileActivity" />
+        <activity android:name=".ui.Profile_Menu.public_profile.PublicProfileActivity" />
 
         <activity android:name=".ui.Chat.UsersActivity" />
         <activity android:name=".ui.Chat.ChatActivity"/>
