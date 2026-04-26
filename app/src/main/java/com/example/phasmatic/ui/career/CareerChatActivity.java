@@ -1,8 +1,10 @@
-package com.example.phasmatic.ui;
+package com.example.phasmatic.ui.career;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -24,24 +26,24 @@ import com.example.phasmatic.R;
 import com.example.phasmatic.data.ai.OpenAIChatClient;
 import com.example.phasmatic.extras.HTMLFileExporter;
 import com.example.phasmatic.extras.InternetConnection;
-import com.example.phasmatic.extras.ProgramType;
-import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
-import android.graphics.Bitmap;
 import com.example.phasmatic.extras.ProfileImageManager;
+import com.example.phasmatic.ui.BackButtonHelper;
+import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class MasterChatActivity extends AppCompatActivity {
+
+public class CareerChatActivity extends AppCompatActivity {
 
     TextView txtChatTitle, txtChatLog;
     EditText edtUserInput;
     Button btnSend, btnVoice, btnsave;
     ImageButton btnBack;
+    OpenAIChatClient chatClient;
     ImageView imgProfile;
     private String userId, userFullName, userEmail, userPhone;
-    OpenAIChatClient chatClient;
     private ProfileMenuHelper profileMenuHelper;
     private DatabaseReference usersRef;
 
@@ -53,17 +55,12 @@ public class MasterChatActivity extends AppCompatActivity {
     private static final int CREATE_HTML_FILE = 2003;
 
 
-
+    @SuppressLint("SetTextI18n") //AFAIREI WARNINGS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_master_chat);
-
-
-        if(!inter.isConnected(this)){
-            inter.showCustomDialog(this);
-        }
+        setContentView(R.layout.activity_erasmus_chat);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -71,13 +68,17 @@ public class MasterChatActivity extends AppCompatActivity {
             return insets;
         });
 
+
+        if(!inter.isConnected(this)){
+            inter.showCustomDialog(this);
+        }
+
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
         userFullName = intent.getStringExtra("userFullName");
         userEmail = intent.getStringExtra("userEmail");
         userPhone = intent.getStringExtra("userPhone");
         userExpectations = intent.getStringExtra("userExpectations");
-
 
         imgProfile = findViewById(R.id.imgProfile);
 
@@ -104,7 +105,7 @@ public class MasterChatActivity extends AppCompatActivity {
         btnVoice = findViewById(R.id.btnVoice);
         btnsave = findViewById(R.id.btnsave);
 
-        txtChatTitle.setText("DECYRA Master Assistant");
+        txtChatTitle.setText("DECYRA Career Assistant");
 
         chatClient = new OpenAIChatClient(this);
 
@@ -124,10 +125,11 @@ public class MasterChatActivity extends AppCompatActivity {
             Intent htmlIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             htmlIntent.addCategory(Intent.CATEGORY_OPENABLE);
             htmlIntent.setType("text/html");
-            htmlIntent.putExtra(Intent.EXTRA_TITLE, "master_" + System.currentTimeMillis() + ".html");
+            htmlIntent.putExtra(Intent.EXTRA_TITLE, "career_" + System.currentTimeMillis() + ".html");
 
             startActivityForResult(htmlIntent, CREATE_HTML_FILE);
         });
+
 
         btnSend.setOnClickListener(v -> {
             String userMsg = edtUserInput.getText().toString().trim();
@@ -136,8 +138,8 @@ public class MasterChatActivity extends AppCompatActivity {
             appendToChat("You: " + userMsg);
             edtUserInput.setText("");
             btnSend.setEnabled(false);
-            String ConvoId = userFullName + "-MASTER";
-            chatClient.sendMessage(1, ConvoId,userMsg,userFullName, new OpenAIChatClient.ChatCallback() {
+            String ConvoId = userFullName + "-CAREER";
+            chatClient.sendMessage(2, ConvoId, userMsg, userFullName, new OpenAIChatClient.ChatCallback() {
                 @Override
                 public void onSuccess(String reply) {
                     runOnUiThread(() -> {

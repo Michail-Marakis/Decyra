@@ -1,5 +1,7 @@
-package com.example.phasmatic.ui.erasmus
+package com.example.phasmatic.ui.career
 
+
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
@@ -16,21 +18,20 @@ import com.example.phasmatic.data.ai.OpenAIChatClient
 import com.example.phasmatic.extras.HTMLFileExporter
 import com.example.phasmatic.extras.InternetConnection
 import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
 import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
 import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
 import com.example.phasmatic.ui.login.LoginActivity
+import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
 import com.example.phasmatic.ui.notes.Notes.NotesActivity
 import com.example.phasmatic.ui.shared_chat.UnifiedChatScreen
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-class ErasmusChatComposeActivity : AppCompatActivity() {
+class CareerChatComposeActivity : AppCompatActivity() {
 
     private val inter = InternetConnection()
     private lateinit var chatClient: OpenAIChatClient
     private lateinit var usersRef: DatabaseReference
-    private lateinit var userInfoRef: DatabaseReference
 
     private var userId: String? = null
     private var userFullName: String? = null
@@ -70,7 +71,6 @@ class ErasmusChatComposeActivity : AppCompatActivity() {
             "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
         )
         usersRef = firebaseDb.getReference("users")
-        userInfoRef = firebaseDb.getReference("user_info")
 
         chatClient = OpenAIChatClient(this)
 
@@ -78,15 +78,14 @@ class ErasmusChatComposeActivity : AppCompatActivity() {
 
         setContent {
             UnifiedChatScreen(
-                title = "Erasmus",
-                subtitle = "Mentor",
+                title = "DECYRA Career",
+                subtitle = "Assistant",
                 userFullName = userFullName,
                 profileImageUrl = profileImageUrl,
                 profileBitmap = profileBitmap,
                 inputText = inputText,
                 messages = chatMessages,
                 isSending = isSending,
-                placeholder = "How can I help you?",
                 onInputChange = { inputText = it },
                 onBackClick = { finish() },
                 onSendClick = { sendMessage() },
@@ -192,41 +191,30 @@ class ErasmusChatComposeActivity : AppCompatActivity() {
         inputText = ""
         isSending = true
 
-        val convoId = "${userFullName}-ERASMUS"
+        val convoId = "${userFullName}-CAREER"
 
-        userInfoRef.child(userId ?: "").get().addOnSuccessListener { snapshot ->
-            var uniId = 0
-            if (snapshot.exists()) {
-                val university = snapshot.child("university").getValue(String::class.java)
-                uniId = mapUniversityToId(university)
-            }
-
-            chatClient.sendMessage(
-                uniId,
-                convoId,
-                userMsg,
-                userFullName,
-                object : OpenAIChatClient.ChatCallback {
-                    override fun onSuccess(reply: String) {
-                        runOnUiThread {
-                            chatMessages.add("Assistant:\n$reply")
-                            llmReply = reply
-                            isSending = false
-                        }
-                    }
-
-                    override fun onError(error: String) {
-                        runOnUiThread {
-                            chatMessages.add("Error: $error")
-                            isSending = false
-                        }
+        chatClient.sendMessage(
+            2,
+            convoId,
+            userMsg,
+            userFullName,
+            object : OpenAIChatClient.ChatCallback {
+                override fun onSuccess(reply: String) {
+                    runOnUiThread {
+                        chatMessages.add("Assistant:\n$reply")
+                        llmReply = reply
+                        isSending = false
                     }
                 }
-            )
-        }.addOnFailureListener {
-            Toast.makeText(this, "Firebase error", Toast.LENGTH_SHORT).show()
-            isSending = false
-        }
+
+                override fun onError(error: String) {
+                    runOnUiThread {
+                        chatMessages.add("Error: $error")
+                        isSending = false
+                    }
+                }
+            }
+        )
     }
 
     private fun exportHtml() {
@@ -238,7 +226,7 @@ class ErasmusChatComposeActivity : AppCompatActivity() {
         val htmlIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "text/html"
-            putExtra(Intent.EXTRA_TITLE, "erasmus_${System.currentTimeMillis()}.html")
+            putExtra(Intent.EXTRA_TITLE, "career_${System.currentTimeMillis()}.html")
         }
 
         startActivityForResult(htmlIntent, CREATE_HTML_FILE)
@@ -270,7 +258,7 @@ class ErasmusChatComposeActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == CREATE_HTML_FILE) {
-            if (resultCode == RESULT_OK && data?.data != null) {
+            if (resultCode == Activity.RESULT_OK && data?.data != null) {
                 val success = HTMLFileExporter.exportToHtml(this, data.data, llmReply)
                 if (!success) {
                     Toast.makeText(this, "HTML export failed", Toast.LENGTH_SHORT).show()
@@ -280,26 +268,12 @@ class ErasmusChatComposeActivity : AppCompatActivity() {
         }
 
         if (requestCode == REQUEST_SPEECH_RECOGNIZER) {
-            if (resultCode == RESULT_OK && data != null) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
                 val text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 if (!text.isNullOrEmpty()) {
                     inputText = text[0]
                 }
             }
         }
-    }
-
-    private fun mapUniversityToId(university: String?): Int {
-        if (university == null) return 0
-        if (university.contains("Οικονομικό Πανεπιστήμιο Αθηνών")) return 0
-        if (university.contains("Πανεπιστήμιο Θεσσαλίας")) return 4
-        if (university.contains("Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης")) return 5
-        if (university.contains("Εθνικό και Καποδιστριακό Πανεπιστήμιο Αθηνών")) return 6
-        if (university.contains("Πανεπιστήμιο Κρήτης")) return 7
-        if (university.contains("Πανεπιστήμιο Πειραιώς")) return 8
-        if (university.contains("Πανεπιστήμιο Πελοποννήσου")) return 9
-        if (university.contains("Χαροκόπειο Πανεπιστήμιο")) return 10
-        if (university.contains("Ιόνιο Πανεπιστήμιο")) return 11
-        return 0
     }
 }
