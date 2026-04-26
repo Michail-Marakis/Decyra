@@ -26,6 +26,7 @@ import com.example.phasmatic.R;
 import com.example.phasmatic.data.model.UserExpectation;
 import com.example.phasmatic.extras.InternetConnection;
 import com.example.phasmatic.ui.Profile_Menu.ProfileMenuHelper;
+import com.example.phasmatic.ui.erasmus.ErasmusChatActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

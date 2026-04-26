@@ -42,13 +42,14 @@
         <activity android:name=".ui.modeSelection.ModeSelectionComposeActivity" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.login.LoginComposeActivity" />
+        <activity android:name=".ui.erasmus.ErasmusChatComposeActivity" />
 
 
         <activity
             android:name=".ui.modeSelection.ModeSelectionActivity"
             android:exported="false" />
 
-        <activity android:name=".ui.ErasmusChatActivity" />
+        <activity android:name=".ui.erasmus.ErasmusChatActivity" />
 
         <activity android:name=".ui.MasterChatActivity" />
 
