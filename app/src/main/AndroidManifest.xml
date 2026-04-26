@@ -52,6 +52,7 @@
         <activity android:name=".ui.erasmus.ErasmusChatActivity" />
 
         <activity android:name=".ui.master.MasterChatActivity" />
+        <activity android:name=".ui.master.MasterChatComposeActivity" />
 
         <activity android:name=".ui.QuestionnaireActivity" />
 
@@ -112,6 +113,7 @@
         <activity android:name=".ui.conference.general_conference.GeneralConferenceComposeActivity" />
 
         <activity android:name=".ui.career.CareerChatActivity" />
+        <activity android:name=".ui.career.CareerChatComposeActivity" />
 
         <service
             android:name=".extras.FCMTokenService"

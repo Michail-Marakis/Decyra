@@ -77,7 +77,7 @@ class MasterChatComposeActivity : AppCompatActivity() {
 
         setContent {
             UnifiedChatScreen(
-                title = "DECYRA Master",
+                title = "Master",
                 subtitle = "Assistant",
                 userFullName = userFullName,
                 profileImageUrl = profileImageUrl,

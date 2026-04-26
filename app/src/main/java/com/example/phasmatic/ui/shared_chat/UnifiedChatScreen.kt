@@ -49,6 +49,8 @@ fun UnifiedChatScreen(
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
+    val animatedFinishedMessages = remember { mutableStateListOf<String>() }
+
     LaunchedEffect(Unit) {
         if (inputText.isNotBlank() && messages.isEmpty()) {
             onSendClick()
@@ -90,7 +92,10 @@ fun UnifiedChatScreen(
                         .padding(horizontal = 16.dp),
                     contentPadding = PaddingValues(top = 24.dp, bottom = 24.dp)
                 ) {
-                    itemsIndexed(messages) { index, message ->
+                    itemsIndexed(
+                        items = messages,
+                        key = { index, message -> "$index-${message.hashCode()}" }
+                    ) { index, message ->
                         val isAssistant = message.startsWith("Assistant:")
                         val isError = message.startsWith("Error:")
                         val cleanText = when {
@@ -104,6 +109,12 @@ fun UnifiedChatScreen(
                             isUser = !isAssistant && !isError,
                             isError = isError,
                             isLatestAssistant = index == messages.size - 1 && isAssistant,
+                            alreadyAnimated = animatedFinishedMessages.contains(cleanText),
+                            onAnimationFinished = {
+                                if (!animatedFinishedMessages.contains(cleanText)) {
+                                    animatedFinishedMessages.add(cleanText)
+                                }
+                            },
                             onCharTyped = {
                                 scope.launch {
                                     listState.scrollToItem(messages.size - 1)
@@ -114,12 +125,14 @@ fun UnifiedChatScreen(
                     }
 
                     if (isSending) {
-                        item {
+                        item(key = "loading-indicator") {
                             ChatBubble(
                                 message = "",
                                 isUser = false,
                                 isError = false,
                                 isLatestAssistant = true,
+                                alreadyAnimated = false,
+                                onAnimationFinished = {},
                                 onCharTyped = {}
                             )
                         }
@@ -165,9 +178,14 @@ fun ChatBubble(
     isUser: Boolean,
     isError: Boolean,
     isLatestAssistant: Boolean,
+    alreadyAnimated: Boolean,
+    onAnimationFinished: () -> Unit,
     onCharTyped: () -> Unit
 ) {
-    var skipAnimation by remember { mutableStateOf(!isLatestAssistant) }
+    var skipAnimation by remember(message, alreadyAnimated) {
+        mutableStateOf(alreadyAnimated || !isLatestAssistant)
+    }
+
     val haptic = LocalHapticFeedback.current
 
     val alignment = if (isUser) Alignment.End else Alignment.Start
@@ -210,6 +228,7 @@ fun ChatBubble(
                     .clickable {
                         if (isLatestAssistant && !skipAnimation && message.isNotEmpty()) {
                             skipAnimation = true
+                            onAnimationFinished()
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
                     },
@@ -233,6 +252,7 @@ fun ChatBubble(
                                     onCharTyped = onCharTyped,
                                     onFinish = {
                                         skipAnimation = true
+                                        onAnimationFinished()
                                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                     }
                                 )

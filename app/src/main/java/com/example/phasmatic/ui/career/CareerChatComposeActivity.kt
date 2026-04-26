@@ -78,7 +78,7 @@ class CareerChatComposeActivity : AppCompatActivity() {
 
         setContent {
             UnifiedChatScreen(
-                title = "DECYRA Career",
+                title = "Career",
                 subtitle = "Assistant",
                 userFullName = userFullName,
                 profileImageUrl = profileImageUrl,
