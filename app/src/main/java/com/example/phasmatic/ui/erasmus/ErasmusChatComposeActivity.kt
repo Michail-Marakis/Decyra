@@ -21,6 +21,7 @@ import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
 import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
 import com.example.phasmatic.ui.login.LoginActivity
 import com.example.phasmatic.ui.notes.Notes.NotesActivity
+import com.example.phasmatic.ui.shared_chat.UnifiedChatScreen
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -76,13 +77,16 @@ class ErasmusChatComposeActivity : AppCompatActivity() {
         loadProfilePhoto()
 
         setContent {
-            ErasmusChatScreen(
+            UnifiedChatScreen(
+                title = "Erasmus",
+                subtitle = "Mentor",
                 userFullName = userFullName,
                 profileImageUrl = profileImageUrl,
                 profileBitmap = profileBitmap,
                 inputText = inputText,
                 messages = chatMessages,
                 isSending = isSending,
+                placeholder = "How can I help you?",
                 onInputChange = { inputText = it },
                 onBackClick = { finish() },
                 onSendClick = { sendMessage() },
