@@ -11,6 +11,11 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import com.example.phasmatic.data.model.UserExpectation
 import com.example.phasmatic.extras.InternetConnection
 import com.example.phasmatic.extras.ProfileImageManager
@@ -23,6 +28,7 @@ import com.example.phasmatic.ui.login.LoginActivity
 import com.example.phasmatic.ui.master.MasterChatComposeActivity
 import com.example.phasmatic.ui.notes.Notes.NotesActivity
 import com.google.firebase.database.*
+import org.bouncycastle.util.Arrays.append
 import java.util.Locale
 
 class QuestionnaireComposeActivity : AppCompatActivity() {
@@ -235,23 +241,57 @@ class QuestionnaireComposeActivity : AppCompatActivity() {
 
     private fun saveExpectationsAndGoChat() {
         isLoading = true
-        val resultText = userAnswers.joinToString("\n")
+        val labels = when (modeType) {
+            "master" -> listOf(
+                "Περιοχή σπουδών",
+                "Κεφάλαιο διδάκτρων",
+                "Σπουδαιότητα φήμης",
+                "Τύπος προγράμματος",
+                "Τομέας Πληροφορικής",
+                "Βασικός στόχος"
+            )
+            "erasmus" -> listOf(
+                "Περιοχή Erasmus",
+                "Μηνιαία χρηματοδότηση",
+                "Τύπος πανεπιστημίου",
+                "Τύπος πόλης",
+                "Φοιτητική ζωή",
+                "Όφελος από Erasmus"
+            )
+            else -> listOf(
+                "Τομέας ενδιαφέροντος",
+                "Προτίμηση μισθού",
+                "Επένδυση σε Μεταπτυχιακό",
+                "Τοποθεσία εργασίας",
+                "Κύρια προτεραιότητα"
+            )
+        }
+        val formattedResult = StringBuilder()
+        formattedResult.append("Σύνοψη Προτιμήσεων\n")
+        formattedResult.append("\n\n")
+
+        userAnswers.forEachIndexed { index, answer ->
+            val label = labels.getOrNull(index) ?: "Ερώτηση ${index + 1}"
+            if (answer.isNotBlank()) {
+                formattedResult.append("**$label:** $answer\n\n")
+            }
+        }
+
+        val resultText = formattedResult.toString()
         val id = expectationsRef.push().key ?: return
         val exp = UserExpectation(id, userId, modeType, resultText)
+
         expectationsRef.child(id).setValue(exp).addOnSuccessListener {
             val intent = when (modeType) {
-                "erasmus" -> Intent(this, ErasmusChatComposeActivity::class.java).apply{
-                    putUserExtras(userId, userFullName, userEmail, userPhone)
-                }
-                "master" -> Intent(this, MasterChatComposeActivity::class.java).apply{
-                    putUserExtras(userId, userFullName, userEmail, userPhone)
-                }
-                else -> Intent(this, CareerChatComposeActivity::class.java).apply{
-                    putUserExtras(userId, userFullName, userEmail, userPhone)
-                }
+                "erasmus" -> Intent(this, ErasmusChatComposeActivity::class.java)
+                "master" -> Intent(this, MasterChatComposeActivity::class.java)
+                else -> Intent(this, CareerChatComposeActivity::class.java)
+            }.apply {
+                putUserExtras(userId, userFullName, userEmail, userPhone)
+                putExtra("userExpectations", resultText)
             }
-            intent.putExtra("userExpectations", resultText)
-            startActivity(intent); finish()
+            startActivity(intent)
+            finish()
         }
     }
 
