@@ -170,7 +170,7 @@ class LoginComposeActivity : ComponentActivity() {
                 if (!task.isSuccessful) {
                     isLoading = false
                     infoMessage = "Incorrect credentials"
-                    indexer.indexMasterPrograms();
+                    //indexer.indexMasterPrograms();
                     return@addOnCompleteListener
                 }
 
