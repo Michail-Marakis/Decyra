@@ -6,6 +6,7 @@ public class ErasmusProgram {
     private String name;
     private String websiteUrl;
     private String language;
+    private Double score;
 
     public ErasmusProgram(){
     }
@@ -16,6 +17,14 @@ public class ErasmusProgram {
         this.name = name;
         this.websiteUrl = websiteUrl;
         this.language = language;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
     }
 
     public String getId() {

@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import com.example.phasmatic.data.ai.callbacks.ChatCallback
 import android.speech.RecognizerIntent
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -13,7 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.data.ai.OpenAIChatClient
+import com.example.phasmatic.data.ai.clients.OpenAIChatClient
 import com.example.phasmatic.extras.HTMLFileExporter
 import com.example.phasmatic.extras.InternetConnection
 import com.example.phasmatic.extras.ProfileImageManager
@@ -197,7 +198,7 @@ class MasterChatComposeActivity : AppCompatActivity() {
             convoId,
             userMsg,
             userFullName,
-            object : OpenAIChatClient.ChatCallback {
+            object : ChatCallback {
                 override fun onSuccess(reply: String) {
                     runOnUiThread {
                         chatMessages.add("Assistant:\n$reply")
@@ -208,7 +209,13 @@ class MasterChatComposeActivity : AppCompatActivity() {
 
                 override fun onError(error: String) {
                     runOnUiThread {
-                        chatMessages.add("Error: $error")
+                        val displayMsg = when{
+                            error == "TIMEOUT_ERROR" ->
+                                "Cant connect to the server fast enough. Try again later"
+                            else ->
+                                "Unexpected error occurred. (Information: $error)"
+                        }
+                        chatMessages.add("Assistant:\n$displayMsg")
                         isSending = false
                     }
                 }

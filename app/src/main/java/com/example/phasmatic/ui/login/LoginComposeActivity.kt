@@ -23,9 +23,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.phasmatic.data.ai.indexers.PineconeIndexerMasterCareer
 import com.example.phasmatic.ui.forget.ForgetActivity
 import com.example.phasmatic.ui.register.RegisterActivity
 import com.example.phasmatic.data.model.User
@@ -48,7 +48,7 @@ class LoginComposeActivity : ComponentActivity() {
     private lateinit var usersFaceRef: DatabaseReference
     private lateinit var userInfoRef: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
-
+    private lateinit var indexer: PineconeIndexerMasterCareer
     private var imageCapture: ImageCapture? = null
     private var tflite: Interpreter? = null
 
@@ -78,7 +78,7 @@ class LoginComposeActivity : ComponentActivity() {
         usersFaceRef = firebaseDb.getReference("users_face_embedding")
         userInfoRef = firebaseDb.getReference("user_info")
         mAuth = FirebaseAuth.getInstance()
-
+        indexer = PineconeIndexerMasterCareer(this)
         requestNotificationPermissionIfNeeded()
         loadFaceModel()
 
@@ -170,6 +170,7 @@ class LoginComposeActivity : ComponentActivity() {
                 if (!task.isSuccessful) {
                     isLoading = false
                     infoMessage = "Incorrect credentials"
+                    indexer.indexMasterPrograms();
                     return@addOnCompleteListener
                 }
 

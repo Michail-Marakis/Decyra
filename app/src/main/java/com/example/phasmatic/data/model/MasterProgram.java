@@ -8,6 +8,7 @@ public class MasterProgram {
     private String description;
     private String websiteUrl;
     private String language;
+    private Double score;
 
     public MasterProgram(){
     }
@@ -22,6 +23,13 @@ public class MasterProgram {
         this.language = language;
     }
 
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
     public String getId() {
         return id;
     }
