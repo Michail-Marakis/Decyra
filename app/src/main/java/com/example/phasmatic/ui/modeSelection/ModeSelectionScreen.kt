@@ -15,6 +15,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import android.speech.tts.TextToSpeech
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectTapGestures
+import java.util.Locale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -27,16 +32,26 @@ import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import kotlin.math.sin
+import kotlin.math.cos
 import android.graphics.Bitmap
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import com.example.phasmatic.R
+import java.nio.file.Files.size
 
 // --- PREMIUM COLOR PALETTE ---
 val InkBlack = Color(0xFF000000)
 val InkDeep = Color(0xFF1E1B4B)
 val HeroIndigoEnd = Color(0xFF312E81)
 val OrchidPrimary = Color(0xFFD946EF)
+val OrchidSecondary = Color(0xFF818CF8) // Προστέθηκε για τα nodes
 val OrchidLight = Color(0xFFFDF4FF)
 val SoftPinkGlow = Color(0xFFFFE4FF)
 val PureWhite = Color(0xFFFFFFFF)
@@ -58,144 +73,392 @@ fun ModeSelectionScreen(
     onLogoutClick: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
+    var showAIAssistant by remember { mutableStateOf(false) }
 
     val haptic = LocalHapticFeedback.current
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = PureWhite
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            AnimatedMeshBackground()
-
-            LazyColumn(
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = PureWhite
+        ) { innerPadding ->
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp),
-                contentPadding = PaddingValues(top = 24.dp, bottom = 40.dp)
+                    .padding(innerPadding)
             ) {
-                // --- TOP BAR ---
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                AnimatedMeshBackground()
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 20.dp),
+                    contentPadding = PaddingValues(top = 24.dp, bottom = 40.dp)
+                ) {
+                    // --- TOP BAR ---
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "DECYRA",
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontWeight = FontWeight.Black,
+                                    fontSize = 28.sp,
+                                    letterSpacing = 8.sp,
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(InkDeep, OrchidPrimary)
+                                    )
+                                ),
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                            Box {
+                                ProfileAvatar(
+                                    imageUrl = profileImageUrl,
+                                    profileBitmap = profileBitmap,
+                                    onClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        menuExpanded = true
+                                    }
+                                )
+
+                                ProfileMenuDropdown(
+                                    expanded = menuExpanded,
+                                    onDismiss = { menuExpanded = false },
+                                    onChatClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onChatClick()
+                                    },
+                                    onConferenceClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onConferenceClick()
+                                    },
+                                    onNotesClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onNotesClick()
+                                    },
+                                    onLogoutClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onLogoutClick()
+                                    },
+                                    onAccountClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onProfileClick()
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    item { Spacer(Modifier.height(32.dp)) }
+
+                    item {
+                        HeroGlassCard(
+                            name = userFullName?.split(" ")?.firstOrNull() ?: "User",
+                            onAuraClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                showAIAssistant = true
+                            }
+                        )
+                    }
+
+                    item { Spacer(Modifier.height(48.dp)) }
+
+                    // --- MISSIONS SECTION ---
+                    item {
+                        Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+                            AnimatedShimmerTitle(text = "CHOOSE YOUR MISSION")
+
+                            Spacer(Modifier.height(24.dp))
+
+                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                ModeCard(
+                                    title = "Erasmus+",
+                                    subtitle = "Global Academic Mobility",
+                                    icon = Icons.Default.Public
+                                ) {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onModeSelected("erasmus")
+                                }
+                                ModeCard(
+                                    title = "Master's Degree",
+                                    subtitle = "Higher Education Research",
+                                    icon = Icons.Default.School
+                                ) {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onModeSelected("master")
+                                }
+                                ModeCard(
+                                    title = "Career Path",
+                                    subtitle = "Professional Placement",
+                                    icon = Icons.Default.AutoGraph
+                                ) {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onModeSelected("career")
+                                }
+                            }
+                        }
+                    }
+
+                    item { Spacer(Modifier.height(40.dp)) }
+
+                    item {
+                        ExtremeForumButtonUnified(onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onForumClick()
+                        })
+                    }
+                }
+            }
+        }
+
+        // --- AI ASSISTANT OVERLAY ---
+        if (showAIAssistant) {
+            AIAssistantOverlay(onDismiss = { showAIAssistant = false })
+        }
+    }
+}
+
+@Composable
+fun AIAssistantOverlay(onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    var isVoiceEnabled by remember { mutableStateOf(true) }
+    var isPaused by remember { mutableStateOf(false) }
+    var isTtsReady by remember { mutableStateOf(false) } // Νέο state για ετοιμότητα
+
+    val tips = listOf(
+        "Tip: Use the Erasmus plus mission to explore global opportunities!",
+        "Tip: You can access the Community forum to chat with peers.",
+        "Tip: Long-press your avatar to quickly access account settings.",
+        "Tip: Check your Notes to keep track of important research."
+    )
+
+    var currentTipIndex by remember { mutableIntStateOf(0) }
+
+    // --- TEXT TO SPEECH SETUP ---
+    val tts = remember {
+        var textToSpeech: TextToSpeech? = null
+        textToSpeech = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech?.language = Locale.ENGLISH
+                isTtsReady = true // Ενημέρωση ότι είναι έτοιμο
+            }
+        }
+        textToSpeech
+    }
+
+    // Διαχείριση εναλλαγής tips και ομιλίας
+    LaunchedEffect(currentTipIndex, isVoiceEnabled, isPaused, isTtsReady) {
+        if (!isPaused && isTtsReady) { // Προσθήκη ελέγχου isTtsReady
+            if (isVoiceEnabled) {
+                // Μικρή καθυστέρηση για να προλάβει το UI animation να ξεκινήσει
+                kotlinx.coroutines.delay(300)
+                tts?.speak(tips[currentTipIndex], TextToSpeech.QUEUE_FLUSH, null, "tip_id")
+            }
+            kotlinx.coroutines.delay(5000)
+            currentTipIndex = (currentTipIndex + 1) % tips.size
+        }
+    }
+
+    // Cleanup TTS όταν κλείνει το Overlay
+    DisposableEffect(Unit) {
+        onDispose {
+            tts?.stop()
+            tts?.shutdown()
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(InkBlack.copy(alpha = 0.75f))
+            .clickable {
+                tts?.stop()
+                onDismiss()
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier
+                .width(340.dp)
+                .wrapContentHeight()
+                .padding(16.dp)
+                .clickable(enabled = false) { },
+            shape = RoundedCornerShape(32.dp),
+            colors = CardDefaults.cardColors(containerColor = InkDeep.copy(alpha = 0.98f)),
+            elevation = CardDefaults.cardElevation(30.dp),
+            border = BorderStroke(1.dp, OrchidPrimary.copy(alpha = 0.4f))
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp).fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // --- TOP ROW ---
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = {
+                        isVoiceEnabled = !isVoiceEnabled
+                        if (!isVoiceEnabled) tts?.stop()
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }) {
+                        Icon(
+                            imageVector = if (isVoiceEnabled) Icons.Default.VolumeUp else Icons.Default.VolumeOff,
+                            contentDescription = null,
+                            tint = if (isVoiceEnabled) OrchidPrimary else Color.Gray
+                        )
+                    }
+
+                    Surface(
+                        color = if (isPaused) Color.White.copy(0.2f) else OrchidPrimary.copy(0.1f),
+                        shape = CircleShape
                     ) {
                         Text(
-                            text = "DECYRA",
-                            style = MaterialTheme.typography.headlineMedium.copy(
-                                fontWeight = FontWeight.Black,
-                                fontSize = 28.sp,
-                                letterSpacing = 8.sp,
-                                brush = Brush.linearGradient(
-                                    colors = listOf(InkDeep, OrchidPrimary)
-                                )
-                            ),
-                            modifier = Modifier.padding(top = 8.dp)
+                            text = if (isPaused) "PAUSED" else "LIVE TIPS",
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (isPaused) Color.White else OrchidPrimary,
+                            fontWeight = FontWeight.Bold
                         )
-                        Box {
-                            ProfileAvatar(
-                                imageUrl = profileImageUrl,
-                                profileBitmap = profileBitmap,
-                                onClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    menuExpanded = true
+                    }
+
+                    IconButton(onClick = {
+                        tts?.stop()
+                        onDismiss()
+                    }) {
+                        Icon(Icons.Default.Close, null, tint = Color.White.copy(0.5f))
+                    }
+                }
+
+                Spacer(Modifier.height(20.dp))
+
+                NeuralPrismAura(isSpeaking = isVoiceEnabled && !isPaused && isTtsReady, onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                })
+
+                Spacer(Modifier.height(24.dp))
+
+                // --- INTERACTIVE TIP BOX ---
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(Color.White.copy(alpha = 0.05f))
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onPress = {
+                                    isPaused = true
+                                    tts?.stop()
+                                    tryAwaitRelease()
+                                    isPaused = false
                                 }
                             )
+                        }
+                        .padding(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        androidx.compose.animation.AnimatedContent(
+                            targetState = tips[currentTipIndex],
+                            transitionSpec = {
+                                (slideInVertically { it } + fadeIn()).togetherWith(slideOutVertically { -it } + fadeOut())
+                            }, label = ""
+                        ) { tipText ->
+                            Text(
+                                text = tipText,
+                                color = PureWhite,
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Medium,
+                                lineHeight = 22.sp
+                            )
+                        }
 
-                            ProfileMenuDropdown(
-                                expanded = menuExpanded,
-                                onDismiss = { menuExpanded = false },
-                                onChatClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onChatClick()
-                                },
-                                onConferenceClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onConferenceClick()
-                                },
-                                onNotesClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onNotesClick()
-                                },
-                                onLogoutClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onLogoutClick()
-                                },
-                                onAccountClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onProfileClick()
-                                }
+                        Spacer(Modifier.height(16.dp))
+
+                        if (!isPaused) {
+                            LinearProgressIndicator(
+                                modifier = Modifier.fillMaxWidth(0.4f).height(2.dp).clip(CircleShape),
+                                color = OrchidPrimary,
+                                trackColor = Color.White.copy(0.1f)
                             )
                         }
                     }
                 }
 
-                item { Spacer(Modifier.height(32.dp)) }
+                Spacer(Modifier.height(32.dp))
 
-                item {
-                    HeroGlassCard(name = userFullName?.split(" ")?.firstOrNull() ?: "User")
-                }
+                // --- VOICE ANIMATION & DYNAMIC HINT ---
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (isVoiceEnabled && !isPaused && isTtsReady) {
+                        VoiceVisualizer()
 
-                item { Spacer(Modifier.height(48.dp)) }
-
-                // --- MISSIONS SECTION ---
-                item {
-                    Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-                        AnimatedShimmerTitle(text = "CHOOSE YOUR MISSION")
-
-                        Spacer(Modifier.height(24.dp))
-
-                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                            ModeCard(
-                                title = "Erasmus+",
-                                subtitle = "Global Academic Mobility",
-                                icon = Icons.Default.Public
-                            ) {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onModeSelected("erasmus")
-                            }
-                            ModeCard(
-                                title = "Master's Degree",
-                                subtitle = "Higher Education Research",
-                                icon = Icons.Default.School
-                            ) {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onModeSelected("master")
-                            }
-                            ModeCard(
-                                title = "Career Path",
-                                subtitle = "Professional Placement",
-                                icon = Icons.Default.AutoGraph
-                            ) {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onModeSelected("career")
-                            }
-                        }
+                        Spacer(Modifier.height(12.dp))
+                        Text(
+                            "Tap and hold the tip to pause AI",
+                            color = OrchidPrimary.copy(alpha = 0.6f),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    } else if (isPaused) {
+                        Text(
+                            "Released to resume",
+                            color = Color.White.copy(alpha = 0.8f),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    } else if (!isVoiceEnabled) {
+                        Text(
+                            "Voice is muted",
+                            color = Color.White.copy(alpha = 0.2f),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    } else {
+                        //Εμφάνιση κατά το loading του TTS
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp, color = OrchidPrimary)
                     }
-                }
-
-                item { Spacer(Modifier.height(40.dp)) }
-
-                item {
-                    ExtremeForumButtonUnified(onClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onForumClick()
-                    })
                 }
             }
         }
     }
 }
 
-// --- Υπόλοιπα Composables με ενσωματωμένο feedback ---
+@Composable
+fun VoiceVisualizer() {
+    Row(
+        modifier = Modifier.height(40.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val infiniteTransition = rememberInfiniteTransition(label = "voice")
+        repeat(8) { index ->
+            val height by infiniteTransition.animateFloat(
+                initialValue = 10f,
+                targetValue = 40f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(300 + (index * 80), easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ), label = "bar"
+            )
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .height(height.dp)
+                    .background(
+                        brush = Brush.verticalGradient(listOf(OrchidPrimary, OrchidSecondary)),
+                        shape = CircleShape
+                    )
+            )
+        }
+    }
+}
 
 @Composable
-fun HeroGlassCard(name: String) {
+fun HeroGlassCard(name: String, onAuraClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -222,7 +485,10 @@ fun HeroGlassCard(name: String) {
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            NeuralPrismAura()
+            // Στην αρχική οθόνη isSpeaking = false
+            Box(modifier = Modifier.clickable { onAuraClick() }) {
+                NeuralPrismAura(isSpeaking = false, onClick = onAuraClick)
+            }
             Spacer(Modifier.width(24.dp))
             Column {
                 Text("Welcome back,", style = MaterialTheme.typography.bodyLarge, color = Color.White.copy(0.6f))
@@ -237,39 +503,107 @@ fun ModeCard(title: String, subtitle: String, icon: ImageVector, onClick: () -> 
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
-        targetValue = if (isPressed) 0.98f else 1f,
+        targetValue = if (isPressed) 0.97f else 1f,
         animationSpec = spring(stiffness = Spring.StiffnessLow), label = "scale"
     )
 
     Surface(
         onClick = onClick,
         interactionSource = interactionSource,
-        modifier = Modifier.fillMaxWidth().height(90.dp).scale(scale),
-        shape = RoundedCornerShape(20.dp),
-        color = Color.White,
-        border = BorderStroke(1.dp, Color(0xFFF1F5F9))
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(95.dp)
+            .scale(scale)
+            .padding(vertical = 4.dp)
+            .shadow(
+                elevation = if (isPressed) 6.dp else 16.dp,
+                shape = RoundedCornerShape(24.dp),
+                spotColor = OrchidPrimary.copy(alpha = 0.5f), //Έντονη ροζ σκιά
+                ambientColor = OrchidPrimary
+            ),
+        shape = RoundedCornerShape(24.dp),
+        color = Color.Transparent
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Canvas(modifier = Modifier.fillMaxSize().align(Alignment.CenterEnd)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            OrchidLight,
+                            PureWhite
+                        ),
+
+                        start = Offset(0f, 0f),
+                        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+                    )
+                )
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        listOf(OrchidPrimary.copy(alpha = 0.4f), Color.Transparent)
+                    ),
+                    shape = RoundedCornerShape(24.dp)
+                )
+        ) {
+
+            Canvas(modifier = Modifier.fillMaxSize()) {
                 drawCircle(
                     brush = Brush.radialGradient(
-                        colors = listOf(OrchidPrimary.copy(alpha = 0.04f), Color.Transparent),
-                        center = Offset(size.width, size.height / 2),
-                        radius = size.width * 0.6f
+                        colors = listOf(SoftPinkGlow.copy(alpha = 0.6f), Color.Transparent),
+                        center = Offset(0f, size.height),
+                        radius = size.width * 0.7f
                     )
                 )
             }
 
-            Row(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(modifier = Modifier.size(48.dp).clip(RoundedCornerShape(14.dp)).background(OrchidLight), contentAlignment = Alignment.Center) {
-                    Icon(icon, null, tint = OrchidPrimary, modifier = Modifier.size(24.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //Icon Container
+                Box(
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(OrchidPrimary.copy(alpha = 0.15f))
+                        .border(1.dp, OrchidPrimary.copy(alpha = 0.2f), RoundedCornerShape(18.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = OrchidPrimary,
+                        modifier = Modifier.size(28.dp)
+                    )
                 }
-                Spacer(Modifier.width(16.dp))
+
+                Spacer(Modifier.width(18.dp))
+
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(title, fontWeight = FontWeight.Bold, fontSize = 17.sp, color = InkDeep)
-                    Text(subtitle, fontSize = 12.sp, color = Color.Gray)
+                    Text(
+                        text = title,
+                        fontWeight = FontWeight.Black,
+                        fontSize = 18.sp,
+                        color = InkDeep,
+                        letterSpacing = (-0.5).sp
+                    )
+                    Text(
+                        text = subtitle,
+                        fontSize = 13.sp,
+                        color = InkDeep.copy(alpha = 0.7f),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Icon(Icons.Default.ArrowForward, null, tint = Color.LightGray.copy(0.6f), modifier = Modifier.size(18.dp))
+
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = OrchidPrimary.copy(alpha = 0.7f),
+                    modifier = Modifier.size(26.dp)
+                )
             }
         }
     }
@@ -352,21 +686,88 @@ fun AnimatedMeshBackground() {
 }
 
 @Composable
-fun NeuralPrismAura() {
+fun NeuralPrismAura(isSpeaking: Boolean = false, onClick: () -> Unit) {
     val infiniteTransition = rememberInfiniteTransition(label = "prism")
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(15000, easing = LinearEasing)), label = "rot"
+
+    val outerRotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(15000, easing = LinearEasing)),
+        label = "outerRot"
     )
+
+    val innerRotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(10000, easing = LinearEasing)),
+        label = "innerRot"
+    )
+
+    val nodeRotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(3000, easing = LinearEasing)),
+        label = "nodes"
+    )
+
+    val pulse by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = if (isSpeaking) 1.15f else 1f,
+        animationSpec = infiniteRepeatable(tween(800), RepeatMode.Reverse),
+        label = "pulse"
+    )
+
     Box(
-        modifier = Modifier.size(85.dp).rotate(rotation)
+        modifier = Modifier
+            .size(85.dp) // Αυξημένο μέγεθος για να ταιριάζει στο UI σου
+            .graphicsLayer {
+                scaleX = pulse
+                scaleY = pulse
+            }
+            .rotate(outerRotation)
             .drawBehind {
-                drawCircle(brush = Brush.sweepGradient(listOf(OrchidPrimary, Color.Transparent, OrchidPrimary)), style = Stroke(width = 6f, cap = StrokeCap.Round))
-                drawCircle(brush = Brush.radialGradient(listOf(OrchidPrimary.copy(0.3f), Color.Transparent)), radius = size.width / 1.5f)
+                drawCircle(
+                    brush = Brush.sweepGradient(listOf(OrchidPrimary, Color.Transparent, OrchidPrimary)),
+                    style = Stroke(width = 5f, cap = StrokeCap.Round)
+                )
+                drawCircle(
+                    brush = Brush.radialGradient(listOf(OrchidPrimary.copy(0.15f), Color.Transparent)),
+                    radius = size.width / 1.3f
+                )
+
+                if (isSpeaking) {
+                    val radius = size.width / 2.8f
+                    val angle1 = Math.toRadians(nodeRotation.toDouble())
+                    val angle2 = angle1 + Math.PI
+
+                    drawCircle(
+                        color = OrchidPrimary,
+                        radius = 5f,
+                        center = Offset(
+                            center.x + (radius * cos(angle1)).toFloat(),
+                            center.y + (radius * sin(angle1)).toFloat()
+                        )
+                    )
+                    drawCircle(
+                        color = OrchidSecondary,
+                        radius = 5f,
+                        center = Offset(
+                            center.x + (radius * cos(angle2)).toFloat(),
+                            center.y + (radius * sin(angle2)).toFloat()
+                        )
+                    )
+                }
             },
         contentAlignment = Alignment.Center
     ) {
-        Icon(Icons.Default.Layers, null, tint = OrchidPrimary, modifier = Modifier.size(30.dp))
+        Icon(
+            imageVector = Icons.Default.Layers,
+            contentDescription = null,
+            tint = OrchidPrimary,
+            modifier = Modifier
+                .size(32.dp) // Προσαρμοσμένο μέγεθος
+                .rotate(innerRotation - outerRotation)
+        )
     }
 }
 
