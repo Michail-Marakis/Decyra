@@ -1,11 +1,17 @@
 package com.example.phasmatic.ui.login
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,6 +23,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -43,6 +50,10 @@ fun LoginScreen(
     faceLoginEnabled: Boolean,
     isLoading: Boolean,
     showCameraPreview: Boolean,
+    // --- NEA STATES ΓΙΑ ΤΟ AR ---
+    isFaceCentered: Boolean = false,
+    guidanceMessage: String = "Align your face inside the frame",
+    // ----------------------------
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
@@ -67,7 +78,9 @@ fun LoginScreen(
             CameraCaptureOverlay(
                 cameraPreview = cameraPreview,
                 onCaptureClick = onCaptureClick,
-                onBackClick = onBackFromCamera
+                onBackClick = onBackFromCamera,
+                isFaceCentered = isFaceCentered,
+                guidanceMessage = guidanceMessage
             )
         } else {
             Column(
@@ -81,7 +94,6 @@ fun LoginScreen(
             ) {
                 TopBrand()
                 Spacer(Modifier.height(28.dp))
-                //LoginHeroCard()
                 Spacer(Modifier.height(28.dp))
                 LoginFormCard(
                     email = email,
@@ -118,8 +130,6 @@ fun TopBrand() {
         )
     )
 }
-
-
 
 @Composable
 fun LoginFormCard(
@@ -355,64 +365,115 @@ fun SecondaryRegisterRow(onRegisterClick: () -> Unit) {
 fun CameraCaptureOverlay(
     cameraPreview: @Composable () -> Unit,
     onCaptureClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    isFaceCentered: Boolean,
+    guidanceMessage: String
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(InkBlack)
-    ) {
+    val infiniteTransition = rememberInfiniteTransition(label = "modern_scan")
+
+    // 1. Περιστροφή κύριων τόξων
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(2000, easing = LinearEasing)), label = "rotation"
+    )
+
+    // 2. Εφέ παλμού (Scale) για το "Lock-on"
+    val ringScale by animateFloatAsState(
+        targetValue = if (isFaceCentered) 1.05f else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessLow), label = "scale"
+    )
+
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         cameraPreview()
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.18f))
-        )
+        //LAYER 1: THE MODERN SCANNER RING ---
+        Canvas(modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer(scaleX = ringScale, scaleY = ringScale)
+        ) {
+            val centerX = size.width / 2
+            val centerY = size.height * 0.42f
+            val radius = size.width * 0.38f
 
+            val accentColor = if (isFaceCentered) OrchidPrimary else Color.White.copy(alpha = 0.5f)
+            val strokeWidth = if (isFaceCentered) 10f else 6f
+
+            // Περιστρεφόμενα Arcs
+            rotate(rotation, pivot = Offset(centerX, centerY)) {
+                for (i in 0..3) {
+                    drawArc(
+                        color = accentColor,
+                        startAngle = i * 90f + 20f,
+                        sweepAngle = 50f,
+                        useCenter = false,
+                        topLeft = Offset(centerX - radius, centerY - radius),
+                        size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
+                        style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                    )
+                }
+            }
+
+            // Διακριτικό εξωτερικό glow όταν κλειδώσει
+            if (isFaceCentered) {
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(OrchidPrimary.copy(alpha = 0.2f), Color.Transparent),
+                        center = Offset(centerX, centerY),
+                        radius = radius * 1.3f
+                    )
+                )
+            }
+        }
+
+        //LAYER 2: TOP CONTROLS ---
         IconButton(
             onClick = onBackClick,
             modifier = Modifier
                 .statusBarsPadding()
                 .padding(16.dp)
                 .align(Alignment.TopStart)
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(Color.White.copy(alpha = 0.16f))
+                .background(Color.Black.copy(alpha = 0.3f), CircleShape)
         ) {
-            Icon(
-                Icons.Default.ArrowBack,
-                contentDescription = "Back",
-                tint = Color.White
-            )
+            Icon(Icons.Default.Close, null, tint = Color.White)
         }
 
+        //LAYER 3: GUIDANCE & SHUTTER ---
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-                .padding(bottom = 26.dp),
+                .padding(bottom = 50.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Μήνυμα Καθοδήγησης (Floating Text)
             Text(
-                "Align your face inside the frame",
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
+                text = guidanceMessage.uppercase(),
+                color = if (isFaceCentered) OrchidPrimary else Color.White,
+                style = MaterialTheme.typography.labelLarge.copy(
+                    fontWeight = FontWeight.Black,
+                    letterSpacing = 2.sp,
+                    shadow = Shadow(Color.Black, Offset(2f, 2f), 4f)
+                )
             )
-            Spacer(Modifier.height(18.dp))
+
+            Spacer(Modifier.height(40.dp))
+
+            // Premium Shutter Button
             Box(
                 modifier = Modifier
-                    .size(84.dp)
+                    .size(80.dp)
+                    .border(2.dp, Color.White, CircleShape)
+                    .padding(6.dp)
                     .clip(CircleShape)
-                    .background(OrchidPrimary)
-                    .clickable { onCaptureClick() },
+                    .background(if (isFaceCentered) OrchidPrimary else Color.White.copy(alpha = 0.2f))
+                    .clickable(enabled = isFaceCentered) { onCaptureClick() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    Icons.Default.CameraAlt,
-                    contentDescription = "Capture",
+                    imageVector = if (isFaceCentered) Icons.Default.Fingerprint else Icons.Default.CameraAlt,
+                    contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(32.dp)
                 )
             }
         }
