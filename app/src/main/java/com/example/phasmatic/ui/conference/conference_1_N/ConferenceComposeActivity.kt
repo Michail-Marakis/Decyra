@@ -3,6 +3,7 @@ package com.example.phasmatic.ui.conference.conference_1_N
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.example.phasmatic.extras.InternetConnection
+import com.example.phasmatic.extras.ProfileImageManager
 import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
 import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
 import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
@@ -41,6 +43,10 @@ class ConferenceComposeActivity : AppCompatActivity() {
 
     private var fragmentAttached = false
 
+    private var profileImageUrl: String? = null
+
+    private var profileBitmap: Bitmap? = null
+
     private lateinit var usersRef: DatabaseReference
 
     private val permissionLauncher = registerForActivityResult(
@@ -60,9 +66,13 @@ class ConferenceComposeActivity : AppCompatActivity() {
             inter.showCustomDialog(this)
         }
 
-        userId = intent.getStringExtra("userId").orEmpty()
-        code = intent.getStringExtra("code").orEmpty()
-        userName = intent.getStringExtra("userName") ?: "User"
+        userId = intent.getStringExtra("userId").toString()
+        code = intent.getStringExtra("code").toString()
+        userName = intent.getStringExtra("userFullName").toString()
+        userEmail = intent.getStringExtra("userEmail")
+        userPhone = intent.getStringExtra("userPhone")
+        profileImageUrl = intent.getStringExtra("profileImageUrl")
+
 
         permissionsGranted = hasAllPermissions()
 
@@ -72,12 +82,16 @@ class ConferenceComposeActivity : AppCompatActivity() {
 
         usersRef = db.getReference("users")
 
+        loadProfilePhoto()
+
         setContent {
             ConferenceRoomScreen(
                 userName = userName,
                 roomCode = code,
                 permissionsGranted = permissionsGranted,
                 showPermissionDenied = showPermissionDenied,
+                profileImageUrl = profileImageUrl,
+                profileBitmap = profileBitmap,
                 onBackClick = {
                     finish()
                 },
@@ -157,6 +171,20 @@ class ConferenceComposeActivity : AppCompatActivity() {
             }
     }
 
+    private fun loadProfilePhoto() {
+        if (userId.isBlank()) {
+            profileImageUrl = null
+            profileBitmap = null
+            return
+        }
+
+        if (!profileImageUrl.isNullOrBlank()) {
+            profileBitmap = null
+        } else {
+            profileBitmap = ProfileImageManager.loadBitmap(this, userId)
+        }
+    }
+
     private fun hasAllPermissions(): Boolean {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
@@ -177,7 +205,7 @@ class ConferenceComposeActivity : AppCompatActivity() {
             return
         }
 
-        val appID: Long = 750984672
+        val appID = 750984672L
         val appSign = "407fa63422294713ac2817e379891688f659af2e652fa3f45d3e428c90c4e888"
         val config = ZegoUIKitPrebuiltVideoConferenceConfig()
 

@@ -376,7 +376,10 @@ class GeneralConferenceComposeActivity : AppCompatActivity() {
                     startActivity(Intent(this, ConferenceActivity::class.java).apply {
                         putExtra("code", code)
                         putExtra("userId", userId)
-                        putExtra("userName", userFullName)
+                        putExtra("userFullName", userFullName)
+                        putExtra("userEmail", userEmail)
+                        putExtra("userPhone", userPhone)
+                        putExtra("profileImageUrl", profileUrl)
                     })
                 } else {
                     val diffMillis = allowedJoinTime - now
