@@ -172,16 +172,29 @@ class ConferenceComposeActivity : AppCompatActivity() {
     }
 
     private fun loadProfilePhoto() {
-        if (userId.isBlank()) {
+        val uid = userId
+        if (uid.isNullOrEmpty()) {
             profileImageUrl = null
             profileBitmap = null
             return
         }
 
-        if (!profileImageUrl.isNullOrBlank()) {
-            profileBitmap = null
-        } else {
-            profileBitmap = ProfileImageManager.loadBitmap(this, userId)
+        usersRef.child(uid).get().addOnSuccessListener { snapshot ->
+            val remoteUrl = snapshot.child("profileImageUrl").getValue(String::class.java)
+
+            if (!remoteUrl.isNullOrEmpty()) {
+                profileImageUrl = "$remoteUrl?t=${System.currentTimeMillis()}"
+                profileBitmap = null
+            } else {
+                val bitmap = ProfileImageManager.loadBitmap(this, uid)
+                if (bitmap != null) {
+                    profileBitmap = bitmap
+                    profileImageUrl = null
+                } else {
+                    profileBitmap = null
+                    profileImageUrl = null
+                }
+            }
         }
     }
 
