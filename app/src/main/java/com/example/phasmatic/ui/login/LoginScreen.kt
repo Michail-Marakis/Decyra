@@ -371,25 +371,25 @@ fun CameraCaptureOverlay(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "modern_scan")
 
-    // 1. Περιστροφή κύριων τόξων
+    // 1. Περιστροφή κύριων τόξων (σταθερή κίνηση)
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 360f,
         animationSpec = infiniteRepeatable(tween(2000, easing = LinearEasing)), label = "rotation"
     )
 
-    // 2. Εφέ παλμού (Scale) για το "Lock-on"
-    val ringScale by animateFloatAsState(
-        targetValue = if (isFaceCentered) 1.05f else 1f,
-        animationSpec = spring(stiffness = Spring.StiffnessLow), label = "scale"
+    // 2. Εφέ παλμού για τον δακτύλιο και το εικονίδιο
+    val pulseScale by animateFloatAsState(
+        targetValue = if (isFaceCentered) 1.08f else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessLow), label = "pulse"
     )
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         cameraPreview()
 
-        //LAYER 1: THE MODERN SCANNER RING ---
+        // --- LAYER 1: THE SCANNER RING ---
         Canvas(modifier = Modifier
             .fillMaxSize()
-            .graphicsLayer(scaleX = ringScale, scaleY = ringScale)
+            .graphicsLayer(scaleX = pulseScale, scaleY = pulseScale)
         ) {
             val centerX = size.width / 2
             val centerY = size.height * 0.42f
@@ -398,7 +398,6 @@ fun CameraCaptureOverlay(
             val accentColor = if (isFaceCentered) OrchidPrimary else Color.White.copy(alpha = 0.5f)
             val strokeWidth = if (isFaceCentered) 10f else 6f
 
-            // Περιστρεφόμενα Arcs
             rotate(rotation, pivot = Offset(centerX, centerY)) {
                 for (i in 0..3) {
                     drawArc(
@@ -413,7 +412,6 @@ fun CameraCaptureOverlay(
                 }
             }
 
-            // Διακριτικό εξωτερικό glow όταν κλειδώσει
             if (isFaceCentered) {
                 drawCircle(
                     brush = Brush.radialGradient(
@@ -425,7 +423,7 @@ fun CameraCaptureOverlay(
             }
         }
 
-        //LAYER 2: TOP CONTROLS ---
+        // --- LAYER 2: TOP CONTROLS ---
         IconButton(
             onClick = onBackClick,
             modifier = Modifier
@@ -437,7 +435,7 @@ fun CameraCaptureOverlay(
             Icon(Icons.Default.Close, null, tint = Color.White)
         }
 
-        //LAYER 3: GUIDANCE & SHUTTER ---
+        // --- LAYER 3: GUIDANCE & SHUTTER ---
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -445,7 +443,6 @@ fun CameraCaptureOverlay(
                 .padding(bottom = 50.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Μήνυμα Καθοδήγησης (Floating Text)
             Text(
                 text = guidanceMessage.uppercase(),
                 color = if (isFaceCentered) OrchidPrimary else Color.White,
@@ -458,10 +455,11 @@ fun CameraCaptureOverlay(
 
             Spacer(Modifier.height(40.dp))
 
-            // Premium Shutter Button
+            // Premium Shutter Button με εικονίδιο κάμερας
             Box(
                 modifier = Modifier
                     .size(80.dp)
+                    .scale(pulseScale) // Το κουμπί μεγαλώνει όταν κλειδώνει το πρόσωπο
                     .border(2.dp, Color.White, CircleShape)
                     .padding(6.dp)
                     .clip(CircleShape)
@@ -470,10 +468,11 @@ fun CameraCaptureOverlay(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = if (isFaceCentered) Icons.Default.Fingerprint else Icons.Default.CameraAlt,
-                    contentDescription = null,
+                    // Αντικατάσταση Fingerprint με PhotoCamera
+                    imageVector = Icons.Default.PhotoCamera,
+                    contentDescription = "Capture",
                     tint = Color.White,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(34.dp)
                 )
             }
         }

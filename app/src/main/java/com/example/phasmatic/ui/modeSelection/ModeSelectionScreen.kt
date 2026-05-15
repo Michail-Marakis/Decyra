@@ -40,6 +40,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -687,87 +688,92 @@ fun AnimatedMeshBackground() {
 
 @Composable
 fun NeuralPrismAura(isSpeaking: Boolean = false, onClick: () -> Unit) {
-    val infiniteTransition = rememberInfiniteTransition(label = "prism")
+    val infiniteTransition = rememberInfiniteTransition(label = "aura_final")
 
+    // 1. ΣΥΝΕΧΗΣ ΠΕΡΙΣΤΡΟΦΗ (Spinning)
     val outerRotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(15000, easing = LinearEasing)),
-        label = "outerRot"
+        initialValue = 0f, targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(15000, easing = LinearEasing)), label = "outer"
     )
 
     val innerRotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(10000, easing = LinearEasing)),
-        label = "innerRot"
+        initialValue = 0f, targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(10000, easing = LinearEasing)), label = "inner"
     )
 
-    val nodeRotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(3000, easing = LinearEasing)),
-        label = "nodes"
+    // 2. RADAR EFFECT (The "Click Me" hint)
+    val radarScale by infiniteTransition.animateFloat(
+        initialValue = 1f, targetValue = 1.8f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Restart
+        ), label = "radar_scale"
+    )
+    val radarAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.6f, targetValue = 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Restart
+        ), label = "radar_alpha"
     )
 
+    // 3. PULSE (Breathing)
     val pulse by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = if (isSpeaking) 1.15f else 1f,
-        animationSpec = infiniteRepeatable(tween(800), RepeatMode.Reverse),
+        targetValue = if (isSpeaking) 1.15f else 1.08f,
+        animationSpec = infiniteRepeatable(tween(1000, easing = EaseInOutSine), RepeatMode.Reverse),
         label = "pulse"
     )
 
     Box(
         modifier = Modifier
-            .size(85.dp) // Αυξημένο μέγεθος για να ταιριάζει στο UI σου
-            .graphicsLayer {
-                scaleX = pulse
-                scaleY = pulse
-            }
-            .rotate(outerRotation)
-            .drawBehind {
-                drawCircle(
-                    brush = Brush.sweepGradient(listOf(OrchidPrimary, Color.Transparent, OrchidPrimary)),
-                    style = Stroke(width = 5f, cap = StrokeCap.Round)
-                )
-                drawCircle(
-                    brush = Brush.radialGradient(listOf(OrchidPrimary.copy(0.15f), Color.Transparent)),
-                    radius = size.width / 1.3f
-                )
-
-                if (isSpeaking) {
-                    val radius = size.width / 2.8f
-                    val angle1 = Math.toRadians(nodeRotation.toDouble())
-                    val angle2 = angle1 + Math.PI
-
-                    drawCircle(
-                        color = OrchidPrimary,
-                        radius = 5f,
-                        center = Offset(
-                            center.x + (radius * cos(angle1)).toFloat(),
-                            center.y + (radius * sin(angle1)).toFloat()
-                        )
-                    )
-                    drawCircle(
-                        color = OrchidSecondary,
-                        radius = 5f,
-                        center = Offset(
-                            center.x + (radius * cos(angle2)).toFloat(),
-                            center.y + (radius * sin(angle2)).toFloat()
-                        )
-                    )
-                }
-            },
+            .size(90.dp)
+            .scale(pulse)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(bounded = false, radius = 55.dp, color = OrchidPrimary),
+                onClick = onClick
+            ),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            imageVector = Icons.Default.Layers,
-            contentDescription = null,
-            tint = OrchidPrimary,
+        // --- LAYER 1: THE RADAR ---
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            if (!isSpeaking) {
+                drawCircle(
+                    color = OrchidPrimary.copy(alpha = radarAlpha),
+                    radius = (size.width / 2) * radarScale,
+                    style = Stroke(width = 2f)
+                )
+            }
+        }
+
+        // --- LAYER 2: THE ORIGINAL PRISM SHAPE ---
+        Box(
             modifier = Modifier
-                .size(32.dp) // Προσαρμοσμένο μέγεθος
-                .rotate(innerRotation - outerRotation)
-        )
+                .size(85.dp)
+                .rotate(outerRotation)
+                .drawBehind {
+                    drawCircle(
+                        brush = Brush.sweepGradient(listOf(OrchidPrimary, Color.Transparent, OrchidPrimary)),
+                        style = Stroke(width = 5f, cap = StrokeCap.Round)
+                    )
+                    drawCircle(
+                        brush = Brush.radialGradient(listOf(OrchidPrimary.copy(0.15f), Color.Transparent)),
+                        radius = size.width / 1.3f
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            // --- LAYER 3: THE ORIGINAL LAYERS ICON ---
+            Icon(
+                imageVector = Icons.Default.Layers,
+                contentDescription = null,
+                tint = OrchidPrimary,
+                modifier = Modifier
+                    .size(32.dp)
+                    .rotate(innerRotation - outerRotation) // Αντίθετη περιστροφή για το εφέ σου
+            )
+        }
     }
 }
 
