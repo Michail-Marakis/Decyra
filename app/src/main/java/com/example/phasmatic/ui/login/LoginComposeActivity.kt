@@ -35,6 +35,9 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetectorOptions
 import org.tensorflow.lite.Interpreter
 import java.io.InputStream
 import java.nio.ByteBuffer
@@ -64,6 +67,10 @@ class LoginComposeActivity : ComponentActivity() {
     var showCameraPreview by mutableStateOf(false)
     var isLoading by mutableStateOf(false)
 
+    // --- NEW AR & ML KIT STATES ---
+    var isFaceCentered by mutableStateOf(false)
+    var guidanceMessage by mutableStateOf("Align your face in the frame")
+
     private lateinit var viewFinder: PreviewView
 
     @SuppressLint("MissingInflatedId")
@@ -90,6 +97,9 @@ class LoginComposeActivity : ComponentActivity() {
                 faceLoginEnabled = faceLoginEnabled,
                 isLoading = isLoading,
                 showCameraPreview = showCameraPreview,
+                // Pass new states to Compose
+                isFaceCentered = isFaceCentered,
+                guidanceMessage = guidanceMessage,
                 onEmailChange = { email = it },
                 onPasswordChange = { password = it },
                 onLoginClick = { attemptLogin() },
@@ -239,6 +249,7 @@ class LoginComposeActivity : ComponentActivity() {
         }
     }
 
+    @androidx.annotation.OptIn(ExperimentalGetImage::class)
     private fun startCamera() {
         showCameraPreview = true
 
@@ -254,6 +265,51 @@ class LoginComposeActivity : ComponentActivity() {
 
                 imageCapture = ImageCapture.Builder().build()
 
+                // --- ML KIT ANALYZER START ---
+                val imageAnalysis = ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                    .build()
+
+                val options = FaceDetectorOptions.Builder()
+                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+                    .build()
+                val detector = FaceDetection.getClient(options)
+
+                imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this)) { imageProxy ->
+                    val mediaImage = imageProxy.image
+                    if (mediaImage != null) {
+                        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                        detector.process(image)
+                            .addOnSuccessListener { faces ->
+                                if (faces.isEmpty()) {
+                                    isFaceCentered = false
+                                    guidanceMessage = "No face detected"
+                                } else {
+                                    val face = faces[0]
+                                    val yaw = face.headEulerAngleY
+                                    val pitch = face.headEulerAngleX
+
+                                    // Logic for AR validation
+                                    val isStraight = Math.abs(yaw) < 25 && Math.abs(pitch) < 25
+                                    val isAtRightDistance = face.boundingBox.width() > (viewFinder.width * 0.2)
+
+                                    if (isStraight && isAtRightDistance) {
+                                        isFaceCentered = true
+                                        guidanceMessage = "Perfect! Ready to capture"
+                                    } else if (!isStraight) {
+                                        isFaceCentered = false
+                                        guidanceMessage = "Look straight at the camera"
+                                    } else {
+                                        isFaceCentered = false
+                                        guidanceMessage = "Move a bit closer"
+                                    }
+                                }
+                            }
+                            .addOnCompleteListener { imageProxy.close() }
+                    }
+                }
+                // --- ML KIT ANALYZER END ---
+
                 val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
                 cameraProvider.unbindAll()
@@ -261,6 +317,7 @@ class LoginComposeActivity : ComponentActivity() {
                     this,
                     cameraSelector,
                     preview,
+                    imageAnalysis, // Added analysis to lifecycle
                     imageCapture
                 )
             } catch (e: Exception) {
