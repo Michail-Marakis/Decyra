@@ -1,5 +1,6 @@
 package com.example.phasmatic.ui.conference.conference_1_N
 
+import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -88,6 +89,8 @@ fun ConferenceRoomScreen(
     roomCode: String,
     permissionsGranted: Boolean,
     showPermissionDenied: Boolean,
+    profileImageUrl: String?,
+    profileBitmap: Bitmap?,
     onBackClick: () -> Unit,
     onRequestPermissions: () -> Unit,
     onDismissPermissionWarning: () -> Unit,
@@ -115,6 +118,8 @@ fun ConferenceRoomScreen(
             ConferenceTopBar(
                 userName = userName,
                 roomCode = roomCode,
+                profileImageUrl = profileImageUrl,
+                profileBitmap = profileBitmap,
                 onBackClick = onBackClick,
                 menuExpanded = menuExpanded,
                 onMenuExpandedChange = { menuExpanded = it },
@@ -173,6 +178,8 @@ fun ConferenceRoomScreen(
 private fun ConferenceTopBar(
     userName: String,
     roomCode: String,
+    profileImageUrl: String?,
+    profileBitmap: Bitmap?,
     onBackClick: () -> Unit,
     menuExpanded: Boolean,
     onMenuExpandedChange: (Boolean) -> Unit,
@@ -221,8 +228,8 @@ private fun ConferenceTopBar(
 
         Box {
             ProfileAvatar(
-                imageUrl = null,
-                profileBitmap = null,
+                imageUrl = profileImageUrl,
+                profileBitmap = profileBitmap,
                 onClick = {
                     onMenuExpandedChange(true)
                 }
