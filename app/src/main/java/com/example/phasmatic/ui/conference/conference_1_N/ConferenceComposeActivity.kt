@@ -177,8 +177,8 @@ class ConferenceComposeActivity : AppCompatActivity() {
             return
         }
 
-        val appID = 581663696L
-        val appSign = "b8262be56354041edcd4128c02f73d0858f0d143f55036a2b79b45b16f61011c"
+        val appID: Long = 750984672
+        val appSign = "407fa63422294713ac2817e379891688f659af2e652fa3f45d3e428c90c4e888"
         val config = ZegoUIKitPrebuiltVideoConferenceConfig()
 
         val fragment = ZegoUIKitPrebuiltVideoConferenceFragment.newInstance(
