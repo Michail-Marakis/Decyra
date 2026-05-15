@@ -26,22 +26,222 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 
-@Composable
 fun parseMarkdown(text: String): AnnotatedString {
     return buildAnnotatedString {
-        val parts = text.split("**")
-        parts.forEachIndexed { index, part ->
-            if (index % 2 != 0) {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(part)
+        val lines = text.lines()
+
+        lines.forEachIndexed { index, rawLine ->
+            val line = rawLine.trimEnd()
+
+            when {
+                line.isBlank() -> append("\n")
+
+                isHorizontalRule(line) -> {
+                    withStyle(
+                        SpanStyle(color = Color.Gray)
+                    ) {
+                        append("────────")
+                    }
+                    if (index != lines.lastIndex) append("\n")
                 }
-            } else {
-                append(part)
+
+                line.startsWith("### ") -> {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        appendInlineMarkdown(line.removePrefix("### "))
+                    }
+                    if (index != lines.lastIndex) append("\n")
+                }
+
+                line.startsWith("## ") -> {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        appendInlineMarkdown(line.removePrefix("## "))
+                    }
+                    if (index != lines.lastIndex) append("\n")
+                }
+
+                line.startsWith("# ") -> {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        appendInlineMarkdown(line.removePrefix("# "))
+                    }
+                    if (index != lines.lastIndex) append("\n")
+                }
+
+                line.startsWith("- ") || line.startsWith("* ") -> {
+                    append("• ")
+                    appendInlineMarkdown(line.drop(2))
+                    if (index != lines.lastIndex) append("\n")
+                }
+
+                else -> {
+                    appendInlineMarkdown(line)
+                    if (index != lines.lastIndex) append("\n")
+                }
             }
         }
     }
 }
+
+private fun isHorizontalRule(line: String): Boolean {
+    val trimmed = line.trim()
+    return trimmed == "---" || trimmed == "***" || trimmed == "___"
+}
+
+private fun AnnotatedString.Builder.appendInlineMarkdown(text: String) {
+    var i = 0
+
+    while (i < text.length) {
+        when {
+            text.startsWith("**", i) -> {
+                val end = text.indexOf("**", startIndex = i + 2)
+                if (end != -1) {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        appendInlineMarkdown(text.substring(i + 2, end))
+                    }
+                    i = end + 2
+                } else {
+                    append(text[i])
+                    i++
+                }
+            }
+
+            text.startsWith("`", i) -> {
+                val end = text.indexOf("`", startIndex = i + 1)
+                if (end != -1) {
+                    withStyle(
+                        SpanStyle(
+                            fontFamily = FontFamily.Monospace,
+                            background = Color(0xFFEAEAEA)
+                        )
+                    ) {
+                        append(text.substring(i + 1, end))
+                    }
+                    i = end + 1
+                } else {
+                    append(text[i])
+                    i++
+                }
+            }
+
+            text.startsWith("[", i) -> {
+                val closeText = text.indexOf("]", startIndex = i + 1)
+                val openUrl = if (closeText != -1) text.indexOf("(", startIndex = closeText) else -1
+                val closeUrl = if (openUrl != -1) text.indexOf(")", startIndex = openUrl) else -1
+
+                if (closeText != -1 && openUrl == closeText + 1 && closeUrl != -1) {
+                    val label = text.substring(i + 1, closeText)
+                    val url = text.substring(openUrl + 1, closeUrl)
+
+                    pushStringAnnotation(tag = "URL", annotation = url)
+                    withStyle(
+                        SpanStyle(
+                            color = Color(0xFF1565C0),
+                            textDecoration = TextDecoration.Underline
+                        )
+                    ) {
+                        append(label)
+                    }
+                    pop()
+
+                    i = closeUrl + 1
+                } else {
+                    append(text[i])
+                    i++
+                }
+            }
+
+            text.startsWith("*", i) -> {
+                val end = text.indexOf("*", startIndex = i + 1)
+                if (end != -1) {
+                    withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
+                        append(text.substring(i + 1, end))
+                    }
+                    i = end + 1
+                } else {
+                    append(text[i])
+                    i++
+                }
+            }
+
+            else -> {
+                append(text[i])
+                i++
+            }
+        }
+    }
+}
+
+private fun AnnotatedString.Builder.appendInlineMarkdown(
+    text: String,
+    boldRegex: Regex,
+    italicRegex: Regex,
+    codeRegex: Regex,
+    linkRegex: Regex
+) {
+    var currentIndex = 0
+
+    val matches = buildList {
+        addAll(boldRegex.findAll(text).map { MatchToken("bold", it.range.first, it.range.last + 1, it.groupValues[1], null) })
+        addAll(italicRegex.findAll(text).map { MatchToken("italic", it.range.first, it.range.last + 1, it.groupValues[1], null) })
+        addAll(codeRegex.findAll(text).map { MatchToken("code", it.range.first, it.range.last + 1, it.groupValues[1], null) })
+        addAll(linkRegex.findAll(text).map { MatchToken("link", it.range.first, it.range.last + 1, it.groupValues[1], it.groupValues[2]) })
+    }.sortedBy { it.start }
+
+    for (match in matches) {
+        if (match.start < currentIndex) continue
+
+        append(text.substring(currentIndex, match.start))
+
+        when (match.type) {
+            "bold" -> withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(match.content)
+            }
+            "italic" -> withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
+                append(match.content)
+            }
+            "code" -> withStyle(
+                SpanStyle(
+                    fontFamily = FontFamily.Monospace,
+                    background = Color(0xFFEAEAEA)
+                )
+            ) {
+                append(match.content)
+            }
+            "link" -> withLink(
+                LinkAnnotation.Url(
+                    match.extra.orEmpty(),
+                    TextLinkStyles(
+                        style = SpanStyle(
+                            color = Color(0xFF1565C0)
+                        )
+                    )
+                )
+            ) {
+                append(match.content)
+            }
+        }
+
+        currentIndex = match.end
+    }
+
+    if (currentIndex < text.length) {
+        append(text.substring(currentIndex))
+    }
+}
+
+private data class MatchToken(
+    val type: String,
+    val start: Int,
+    val end: Int,
+    val content: String,
+    val extra: String?
+)
 
 @Composable
 fun UnifiedChatScreen(

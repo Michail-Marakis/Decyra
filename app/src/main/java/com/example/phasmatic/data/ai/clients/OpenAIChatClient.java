@@ -43,79 +43,127 @@ public class OpenAIChatClient {
     private final PineconeClient pineconeClient = new PineconeClient();
     private final CohereClient reranker = new CohereClient();
 
+    private static final String AWS_API_KEY_URL =
+            "https://koa1qztjbi.execute-api.eu-north-1.amazonaws.com/prod/apikey";
+
+    private interface ApiKeyCallback {
+        void onSuccess(String apiKey);
+        void onError(String error);
+    }
+
     public OpenAIChatClient(Context context) {
         firebaseDb = FirebaseDatabase.getInstance(
                 "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
         );
     }
 
+    private void getApiKeyFromAws(ApiKeyCallback callback) {
+        try {
+            Log.d("AWS_API_DEBUG", "Calling URL: " + AWS_API_KEY_URL);
+
+            Request request = new Request.Builder()
+                    .url(AWS_API_KEY_URL)
+                    .get()
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    String type;
+                    if (e instanceof SocketTimeoutException) {
+                        type = "TIMEOUT_ERROR";
+                    } else {
+                        type = e.getMessage();
+                    }
+                    Log.e("AWS_API_DEBUG", "Failure: " + type);
+                    callback.onError(type);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        String body = response.body().string();
+                        Log.d("AWS_API_DEBUG", "HTTP " + response.code() + " body: " + body);
+
+                        if (!response.isSuccessful()) {
+                            callback.onError("HTTP " + response.code() + ": " + body);
+                            return;
+                        }
+
+                        JSONObject json = new JSONObject(body);
+                        String apiKey = json.getString("apiKey");
+                        callback.onSuccess(apiKey);
+
+                    } catch (Exception e) {
+                        Log.e("AWS_API_DEBUG", "Parse error: " + e.getMessage());
+                        callback.onError(e.getMessage());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e("AWS_API_DEBUG", "Outer error: " + e.getMessage());
+            callback.onError(e.getMessage());
+        }
+    }
+
     public void getEmbedding(String text, EmbeddingCallback callback) {
 
-        firebaseDb.getReference("api_keys/0/api_key")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        getApiKeyFromAws(new ApiKeyCallback() {
+            @Override
+            public void onSuccess(String apiKey) {
+                try {
+                    JSONObject body = new JSONObject();
+                    body.put("model", "text-embedding-3-small");
+                    body.put("input", text);
 
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Request request = new Request.Builder()
+                            .url("https://api.openai.com/v1/embeddings")
+                            .addHeader("Authorization", "Bearer " + apiKey)
+                            .post(RequestBody.create(body.toString(), JSON))
+                            .build();
 
-                        String apiKey = snapshot.getValue(String.class);
-
-                        try {
-                            JSONObject body = new JSONObject();
-                            body.put("model", "text-embedding-3-small");
-                            body.put("input", text);
-
-                            Request request = new Request.Builder()
-                                    .url("https://api.openai.com/v1/embeddings")
-                                    .addHeader("Authorization", "Bearer " + apiKey)
-                                    .post(RequestBody.create(body.toString(), JSON))
-                                    .build();
-
-                            client.newCall(request).enqueue(new Callback() {
-
-                                @Override
-                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                    String type = "";
-                                    if (e instanceof SocketTimeoutException) {
-                                        type = "TIMEOUT_ERROR";
-                                    } else {
-                                        type = e.getMessage();
-                                    }
-                                    callback.onError(type);
-                                }
-
-                                @Override
-                                public void onResponse(@NonNull Call call, @NonNull Response response) {
-
-                                    try {
-                                        JSONObject json = new JSONObject(response.body().string());
-                                        JSONArray emb = json.getJSONArray("data")
-                                                .getJSONObject(0)
-                                                .getJSONArray("embedding");
-
-                                        float[] vector = new float[emb.length()];
-
-                                        for (int i = 0; i < emb.length(); i++) {
-                                            vector[i] = (float) emb.getDouble(i);
-                                        }
-
-                                        callback.onSuccess(vector);
-
-                                    } catch (Exception e) {
-                                        callback.onError(e.getMessage());
-                                    }
-                                }
-                            });
-
-                        } catch (Exception e) {
-                            callback.onError(e.getMessage());
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            String type;
+                            if (e instanceof SocketTimeoutException) {
+                                type = "TIMEOUT_ERROR";
+                            } else {
+                                type = e.getMessage();
+                            }
+                            callback.onError(type);
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        callback.onError(error.getMessage());
-                    }
-                });
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) {
+                            try {
+                                JSONObject json = new JSONObject(response.body().string());
+                                JSONArray emb = json.getJSONArray("data")
+                                        .getJSONObject(0)
+                                        .getJSONArray("embedding");
+
+                                float[] vector = new float[emb.length()];
+                                for (int i = 0; i < emb.length(); i++) {
+                                    vector[i] = (float) emb.getDouble(i);
+                                }
+
+                                callback.onSuccess(vector);
+                            } catch (Exception e) {
+                                callback.onError(e.getMessage());
+                            }
+                        }
+                    });
+
+                } catch (Exception e) {
+                    callback.onError(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
     }
 
     private MessageLLM saveMessage(String conversationId, String role, String content) {
@@ -186,53 +234,46 @@ public class OpenAIChatClient {
     ) {
         MessageLLM userMsg = saveMessage(conversationId, "user", userMessage);
 
-        firebaseDb.getReference("api_keys/0/api_key")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        getApiKeyFromAws(new ApiKeyCallback() {
+            @Override
+            public void onSuccess(String apiKey) {
+                RouterClient router = new RouterClient(client, apiKey);
 
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String apiKey = snapshot.getValue(String.class);
+                router.classifyIntent(userMessage, isFollowUp -> {
+                    if (isFollowUp) {
+                        Log.d("ROUTER_LOGIC", "Follow-up detected. Using History.");
+                        buildPrompt(apiKey, conversationId, userMessage, "", callback, userFullName, getProgramType(num));
+                    } else {
+                        Log.d("ROUTER_LOGIC", "Search detected. Starting RAG flow.");
+                        getEmbedding(userMessage, new EmbeddingCallback() {
+                            @Override
+                            public void onSuccess(float[] embedding) {
+                                pineconeClient.upsertChatHistory(
+                                        embedding,
+                                        userMsg.getId(),
+                                        userFullName,
+                                        "user",
+                                        userMessage,
+                                        conversationId,
+                                        userMsg.getTimestamp()
+                                );
+                                runRag(num, embedding, conversationId, userMessage, callback, userFullName);
+                            }
 
-                        //RouterClient για να αποφασίσει τη ροή
-                        RouterClient router = new RouterClient(client, apiKey);
-
-                        router.classifyIntent(userMessage, isFollowUp -> {
-                            if (isFollowUp) {
-                                //case Follow-up: no RAG, μόνο Ιστορικό
-                                Log.d("ROUTER_LOGIC", "Follow-up detected. Using History.");
-                                buildPrompt(apiKey, conversationId, userMessage, "", callback, userFullName, getProgramType(num));
-                            } else {
-                                //case Search: Κανονική ροή RAG
-                                Log.d("ROUTER_LOGIC", "Search detected. Starting RAG flow.");
-                                getEmbedding(userMessage, new EmbeddingCallback() {
-                                    @Override
-                                    public void onSuccess(float[] embedding) {
-                                        pineconeClient.upsertChatHistory(
-                                                embedding,
-                                                userMsg.getId(),
-                                                userFullName,
-                                                "user",
-                                                userMessage,
-                                                conversationId,
-                                                userMsg.getTimestamp()
-                                        );
-                                        runRag(num, embedding, conversationId, userMessage, callback, userFullName);
-                                    }
-
-                                    @Override
-                                    public void onError(String error) {
-                                        runRag(num, null, conversationId, userMessage, callback, userFullName);
-                                    }
-                                });
+                            @Override
+                            public void onError(String error) {
+                                runRag(num, null, conversationId, userMessage, callback, userFullName);
                             }
                         });
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        callback.onError(error.getMessage());
-                    }
                 });
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
     }
 
     private void runRag(
@@ -244,78 +285,74 @@ public class OpenAIChatClient {
             String userFullName
     ) {
 
-        firebaseDb.getReference("api_keys/0/api_key")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        getApiKeyFromAws(new ApiKeyCallback() {
+            @Override
+            public void onSuccess(String apiKey) {
 
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String[] namespaces;
+                String[] indexes;
+                ProgramType programType;
 
-                        String apiKey = snapshot.getValue(String.class);
+                if (num == 0) {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-AUEB"};
+                    indexes = new String[]{"Education"};
+                } else if (num == 1) {
+                    programType = ProgramType.master;
+                    namespaces = new String[]{"europe-master"};
+                    indexes = new String[]{"master"};
+                } else if (num == 2) {
+                    programType = ProgramType.career;
+                    namespaces = new String[]{"main-career"};
+                    indexes = new String[]{"career"};
+                } else if (num == 4) {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-THESSALY"};
+                    indexes = new String[]{"Education"};
+                } else if (num == 5) {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-ARISTOTLE"};
+                    indexes = new String[]{"Education"};
+                } else if (num == 6) {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-EKPA"};
+                    indexes = new String[]{"Education"};
+                } else if (num == 7) {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-CRETE"};
+                    indexes = new String[]{"Education"};
+                } else if (num == 8) {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-PAPEI"};
+                    indexes = new String[]{"Education"};
+                } else if (num == 9) {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-PELLOPONESE"};
+                    indexes = new String[]{"Education"};
+                } else if (num == 10) {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-HAROKOPIO"};
+                    indexes = new String[]{"Education"};
+                } else {
+                    programType = ProgramType.erasmus;
+                    namespaces = new String[]{"erasmus-IONIAN"};
+                    indexes = new String[]{"Education"};
+                }
 
-                        String[] namespaces;
-                        String[] indexes;
-                        ProgramType programType;
+                if (embedding == null) {
+                    buildPrompt(apiKey, conversationId, userMessage, "", callback, userFullName, programType);
+                    return;
+                }
 
-                        if (num == 0) {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-AUEB"};
-                            indexes = new String[]{"Education"};
-                        } else if (num == 1) {
-                            programType = ProgramType.master;
-                            namespaces = new String[]{"europe-master"};
-                            indexes = new String[]{"master"};
-                        } else if (num == 2) {
-                            programType = ProgramType.career;
-                            namespaces = new String[]{"main-career"};
-                            indexes = new String[]{"career"};
-                        } else if (num == 4) {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-THESSALY"};
-                            indexes = new String[]{"Education"};
-                        } else if (num == 5) {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-ARISTOTLE"};
-                            indexes = new String[]{"Education"};
-                        } else if (num == 6) {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-EKPA"};
-                            indexes = new String[]{"Education"};
-                        } else if (num == 7) {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-CRETE"};
-                            indexes = new String[]{"Education"};
-                        } else if (num == 8) {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-PAPEI"};
-                            indexes = new String[]{"Education"};
-                        } else if (num == 9) {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-PELLOPONESE"};
-                            indexes = new String[]{"Education"};
-                        } else if (num == 10) {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-HAROKOPIO"};
-                            indexes = new String[]{"Education"};
-                        } else {
-                            programType = ProgramType.erasmus;
-                            namespaces = new String[]{"erasmus-IONIAN"};
-                            indexes = new String[]{"Education"};
-                        }
+                queryNext(0, namespaces, indexes, embedding, new JSONArray(),
+                        apiKey, conversationId, userMessage, callback, programType, userFullName);
+            }
 
-                        if (embedding == null) {
-                            buildPrompt(apiKey, conversationId, userMessage, "", callback, userFullName, programType);
-                            return;
-                        }
-
-                        queryNext(0, namespaces, indexes, embedding, new JSONArray(),
-                                apiKey, conversationId, userMessage, callback, programType, userFullName);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        callback.onError(error.getMessage());
-                    }
-                });
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
     }
 
     private void queryNext(
