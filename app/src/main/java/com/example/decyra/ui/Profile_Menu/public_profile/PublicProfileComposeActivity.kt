@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu.public_profile
+package com.example.decyra.ui.Profile_Menu.public_profile
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.chat.ChatActivity
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.extras.ProfileImageManager
+import com.example.decyra.ui.Chat.chat.ChatActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

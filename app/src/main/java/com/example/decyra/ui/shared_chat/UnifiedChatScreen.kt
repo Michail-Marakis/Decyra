@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.shared_chat
+package com.example.decyra.ui.shared_chat
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke

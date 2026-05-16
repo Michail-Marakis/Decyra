@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.modeSelection
+package com.example.decyra.ui.modeSelection
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,14 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
-import com.example.phasmatic.ui.Forum.forum.ForumActivity
-import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
-import com.example.phasmatic.ui.questionnaire.QuestionnaireActivity
-import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
-import com.example.phasmatic.ui.login.LoginActivity
-import com.example.phasmatic.ui.notes.Notes.NotesActivity
+import com.example.decyra.extras.ProfileImageManager
+import com.example.decyra.ui.Chat.users_to_chat.UsersActivity
+import com.example.decyra.ui.Forum.forum.ForumActivity
+import com.example.decyra.ui.Profile_Menu.account_settings.AccountActivity
+import com.example.decyra.ui.questionnaire.QuestionnaireActivity
+import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity
+import com.example.decyra.ui.login.LoginActivity
+import com.example.decyra.ui.notes.Notes.NotesActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

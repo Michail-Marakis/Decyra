@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu.account_settings
+package com.example.decyra.ui.Profile_Menu.account_settings
 
 import android.graphics.Bitmap
 import android.widget.ImageView
@@ -24,13 +24,12 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.phasmatic.R
+import com.example.decyra.R
 import kotlin.math.sin
 
 val InkBlack = Color(0xFF000000)

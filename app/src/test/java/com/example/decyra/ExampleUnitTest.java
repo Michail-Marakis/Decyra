@@ -1,4 +1,4 @@
-package com.example.phasmatic;
+package com.example.decyra;
 
 import org.junit.Test;
 

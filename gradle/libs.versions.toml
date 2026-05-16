@@ -17,6 +17,7 @@ ui = "1.11.0"
 coreKtx = "1.18.0"
 firebaseFirestoreKtx = "26.2.0"
 animation = "1.11.1"
+uiText = "1.11.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -36,6 +37,7 @@ ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animation" }
+ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,4 +1,4 @@
-package com.example.phasmatic.data.ai.callbacks;
+package com.example.decyra.data.ai.callbacks;
 
 import org.json.JSONArray;
 

@@ -1,6 +1,6 @@
-package com.example.phasmatic.data.ai.clients;
+package com.example.decyra.data.ai.clients;
 
-import com.example.phasmatic.data.ai.callbacks.RouterCallback;
+import com.example.decyra.data.ai.callbacks.RouterCallback;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

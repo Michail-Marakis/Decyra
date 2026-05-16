@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu.edit_academic_account_settings
+package com.example.decyra.ui.Profile_Menu.edit_academic_account_settings
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -24,7 +24,6 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction

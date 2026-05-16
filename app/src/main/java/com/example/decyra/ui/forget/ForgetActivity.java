@@ -1,9 +1,8 @@
-package com.example.phasmatic.ui.forget;
+package com.example.decyra.ui.forget;
 
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.phasmatic.ui.forget.ForgetComposeActivity;
 
 public class ForgetActivity extends AppCompatActivity {
     @Override

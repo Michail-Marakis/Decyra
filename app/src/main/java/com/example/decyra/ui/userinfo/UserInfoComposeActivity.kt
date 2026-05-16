@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.userinfo
+package com.example.decyra.ui.userinfo
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.data.model.UserInfo
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.ui.login.LoginActivity
-import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity
+import com.example.decyra.data.model.UserInfo
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.ui.login.LoginActivity
+import com.example.decyra.ui.modeSelection.ModeSelectionActivity
 import com.google.firebase.database.*
 
 class UserInfoComposeActivity : AppCompatActivity() {

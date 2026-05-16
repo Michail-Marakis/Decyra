@@ -1,4 +1,4 @@
-package com.example.phasmatic.extras;
+package com.example.decyra.extras;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +10,7 @@ import android.provider.Settings;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.phasmatic.ui.login.LoginActivity;
+import com.example.decyra.ui.login.LoginActivity;
 
 public class InternetConnection {
 

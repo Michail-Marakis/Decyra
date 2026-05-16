@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.register
+package com.example.decyra.ui.register
 
 import android.Manifest
 import android.app.AlertDialog
@@ -20,11 +20,12 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.phasmatic.data.model.User
-import com.example.phasmatic.data.model.User_Face_Embedding
-import com.example.phasmatic.ui.login.LoginActivity
+import com.example.decyra.data.model.User
+import com.example.decyra.data.model.User_Face_Embedding
+import com.example.decyra.ui.login.LoginActivity
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -125,7 +126,7 @@ class RegisterComposeActivity : ComponentActivity() {
                 },
 
                 cameraPreview = {
-                    androidx.compose.ui.viewinterop.AndroidView(
+                    AndroidView(
                         factory = { context ->
                             PreviewView(context).apply {
                                 scaleType = PreviewView.ScaleType.FILL_CENTER

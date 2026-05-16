@@ -1,4 +1,4 @@
-package com.example.phasmatic.extras;
+package com.example.decyra.extras;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

@@ -192,7 +192,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.example.phasmatic.data.model.FaceGuideOverlay
+        <com.example.decyra.data.model.FaceGuideOverlay
             android:id="@+id/faceGuideOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

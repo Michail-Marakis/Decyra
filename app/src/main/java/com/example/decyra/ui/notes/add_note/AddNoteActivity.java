@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.notes.add_note;
+package com.example.decyra.ui.notes.add_note;
 
 import android.content.Intent;
 import android.os.Bundle;

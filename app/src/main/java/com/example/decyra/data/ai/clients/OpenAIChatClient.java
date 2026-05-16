@@ -1,18 +1,18 @@
-package com.example.phasmatic.data.ai.clients;
+package com.example.decyra.data.ai.clients;
 
 import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.phasmatic.data.ai.callbacks.ChatCallback;
-import com.example.phasmatic.data.ai.callbacks.EmbeddingCallback;
-import com.example.phasmatic.data.ai.callbacks.MessagesCallback;
-import com.example.phasmatic.data.ai.callbacks.PineconeCallback;
-import com.example.phasmatic.data.ai.callbacks.RerankCallback;
-import com.example.phasmatic.data.model.MessageLLM;
-import com.example.phasmatic.extras.ProgramType;
-import com.example.phasmatic.extras.LLMRules;
+import com.example.decyra.data.ai.callbacks.ChatCallback;
+import com.example.decyra.data.ai.callbacks.EmbeddingCallback;
+import com.example.decyra.data.ai.callbacks.MessagesCallback;
+import com.example.decyra.data.ai.callbacks.PineconeCallback;
+import com.example.decyra.data.ai.callbacks.RerankCallback;
+import com.example.decyra.data.model.MessageLLM;
+import com.example.decyra.extras.ProgramType;
+import com.example.decyra.extras.LLMRules;
 import com.google.firebase.database.*;
 
 import org.json.JSONArray;

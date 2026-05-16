@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu.account_settings;
+package com.example.decyra.ui.Profile_Menu.account_settings;
 
 import android.content.Intent;
 import android.os.Bundle;

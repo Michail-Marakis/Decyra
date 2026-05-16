@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu.edit_account_settings
+package com.example.decyra.ui.Profile_Menu.edit_account_settings
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*

@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.erasmus;
+package com.example.decyra.ui.erasmus;
 
 import android.content.Intent;
 import android.os.Bundle;

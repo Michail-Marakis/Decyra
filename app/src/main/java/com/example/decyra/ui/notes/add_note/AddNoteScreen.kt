@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.notes.add_note
+package com.example.decyra.ui.notes.add_note
 
 import android.graphics.Bitmap
 import android.widget.ImageView
@@ -32,9 +32,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
-import com.example.phasmatic.R
-import com.example.phasmatic.ui.modeSelection.ProfileAvatar
-import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
+import com.example.decyra.R
+import com.example.decyra.ui.modeSelection.ProfileAvatar
+import com.example.decyra.ui.modeSelection.ProfileMenuDropdown
 import kotlin.math.sin
 
 val InkBlack = Color(0xFF000000)

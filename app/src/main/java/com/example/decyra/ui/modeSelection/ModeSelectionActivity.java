@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.modeSelection;
+package com.example.decyra.ui.modeSelection;
 
 import android.content.Intent;
 import android.os.Bundle;

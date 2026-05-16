@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.forget
+package com.example.decyra.ui.forget
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Layers
-import androidx.compose.material.icons.filled.LockReset
 import androidx.compose.material.icons.filled.MarkEmailRead
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,7 +25,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.*
-import com.example.phasmatic.ui.modeSelection.OrchidPrimary
+import com.example.decyra.ui.modeSelection.OrchidPrimary
 import kotlin.math.sin
 
 val InkBlack = Color(0xFF000000)

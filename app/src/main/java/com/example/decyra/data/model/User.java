@@ -1,7 +1,4 @@
-package com.example.phasmatic.data.model;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.example.decyra.data.model;
 
 public class User {
 

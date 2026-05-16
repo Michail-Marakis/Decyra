@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Forum.personal_review;
+package com.example.decyra.ui.Forum.personal_review;
 
 import android.content.Intent;
 import android.os.Bundle;

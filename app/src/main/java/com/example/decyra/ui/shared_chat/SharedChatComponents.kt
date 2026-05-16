@@ -1,5 +1,6 @@
-package com.example.phasmatic.ui.shared_chat
+package com.example.decyra.ui.shared_chat
 
+import com.example.decyra.R
 import android.graphics.Bitmap
 import android.widget.ImageView
 import androidx.compose.animation.core.*
@@ -37,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
-import com.example.phasmatic.R
 import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin

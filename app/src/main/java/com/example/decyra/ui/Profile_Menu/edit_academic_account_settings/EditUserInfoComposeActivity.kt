@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu.edit_academic_account_settings
+package com.example.decyra.ui.Profile_Menu.edit_academic_account_settings
 
 import android.os.Bundle
 import android.widget.Toast
@@ -8,8 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.data.model.UserInfo
-import com.example.phasmatic.extras.InternetConnection
+import com.example.decyra.data.model.UserInfo
+import com.example.decyra.extras.InternetConnection
 import com.google.firebase.database.*
 
 class EditUserInfoComposeActivity : AppCompatActivity() {

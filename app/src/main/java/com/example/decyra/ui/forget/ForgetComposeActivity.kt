@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.forget
+package com.example.decyra.ui.forget
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.ui.login.LoginActivity
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class ForgetComposeActivity : AppCompatActivity() {

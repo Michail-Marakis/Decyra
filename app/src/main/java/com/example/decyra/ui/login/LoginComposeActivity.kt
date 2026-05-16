@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.login
+package com.example.decyra.ui.login
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -25,12 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.phasmatic.data.ai.indexers.PineconeIndexerMasterCareer
-import com.example.phasmatic.ui.forget.ForgetActivity
-import com.example.phasmatic.ui.register.RegisterActivity
-import com.example.phasmatic.data.model.User
-import com.example.phasmatic.ui.userinfo.UserInfoActivity
-import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity
+import com.example.decyra.data.ai.indexers.PineconeIndexerMasterCareer
+import com.example.decyra.ui.forget.ForgetActivity
+import com.example.decyra.ui.register.RegisterActivity
+import com.example.decyra.data.model.User
+import com.example.decyra.ui.userinfo.UserInfoActivity
+import com.example.decyra.ui.modeSelection.ModeSelectionActivity
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*

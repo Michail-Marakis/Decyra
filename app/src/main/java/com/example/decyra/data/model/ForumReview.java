@@ -1,4 +1,4 @@
-package com.example.phasmatic.data.model;
+package com.example.decyra.data.model;
 
 public class ForumReview {
     public String id;

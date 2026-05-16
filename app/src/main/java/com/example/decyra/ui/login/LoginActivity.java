@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.login;
+package com.example.decyra.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;

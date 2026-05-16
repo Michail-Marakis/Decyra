@@ -1,35 +1,24 @@
-package com.example.phasmatic.ui.questionnaire
+package com.example.decyra.ui.questionnaire
 
-import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
-import com.example.phasmatic.data.model.UserExpectation
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
-import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
-import com.example.phasmatic.ui.career.CareerChatComposeActivity
-import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
-import com.example.phasmatic.ui.erasmus.ErasmusChatComposeActivity
-import com.example.phasmatic.ui.login.LoginActivity
-import com.example.phasmatic.ui.master.MasterChatComposeActivity
-import com.example.phasmatic.ui.notes.Notes.NotesActivity
+import com.example.decyra.data.model.UserExpectation
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.extras.ProfileImageManager
+import com.example.decyra.ui.Chat.users_to_chat.UsersActivity
+import com.example.decyra.ui.Profile_Menu.account_settings.AccountActivity
+import com.example.decyra.ui.career.CareerChatComposeActivity
+import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity
+import com.example.decyra.ui.erasmus.ErasmusChatComposeActivity
+import com.example.decyra.ui.login.LoginActivity
+import com.example.decyra.ui.master.MasterChatComposeActivity
+import com.example.decyra.ui.notes.Notes.NotesActivity
 import com.google.firebase.database.*
-import org.bouncycastle.util.Arrays.append
-import java.util.Locale
 
 class QuestionnaireComposeActivity : AppCompatActivity() {
 
@@ -106,7 +95,11 @@ class QuestionnaireComposeActivity : AppCompatActivity() {
                 onPrevClick = { handlePrev() },
                 onNextClick = { handleNext() },
                 onVoiceClick = { startVoiceInput() },
-                onStepClick = { index -> if (index < questionsList.size) { saveCurrentAnswer(); currentIndex = index; updateUI() } },
+                onStepClick = { index ->
+                    if (index < questionsList.size) {
+                        saveCurrentAnswer(); currentIndex = index; updateUI()
+                    }
+                },
                 onItFieldSelected = { index ->
                     selectedFieldId = itFieldIds[index]
                     selectedAnswerIndex = index
@@ -117,7 +110,14 @@ class QuestionnaireComposeActivity : AppCompatActivity() {
                 onMenuDismiss = { menuExpanded = false },
                 onAccountClick = { startActivity(Intent(this, AccountActivity::class.java)) },
                 onChatClick = { startActivity(Intent(this, UsersActivity::class.java)) },
-                onConferenceClick = { startActivity(Intent(this, GeneralConferenceActivity::class.java)) },
+                onConferenceClick = {
+                    startActivity(
+                        Intent(
+                            this,
+                            GeneralConferenceActivity::class.java
+                        )
+                    )
+                },
                 onNotesClick = { startActivity(Intent(this, NotesActivity::class.java)) },
                 onLogoutClick = { handleLogout() }
             )
@@ -320,7 +320,7 @@ class QuestionnaireComposeActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 3000 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == 3000 && resultCode == RESULT_OK) {
             textAnswer = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0) ?: ""
         }
     }

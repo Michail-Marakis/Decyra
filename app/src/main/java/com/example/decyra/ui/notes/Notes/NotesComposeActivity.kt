@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.notes.Notes
+package com.example.decyra.ui.notes.Notes
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,16 +10,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.data.model.Note
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
-import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
-import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
-import com.example.phasmatic.ui.login.LoginActivity
-import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity
-import com.example.phasmatic.ui.notes.NotesScreen
-import com.example.phasmatic.ui.notes.add_note.AddNoteActivity
+import com.example.decyra.data.model.Note
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.extras.ProfileImageManager
+import com.example.decyra.ui.Chat.users_to_chat.UsersActivity
+import com.example.decyra.ui.Profile_Menu.account_settings.AccountActivity
+import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity
+import com.example.decyra.ui.login.LoginActivity
+import com.example.decyra.ui.modeSelection.ModeSelectionActivity
+import com.example.decyra.ui.notes.NotesScreen
+import com.example.decyra.ui.notes.add_note.AddNoteActivity
 import com.google.firebase.database.*
 
 class NotesComposeActivity : AppCompatActivity() {

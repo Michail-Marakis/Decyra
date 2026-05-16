@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.modeSelection
+package com.example.decyra.ui.modeSelection
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -32,7 +32,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import kotlin.math.sin
-import kotlin.math.cos
 import android.graphics.Bitmap
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -40,12 +39,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
-import com.example.phasmatic.R
-import java.nio.file.Files.size
+import com.example.decyra.R
 
 // --- PREMIUM COLOR PALETTE ---
 val InkBlack = Color(0xFF000000)
