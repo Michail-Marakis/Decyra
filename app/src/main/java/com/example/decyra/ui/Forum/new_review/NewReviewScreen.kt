@@ -1,8 +1,7 @@
-package com.example.phasmatic.ui.Forum.new_review
+package com.example.decyra.ui.Forum.new_review
 
 import android.graphics.Bitmap
 import android.widget.ImageView
-import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -27,8 +25,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
-import com.example.phasmatic.ui.modeSelection.ProfileAvatar
-import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
+import com.example.decyra.ui.modeSelection.ProfileAvatar
+import com.example.decyra.ui.modeSelection.ProfileMenuDropdown
 import kotlin.math.sin
 
 val InkBlack = Color(0xFF000000)

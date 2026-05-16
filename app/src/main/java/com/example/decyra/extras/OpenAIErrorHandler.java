@@ -1,4 +1,4 @@
-package com.example.phasmatic.extras;
+package com.example.decyra.extras;
 
 public class OpenAIErrorHandler {
 

@@ -1,8 +1,7 @@
-package com.example.phasmatic.ui.Forum.forum
+package com.example.decyra.ui.Forum.forum
 
 import android.graphics.Bitmap
 import android.widget.ImageView
-import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,19 +20,18 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
-import com.example.phasmatic.data.model.ForumReview
-import com.example.phasmatic.ui.modeSelection.OrchidPrimary
-import com.example.phasmatic.ui.modeSelection.ProfileAvatar
-import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
-import com.example.phasmatic.ui.modeSelection.PureWhite
-import com.example.phasmatic.ui.modeSelection.SoftPinkGlow
+import com.example.decyra.data.model.ForumReview
+import com.example.decyra.ui.modeSelection.OrchidPrimary
+import com.example.decyra.ui.modeSelection.ProfileAvatar
+import com.example.decyra.ui.modeSelection.ProfileMenuDropdown
+import com.example.decyra.ui.modeSelection.PureWhite
+import com.example.decyra.ui.modeSelection.SoftPinkGlow
 import kotlin.math.sin
 
 val InkBlack = Color(0xFF000000)

@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.questionnaire
+package com.example.decyra.ui.questionnaire
 
 import android.graphics.Bitmap
 import android.widget.ImageView
@@ -10,7 +10,6 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -25,22 +24,17 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
-import com.example.phasmatic.R
-import com.example.phasmatic.ui.Forum.forum.AnimatedShimmerTitle
-import com.example.phasmatic.ui.modeSelection.OrchidPrimary
+import com.example.decyra.ui.Forum.forum.AnimatedShimmerTitle
+import com.example.decyra.ui.modeSelection.OrchidPrimary
+import com.example.decyra.R
 import kotlin.math.sin
 
 // --- PREMIUM PRODUCTION COLOR PALETTE ---

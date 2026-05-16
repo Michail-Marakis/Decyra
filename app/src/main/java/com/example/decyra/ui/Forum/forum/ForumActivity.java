@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Forum.forum;
+package com.example.decyra.ui.Forum.forum;
 
 import android.content.Intent;
 import android.os.Bundle;

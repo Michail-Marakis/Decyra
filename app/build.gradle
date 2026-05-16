@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.phasmatic'
+    namespace 'com.example.decyra'
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.example.phasmatic"
+        applicationId 'com.example.decyra'
         minSdk 24
         targetSdk 34
         versionCode 1
@@ -81,6 +81,7 @@ dependencies {
     implementation libs.ui
     implementation libs.core.ktx
     implementation libs.animation
+    implementation libs.ui.text
 
     def camerax_version = "1.3.0"
     implementation "androidx.camera:camera-core:$camerax_version"

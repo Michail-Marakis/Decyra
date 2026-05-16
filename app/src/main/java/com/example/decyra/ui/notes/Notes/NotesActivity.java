@@ -1,10 +1,8 @@
-package com.example.phasmatic.ui.notes.Notes;
+package com.example.decyra.ui.notes.Notes;
 
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.phasmatic.ui.notes.Notes.NotesComposeActivity;
 
 public class NotesActivity extends AppCompatActivity {
     @Override

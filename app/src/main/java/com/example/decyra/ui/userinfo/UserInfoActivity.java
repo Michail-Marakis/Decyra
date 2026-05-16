@@ -1,8 +1,10 @@
-package com.example.phasmatic.ui.userinfo;
+package com.example.decyra.ui.userinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.decyra.ui.userinfo.UserInfoComposeActivity;
 
 public class UserInfoActivity extends AppCompatActivity {
     @Override

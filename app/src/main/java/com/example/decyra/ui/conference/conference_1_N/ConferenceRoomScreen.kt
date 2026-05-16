@@ -1,7 +1,6 @@
-package com.example.phasmatic.ui.conference.conference_1_N
+package com.example.decyra.ui.conference.conference_1_N
 
 import android.graphics.Bitmap
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -11,7 +10,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,25 +21,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Videocam
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.ChatBubbleOutline
-import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.VideoCall
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -69,11 +58,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
-import com.example.phasmatic.ui.modeSelection.OrchidPrimary
-import com.example.phasmatic.ui.modeSelection.ProfileAvatar
-import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
-import com.example.phasmatic.ui.modeSelection.PureWhite
-import com.example.phasmatic.ui.modeSelection.SoftPinkGlow
+import com.example.decyra.ui.modeSelection.OrchidPrimary
+import com.example.decyra.ui.modeSelection.ProfileAvatar
+import com.example.decyra.ui.modeSelection.ProfileMenuDropdown
+import com.example.decyra.ui.modeSelection.PureWhite
+import com.example.decyra.ui.modeSelection.SoftPinkGlow
 import kotlin.math.sin
 
 private val InkDeep = Color(0xFF1E1B4B)

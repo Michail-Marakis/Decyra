@@ -1,4 +1,4 @@
-package com.example.phasmatic.extras
+package com.example.decyra.extras
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.*

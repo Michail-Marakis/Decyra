@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu.account_settings
+package com.example.decyra.ui.Profile_Menu.account_settings
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,11 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Profile_Menu.edit_account_settings.EditProfileActivity
-import com.example.phasmatic.ui.Profile_Menu.edit_academic_account_settings.EditUserInfoActivity
-import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.extras.ProfileImageManager
+import com.example.decyra.ui.Profile_Menu.edit_account_settings.EditProfileActivity
+import com.example.decyra.ui.Profile_Menu.edit_academic_account_settings.EditUserInfoActivity
+import com.example.decyra.ui.modeSelection.ModeSelectionActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

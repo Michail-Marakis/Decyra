@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.conference.general_conference;
+package com.example.decyra.ui.conference.general_conference;
 
 import android.content.Intent;
 import android.os.Bundle;

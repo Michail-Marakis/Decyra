@@ -1,11 +1,11 @@
-package com.example.phasmatic.data.ai.indexers;
+package com.example.decyra.data.ai.indexers;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.example.phasmatic.data.ai.callbacks.EmbeddingCallback;
-import com.example.phasmatic.data.ai.clients.OpenAIChatClient;
-import com.example.phasmatic.data.ai.clients.PineconeClient;
+import com.example.decyra.data.ai.callbacks.EmbeddingCallback;
+import com.example.decyra.data.ai.clients.OpenAIChatClient;
+import com.example.decyra.data.ai.clients.PineconeClient;
 import com.google.firebase.database.*;
 
 import org.json.JSONObject;

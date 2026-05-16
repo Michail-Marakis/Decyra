@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Chat.users_to_chat
+package com.example.decyra.ui.Chat.users_to_chat
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -12,15 +12,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.data.model.Conversation
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.chat.ChatActivity
-import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
-import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
-import com.example.phasmatic.ui.login.LoginActivity
-import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity
-import com.example.phasmatic.ui.notes.Notes.NotesActivity
+import com.example.decyra.data.model.Conversation
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.extras.ProfileImageManager
+import com.example.decyra.ui.Chat.chat.ChatActivity
+import com.example.decyra.ui.Profile_Menu.account_settings.AccountActivity
+import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity
+import com.example.decyra.ui.login.LoginActivity
+import com.example.decyra.ui.modeSelection.ModeSelectionActivity
+import com.example.decyra.ui.notes.Notes.NotesActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference

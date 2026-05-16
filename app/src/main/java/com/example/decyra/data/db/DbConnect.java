@@ -1,4 +1,4 @@
-package com.example.phasmatic.data.db;
+package com.example.decyra.data.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.example.phasmatic.data.model.User;
+import com.example.decyra.data.model.User;
 
 public class DbConnect extends SQLiteOpenHelper {
 

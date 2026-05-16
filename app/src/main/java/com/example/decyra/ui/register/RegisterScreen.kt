@@ -1,6 +1,5 @@
-package com.example.phasmatic.ui.register
+package com.example.decyra.ui.register
 
-import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,10 +18,11 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.*
-import com.example.phasmatic.ui.modeSelection.OrchidPrimary
+import com.example.decyra.ui.modeSelection.OrchidPrimary
 import kotlin.math.sin
 
 // Ίδια palette όπως στο ModeSelectionScreen
@@ -401,7 +401,7 @@ fun PremiumTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    leadingIcon: androidx.compose.ui.graphics.vector.ImageVector,
+    leadingIcon: ImageVector,
     keyboardOptions: KeyboardOptions,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailing: @Composable (() -> Unit)? = null
@@ -470,7 +470,7 @@ fun PremiumPrimaryButton(
 @Composable
 fun PremiumSecondaryButton(
     text: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     enabled: Boolean,
     onClick: () -> Unit
 ) {

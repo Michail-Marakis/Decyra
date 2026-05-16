@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Chat;
+package com.example.decyra.ui.Chat;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.phasmatic.R;
-import com.example.phasmatic.data.model.Message;
+import com.example.decyra.R;
+import com.example.decyra.data.model.Message;
 
 import java.util.List;
 

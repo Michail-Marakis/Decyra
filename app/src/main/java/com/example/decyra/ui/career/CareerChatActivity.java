@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.career;
+package com.example.decyra.ui.career;
 
 import android.content.Intent;
 import android.os.Bundle;

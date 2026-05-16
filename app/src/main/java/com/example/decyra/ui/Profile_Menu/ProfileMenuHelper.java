@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu;
+package com.example.decyra.ui.Profile_Menu;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,12 +6,12 @@ import android.view.View;
 
 import androidx.appcompat.widget.PopupMenu;
 
-import com.example.phasmatic.R;
-import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity;
-import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity;
-import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity;
-import com.example.phasmatic.ui.login.LoginActivity;
-import com.example.phasmatic.ui.notes.Notes.NotesActivity;
+import com.example.decyra.R;
+import com.example.decyra.ui.Profile_Menu.account_settings.AccountActivity;
+import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity;
+import com.example.decyra.ui.Chat.users_to_chat.UsersActivity;
+import com.example.decyra.ui.login.LoginActivity;
+import com.example.decyra.ui.notes.Notes.NotesActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

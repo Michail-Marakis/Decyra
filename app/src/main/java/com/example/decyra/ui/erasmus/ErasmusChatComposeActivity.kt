@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.erasmus
+package com.example.decyra.ui.erasmus
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -6,23 +6,23 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.widget.Toast
-import com.example.phasmatic.data.ai.callbacks.ChatCallback
+import com.example.decyra.data.ai.callbacks.ChatCallback
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.data.ai.clients.OpenAIChatClient
-import com.example.phasmatic.extras.HTMLFileExporter
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
-import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
-import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
-import com.example.phasmatic.ui.login.LoginActivity
-import com.example.phasmatic.ui.notes.Notes.NotesActivity
-import com.example.phasmatic.ui.shared_chat.UnifiedChatScreen
+import com.example.decyra.data.ai.clients.OpenAIChatClient
+import com.example.decyra.extras.HTMLFileExporter
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.extras.ProfileImageManager
+import com.example.decyra.ui.Chat.users_to_chat.UsersActivity
+import com.example.decyra.ui.Profile_Menu.account_settings.AccountActivity
+import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity
+import com.example.decyra.ui.login.LoginActivity
+import com.example.decyra.ui.notes.Notes.NotesActivity
+import com.example.decyra.ui.shared_chat.UnifiedChatScreen
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

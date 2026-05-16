@@ -1,4 +1,4 @@
-package com.example.phasmatic.extras;
+package com.example.decyra.extras;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -12,9 +12,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.phasmatic.R;
-import com.example.phasmatic.ui.Chat.chat.ChatActivity;
-import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity;
+import com.example.decyra.R;
+import com.example.decyra.ui.Chat.chat.ChatActivity;
+import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;

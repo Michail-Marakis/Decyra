@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Chat.users_to_chat;
+package com.example.decyra.ui.Chat.users_to_chat;
 
 import android.content.Intent;
 import android.os.Bundle;

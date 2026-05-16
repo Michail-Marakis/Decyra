@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.master;
+package com.example.decyra.ui.master;
 
 import android.content.Intent;
 import android.os.Bundle;

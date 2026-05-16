@@ -1,18 +1,18 @@
-package com.example.phasmatic.ui;
+package com.example.decyra.ui;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.ImageButton;
 
-import com.example.phasmatic.ui.Chat.chat.ChatActivity;
+import com.example.decyra.ui.Chat.chat.ChatActivity;
 //import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity;
-import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity;
-import com.example.phasmatic.ui.Forum.forum.ForumActivity;
-import com.example.phasmatic.ui.Profile_Menu.public_profile.PublicProfileActivity;
-import com.example.phasmatic.ui.login.LoginActivity;
-import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity;
-import com.example.phasmatic.ui.notes.Notes.NotesActivity;
-import com.example.phasmatic.ui.userinfo.UserInfoActivity;
+import com.example.decyra.ui.Chat.users_to_chat.UsersActivity;
+import com.example.decyra.ui.Forum.forum.ForumActivity;
+import com.example.decyra.ui.Profile_Menu.public_profile.PublicProfileActivity;
+import com.example.decyra.ui.login.LoginActivity;
+import com.example.decyra.ui.modeSelection.ModeSelectionActivity;
+import com.example.decyra.ui.notes.Notes.NotesActivity;
+import com.example.decyra.ui.userinfo.UserInfoActivity;
 
 public class BackButtonHelper {
 

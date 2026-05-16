@@ -1,7 +1,6 @@
-package com.example.phasmatic.ui.conference.general_conference
+package com.example.decyra.ui.conference.general_conference
 
 import android.graphics.Bitmap
-import android.view.View
 import android.widget.ImageView
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -40,12 +39,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.ChatBubbleOutline
-import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.VideoCall
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -53,9 +48,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -71,7 +63,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
@@ -92,12 +83,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
-import com.example.phasmatic.data.model.User
-import com.example.phasmatic.ui.modeSelection.OrchidPrimary
-import com.example.phasmatic.ui.modeSelection.ProfileAvatar
-import com.example.phasmatic.ui.modeSelection.ProfileMenuDropdown
-import com.example.phasmatic.ui.modeSelection.PureWhite
-import com.example.phasmatic.ui.modeSelection.SoftPinkGlow
+import com.example.decyra.data.model.User
+import com.example.decyra.ui.modeSelection.OrchidPrimary
+import com.example.decyra.ui.modeSelection.ProfileAvatar
+import com.example.decyra.ui.modeSelection.ProfileMenuDropdown
+import com.example.decyra.ui.modeSelection.PureWhite
+import com.example.decyra.ui.modeSelection.SoftPinkGlow
 import kotlin.math.sin
 
 private val InkBlack = Color(0xFF000000)
@@ -476,8 +467,8 @@ private fun UserAvatar(url: String?) {
                         scaleType = ImageView.ScaleType.CENTER_CROP
                         Glide.with(context)
                             .load(url)
-                            .placeholder(com.example.phasmatic.R.drawable.baseline_face_24)
-                            .error(com.example.phasmatic.R.drawable.baseline_face_24)
+                            .placeholder(com.example.decyra.R.drawable.baseline_face_24)
+                            .error(com.example.decyra.R.drawable.baseline_face_24)
                             .into(this)
                     }
                 },

@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Profile_Menu.edit_account_settings
+package com.example.decyra.ui.Profile_Menu.edit_account_settings
 
 import android.os.Bundle
 import android.widget.Toast
@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.phasmatic.extras.InternetConnection
+import com.example.decyra.extras.InternetConnection
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

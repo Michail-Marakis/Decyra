@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui;
+package com.example.decyra.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.phasmatic.ui.login.LoginActivity;
-import com.example.phasmatic.ui.modeSelection.ModeSelectionActivity;
+import com.example.decyra.ui.login.LoginActivity;
+import com.example.decyra.ui.modeSelection.ModeSelectionActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;

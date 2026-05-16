@@ -1,4 +1,4 @@
-package com.example.phasmatic.ui.Forum.new_review
+package com.example.decyra.ui.Forum.new_review
 
 import android.Manifest
 import android.app.Activity
@@ -24,15 +24,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import com.example.phasmatic.R
-import com.example.phasmatic.data.model.ForumReview
-import com.example.phasmatic.extras.InternetConnection
-import com.example.phasmatic.extras.ProfileImageManager
-import com.example.phasmatic.ui.Chat.users_to_chat.UsersActivity
-import com.example.phasmatic.ui.Profile_Menu.account_settings.AccountActivity
-import com.example.phasmatic.ui.conference.general_conference.GeneralConferenceActivity
-import com.example.phasmatic.ui.login.LoginActivity
-import com.example.phasmatic.ui.notes.Notes.NotesActivity
+import com.example.decyra.R
+import com.example.decyra.data.model.ForumReview
+import com.example.decyra.extras.InternetConnection
+import com.example.decyra.extras.ProfileImageManager
+import com.example.decyra.ui.Chat.users_to_chat.UsersActivity
+import com.example.decyra.ui.Profile_Menu.account_settings.AccountActivity
+import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity
+import com.example.decyra.ui.login.LoginActivity
+import com.example.decyra.ui.notes.Notes.NotesActivity
 import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.Date

@@ -1,10 +1,10 @@
-package com.example.phasmatic.data.ai.clients;
+package com.example.decyra.data.ai.clients;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.phasmatic.data.ai.callbacks.PineconeCallback;
+import com.example.decyra.data.ai.callbacks.PineconeCallback;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
