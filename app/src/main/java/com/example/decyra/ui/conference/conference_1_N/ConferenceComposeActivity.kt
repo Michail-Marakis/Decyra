@@ -65,9 +65,9 @@ class ConferenceComposeActivity : AppCompatActivity() {
             inter.showCustomDialog(this)
         }
 
-        userId = intent.getStringExtra("userId").toString()
-        code = intent.getStringExtra("code").toString()
-        userName = intent.getStringExtra("userFullName").toString()
+        userId = intent.getStringExtra("userId").orEmpty()
+        code = intent.getStringExtra("code").orEmpty()
+        userName = intent.getStringExtra("userFullName").orEmpty().ifBlank { "User" }
         userEmail = intent.getStringExtra("userEmail")
         userPhone = intent.getStringExtra("userPhone")
         profileImageUrl = intent.getStringExtra("profileImageUrl")

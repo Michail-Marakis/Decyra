@@ -172,16 +172,7 @@ fun QuestionnaireScreen(
                                 // IT field selection
                                 AnswerGrid(
                                     options = itFieldNames,
-                                    selectedIndex = itFieldNames.indexOfFirst {
-                                        itFieldNames.indexOf(it) == itFieldNames.indexOf(
-                                            itFieldNames.find { name ->
-                                                selectedFieldId?.let { id ->
-                                                    itFieldNames.indexOf(name) < itFieldNames.size &&
-                                                            itFieldNames.indexOf(name) >= 0
-                                                } ?: false
-                                            }
-                                        )
-                                    },
+                                    selectedIndex = selectedAnswerIndex,
                                     onOptionSelected = { index ->
                                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                         onItFieldSelected(index)
