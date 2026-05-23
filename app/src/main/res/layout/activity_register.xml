@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF1E3A5F"
-    tools:context=".ui.register.RegisterActivity">
+    tools:context=".frontend.register.RegisterActivity">
 
 
 
@@ -192,7 +192,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.example.decyra.data.model.FaceGuideOverlay
+        <com.example.decyra.backend.domain.FaceGuideOverlay
             android:id="@+id/faceGuideOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

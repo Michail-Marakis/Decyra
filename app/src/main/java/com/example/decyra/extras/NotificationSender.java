@@ -12,11 +12,22 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * The type Notification sender.
+ */
 public class NotificationSender {
 
     private static final String FUNCTION_URL =
             "https://sbzxqcwvbbgbpykyvmfa.supabase.co/functions/v1/send-email";
 
+    /**
+     * Send.
+     *
+     * @param toToken the to token
+     * @param type    the type
+     * @param title   the title
+     * @param body    the body
+     */
     public static void send(String toToken, String type, String title, String body) {
         new Thread(() -> {
             try {

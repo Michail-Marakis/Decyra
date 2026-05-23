@@ -9,10 +9,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+/**
+ * The type Profile image manager.
+ */
 public class ProfileImageManager {
 
     private static final String FOLDER_NAME = "profile_images";
 
+    /**
+     * Save bitmap string.
+     *
+     * @param context the context
+     * @param userId  the user id
+     * @param bitmap  the bitmap
+     * @return the string
+     */
     public static String saveBitmap(Context context, String userId, Bitmap bitmap) {
         try {
             File folder = new File(context.getFilesDir(), FOLDER_NAME);
@@ -35,6 +46,14 @@ public class ProfileImageManager {
         }
     }
 
+    /**
+     * Save uri string.
+     *
+     * @param context the context
+     * @param userId  the user id
+     * @param uri     the uri
+     * @return the string
+     */
     public static String saveUri(Context context, String userId, Uri uri) {
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
@@ -51,6 +70,13 @@ public class ProfileImageManager {
         }
     }
 
+    /**
+     * Load bitmap bitmap.
+     *
+     * @param context the context
+     * @param userId  the user id
+     * @return the bitmap
+     */
     public static Bitmap loadBitmap(Context context, String userId) {
         try {
             File folder = new File(context.getFilesDir(), FOLDER_NAME);

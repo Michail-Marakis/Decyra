@@ -10,10 +10,18 @@ import android.provider.Settings;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.decyra.ui.login.LoginActivity;
+import com.example.decyra.frontend.login.LoginActivity;
 
+/**
+ * The type Internet connection.
+ */
 public class InternetConnection {
 
+    /**
+     * Show custom dialog.
+     *
+     * @param i the
+     */
     public void showCustomDialog(AppCompatActivity i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(i);
         builder.setMessage("Please Connect to the Internet to proceed further")
@@ -34,6 +42,12 @@ public class InternetConnection {
         builder.show();
     }
 
+    /**
+     * Is connected boolean.
+     *
+     * @param i the
+     * @return the boolean
+     */
     public boolean isConnected(AppCompatActivity i) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) i.getSystemService(Context.CONNECTIVITY_SERVICE);
