@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FF1E3A5F"
     android:padding="10dp"
-    tools:context=".ui.notes.Notes.NotesActivity">
+    tools:context=".frontend.notes.Notes.NotesActivity">
 
     <ImageButton
         android:id="@+id/btnBack"

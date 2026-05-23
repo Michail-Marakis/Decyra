@@ -24,7 +24,7 @@
         android:theme="@style/Theme.Phasmatic">
 
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".extras.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,88 +33,88 @@
         </activity>
 
         <activity
-            android:name=".ui.register.RegisterActivity"
+            android:name=".frontend.register.RegisterActivity"
             android:exported="false" />
-        <activity android:name=".ui.register.RegisterComposeActivity" />
+        <activity android:name=".frontend.register.RegisterComposeActivity" />
 
-        <activity android:name=".ui.userinfo.UserInfoActivity" />
-        <activity android:name=".ui.userinfo.UserInfoComposeActivity" />
-        <activity android:name=".ui.modeSelection.ModeSelectionComposeActivity" />
-        <activity android:name=".ui.login.LoginActivity" />
-        <activity android:name=".ui.login.LoginComposeActivity" />
-        <activity android:name=".ui.erasmus.ErasmusChatComposeActivity" />
+        <activity android:name=".frontend.userinfo.UserInfoActivity" />
+        <activity android:name=".frontend.userinfo.UserInfoComposeActivity" />
+        <activity android:name=".frontend.modeSelection.ModeSelectionComposeActivity" />
+        <activity android:name=".frontend.login.LoginActivity" />
+        <activity android:name=".frontend.login.LoginComposeActivity" />
+        <activity android:name=".frontend.erasmus.ErasmusChatComposeActivity" />
 
 
         <activity
-            android:name=".ui.modeSelection.ModeSelectionActivity"
+            android:name=".frontend.modeSelection.ModeSelectionActivity"
             android:exported="false" />
 
-        <activity android:name=".ui.erasmus.ErasmusChatActivity" />
+        <activity android:name=".frontend.erasmus.ErasmusChatActivity" />
 
-        <activity android:name=".ui.master.MasterChatActivity" />
-        <activity android:name=".ui.master.MasterChatComposeActivity" />
+        <activity android:name=".frontend.master.MasterChatActivity" />
+        <activity android:name=".frontend.master.MasterChatComposeActivity" />
 
-        <activity android:name=".ui.questionnaire.QuestionnaireActivity" />
-        <activity android:name=".ui.questionnaire.QuestionnaireComposeActivity"/>
+        <activity android:name=".frontend.questionnaire.QuestionnaireActivity" />
+        <activity android:name=".frontend.questionnaire.QuestionnaireComposeActivity"/>
 
-        <activity android:name=".ui.Profile_Menu.account_settings.AccountActivity" />
-        <activity android:name=".ui.Profile_Menu.account_settings.AccountComposeActivity" />
+        <activity android:name=".frontend.Profile_Menu.account_settings.AccountActivity" />
+        <activity android:name=".frontend.Profile_Menu.account_settings.AccountComposeActivity" />
 
-        <activity android:name=".ui.Profile_Menu.edit_account_settings.EditProfileActivity" />
+        <activity android:name=".frontend.Profile_Menu.edit_account_settings.EditProfileActivity" />
         <activity
-            android:name=".ui.Profile_Menu.edit_account_settings.EditProfileComposeActivity"/>
+            android:name=".frontend.Profile_Menu.edit_account_settings.EditProfileComposeActivity"/>
 
-        <activity android:name=".ui.Profile_Menu.edit_academic_account_settings.EditUserInfoActivity" />
-        <activity android:name=".ui.Profile_Menu.edit_academic_account_settings.EditUserInfoComposeActivity"/>
+        <activity android:name=".frontend.Profile_Menu.edit_academic_account_settings.EditUserInfoActivity" />
+        <activity android:name=".frontend.Profile_Menu.edit_academic_account_settings.EditUserInfoComposeActivity"/>
 
-        <activity android:name=".data.model.FaceGuideOverlay"
+        <activity android:name=".backend.domain.FaceGuideOverlay"
             tools:ignore="Instantiatable" />
 
-        <activity android:name=".ui.Forum.forum.ForumActivity" />
-        <activity android:name=".ui.Forum.forum.ForumComposeActivity" />
+        <activity android:name=".frontend.Forum.forum.ForumActivity" />
+        <activity android:name=".frontend.Forum.forum.ForumComposeActivity" />
 
         <activity android:name=".extras.InternetConnection"
             tools:ignore="Instantiatable" />
 
 
 
-        <activity android:name=".ui.notes.Notes.NotesActivity"/>
-        <activity android:name=".ui.notes.Notes.NotesComposeActivity"
+        <activity android:name=".frontend.notes.Notes.NotesActivity"/>
+        <activity android:name=".frontend.notes.Notes.NotesComposeActivity"
             tools:ignore="MissingClass" />
 
-        <activity android:name=".ui.notes.add_note.AddNoteActivity"
+        <activity android:name=".frontend.notes.add_note.AddNoteActivity"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".ui.notes.add_note.AddNoteComposeActivity"
+            android:name=".frontend.notes.add_note.AddNoteComposeActivity"
             tools:ignore="MissingClass" />
 
-        <activity android:name=".ui.Forum.new_review.NewReviewActivity" />
-        <activity android:name=".ui.Forum.new_review.NewReviewComposeActivity" />
+        <activity android:name=".frontend.Forum.new_review.NewReviewActivity" />
+        <activity android:name=".frontend.Forum.new_review.NewReviewComposeActivity" />
 
-        <activity android:name=".ui.Forum.personal_review.ReviewDetailActivity" />
-        <activity android:name=".ui.Forum.personal_review.ReviewDetailComposeActivity" />
+        <activity android:name=".frontend.Forum.personal_review.ReviewDetailActivity" />
+        <activity android:name=".frontend.Forum.personal_review.ReviewDetailComposeActivity" />
 
-        <activity android:name=".ui.forget.ForgetActivity" />
-        <activity android:name=".ui.forget.ForgetComposeActivity" />
+        <activity android:name=".frontend.forget.ForgetActivity" />
+        <activity android:name=".frontend.forget.ForgetComposeActivity" />
 
-        <activity android:name=".ui.Profile_Menu.public_profile.PublicProfileActivity" />
+        <activity android:name=".frontend.Profile_Menu.public_profile.PublicProfileActivity" />
 
-        <activity android:name=".ui.Profile_Menu.public_profile.PublicProfileComposeActivity"/>
+        <activity android:name=".frontend.Profile_Menu.public_profile.PublicProfileComposeActivity"/>
 
-        <activity android:name=".ui.Chat.users_to_chat.UsersActivity" />
-        <activity android:name=".ui.Chat.users_to_chat.UsersComposeActivity" />
-        <activity android:name=".ui.Chat.chat.ChatActivity"/>
-        <activity android:name=".ui.Chat.chat.ChatComposeActivity"/>
+        <activity android:name=".frontend.Chat.users_to_chat.UsersActivity" />
+        <activity android:name=".frontend.Chat.users_to_chat.UsersComposeActivity" />
+        <activity android:name=".frontend.Chat.chat.ChatActivity"/>
+        <activity android:name=".frontend.Chat.chat.ChatComposeActivity"/>
 
-        <activity android:name=".ui.conference.conference_1_N.ConferenceActivity"/>
-        <activity android:name=".ui.conference.conference_1_N.ConferenceComposeActivity"/>
+        <activity android:name=".frontend.conference.conference_screen.ConferenceActivity"/>
+        <activity android:name=".frontend.conference.conference_screen.ConferenceComposeActivity"/>
 
 
-        <activity android:name=".ui.conference.general_conference.GeneralConferenceActivity" />
-        <activity android:name=".ui.conference.general_conference.GeneralConferenceComposeActivity" />
+        <activity android:name=".frontend.conference.general_conference.GeneralConferenceActivity" />
+        <activity android:name=".frontend.conference.general_conference.GeneralConferenceComposeActivity" />
 
-        <activity android:name=".ui.career.CareerChatActivity" />
-        <activity android:name=".ui.career.CareerChatComposeActivity" />
+        <activity android:name=".frontend.career.CareerChatActivity" />
+        <activity android:name=".frontend.career.CareerChatComposeActivity" />
 
         <service
             android:name=".extras.FCMTokenService"

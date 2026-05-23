@@ -7,8 +7,19 @@ import android.widget.Toast;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * The type Html file exporter.
+ */
 public class HTMLFileExporter {
 
+    /**
+     * Export to html boolean.
+     *
+     * @param context the context
+     * @param uri     the uri
+     * @param content the content
+     * @return the boolean
+     */
     public static boolean exportToHtml(Context context, Uri uri, String content) {
         try (OutputStream os = context.getContentResolver().openOutputStream(uri)) {
             if (os == null) {

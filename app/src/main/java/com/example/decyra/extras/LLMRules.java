@@ -1,7 +1,16 @@
 package com.example.decyra.extras;
 
+/**
+ * The type Llm rules.
+ */
 public class LLMRules {
 
+    /**
+     * Build base prompt string.
+     *
+     * @param programType the program type
+     * @return the string
+     */
     public static String buildBasePrompt(ProgramType programType) {
         StringBuilder prompt = new StringBuilder();
 

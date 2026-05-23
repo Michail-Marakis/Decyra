@@ -13,13 +13,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.decyra.R;
-import com.example.decyra.ui.Chat.chat.ChatActivity;
-import com.example.decyra.ui.conference.general_conference.GeneralConferenceActivity;
+import com.example.decyra.frontend.Chat.chat.ChatActivity;
+import com.example.decyra.frontend.conference.general_conference.GeneralConferenceActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+/**
+ * The type Fcm token service.
+ */
 public class FCMTokenService extends FirebaseMessagingService {
 
     private static final String CHAT_CHANNEL_ID = "chat_messages_channel";
