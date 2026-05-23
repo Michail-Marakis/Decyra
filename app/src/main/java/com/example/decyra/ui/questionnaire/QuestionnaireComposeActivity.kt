@@ -173,13 +173,25 @@ class QuestionnaireComposeActivity : AppCompatActivity() {
 
     private fun updateUI() {
         if (questionsList.isEmpty()) return
+
         textAnswer = userAnswers[currentIndex]
         selectedAnswerIndex = null
+
         val qId = questionsList[currentIndex].questionId
-        if (!shouldUseTextInput(modeType, qId) && !(modeType == "career" && currentIndex == 0)) {
+
+        if (modeType == "career" && currentIndex == 0) {
+            val saved = userAnswers[currentIndex]
+            if (saved.isNotEmpty()) {
+                selectedAnswerIndex = itFieldNames.indexOf(saved).takeIf { it >= 0 }
+                selectedFieldId = itFieldIds.getOrNull(selectedAnswerIndex ?: -1)
+            }
+        } else if (!shouldUseTextInput(modeType, qId)) {
             loadAnswersForQuestion(qId)
         }
-        if (modeType == "career" && currentIndex == 1) updateCareerSecondQuestion()
+
+        if (modeType == "career" && currentIndex == 1) {
+            updateCareerSecondQuestion()
+        }
     }
 
     private fun loadAnswersForQuestion(qId: Long) {

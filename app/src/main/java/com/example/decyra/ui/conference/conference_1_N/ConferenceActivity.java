@@ -18,6 +18,8 @@ public class ConferenceActivity extends AppCompatActivity {
         i.putExtra("userFullName", source.getStringExtra("userFullName"));
         i.putExtra("userEmail", source.getStringExtra("userEmail"));
         i.putExtra("userPhone", source.getStringExtra("userPhone"));
+        i.putExtra("code", source.getStringExtra("code"));
+        i.putExtra("profileImageUrl", source.getStringExtra("profileImageUrl"));
 
         startActivity(i);
         finish();
