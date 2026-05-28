@@ -43,12 +43,12 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import com.example.decyra.R
 
-// --- PREMIUM COLOR PALETTE ---
+// PREMIUM COLOR PALETTE
 val InkBlack = Color(0xFF000000)
 val InkDeep = Color(0xFF1E1B4B)
 val HeroIndigoEnd = Color(0xFF312E81)
 val OrchidPrimary = Color(0xFFD946EF)
-val OrchidSecondary = Color(0xFF818CF8) // Προστέθηκε για τα nodes
+val OrchidSecondary = Color(0xFF818CF8)
 val OrchidLight = Color(0xFFFDF4FF)
 val SoftPinkGlow = Color(0xFFFFE4FF)
 val PureWhite = Color(0xFFFFFFFF)
@@ -92,7 +92,7 @@ fun ModeSelectionScreen(
                         .padding(horizontal = 20.dp),
                     contentPadding = PaddingValues(top = 24.dp, bottom = 40.dp)
                 ) {
-                    // --- TOP BAR ---
+                    //TOP BAR
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -163,7 +163,7 @@ fun ModeSelectionScreen(
 
                     item { Spacer(Modifier.height(48.dp)) }
 
-                    // --- MISSIONS SECTION ---
+                    //MISSIONS SECTION
                     item {
                         Column(modifier = Modifier.padding(horizontal = 8.dp)) {
                             AnimatedShimmerTitle(text = "CHOOSE YOUR MISSION")
@@ -211,7 +211,7 @@ fun ModeSelectionScreen(
             }
         }
 
-        // --- AI ASSISTANT OVERLAY ---
+        //AI ASSISTANT OVERLAY
         if (showAIAssistant) {
             AIAssistantOverlay(onDismiss = { showAIAssistant = false })
         }
@@ -224,7 +224,7 @@ fun AIAssistantOverlay(onDismiss: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     var isVoiceEnabled by remember { mutableStateOf(true) }
     var isPaused by remember { mutableStateOf(false) }
-    var isTtsReady by remember { mutableStateOf(false) } // Νέο state για ετοιμότητα
+    var isTtsReady by remember { mutableStateOf(false) }
 
     val tips = listOf(
         "Tip: Use the Erasmus plus mission to explore global opportunities!",
@@ -235,7 +235,7 @@ fun AIAssistantOverlay(onDismiss: () -> Unit) {
 
     var currentTipIndex by remember { mutableIntStateOf(0) }
 
-    // --- TEXT TO SPEECH SETUP ---
+    //TEXT TO SPEECH SETUP
     val tts = remember {
         var textToSpeech: TextToSpeech? = null
         textToSpeech = TextToSpeech(context) { status ->
@@ -247,11 +247,11 @@ fun AIAssistantOverlay(onDismiss: () -> Unit) {
         textToSpeech
     }
 
-    // Διαχείριση εναλλαγής tips και ομιλίας
+    //Διαχείριση εναλλαγής tips και ομιλίας
     LaunchedEffect(currentTipIndex, isVoiceEnabled, isPaused, isTtsReady) {
         if (!isPaused && isTtsReady) { // Προσθήκη ελέγχου isTtsReady
             if (isVoiceEnabled) {
-                // Μικρή καθυστέρηση για να προλάβει το UI animation να ξεκινήσει
+                //Μικρή καθυστέρηση για να προλάβει το UI animation να ξεκινήσει
                 kotlinx.coroutines.delay(300)
                 tts?.speak(tips[currentTipIndex], TextToSpeech.QUEUE_FLUSH, null, "tip_id")
             }
@@ -260,7 +260,7 @@ fun AIAssistantOverlay(onDismiss: () -> Unit) {
         }
     }
 
-    // Cleanup TTS όταν κλείνει το Overlay
+    //Cleanup TTS όταν κλείνει το Overlay
     DisposableEffect(Unit) {
         onDispose {
             tts?.stop()
@@ -293,7 +293,7 @@ fun AIAssistantOverlay(onDismiss: () -> Unit) {
                 modifier = Modifier.padding(24.dp).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // --- TOP ROW ---
+                //TOP ROW
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -340,7 +340,7 @@ fun AIAssistantOverlay(onDismiss: () -> Unit) {
 
                 Spacer(Modifier.height(24.dp))
 
-                // --- INTERACTIVE TIP BOX ---
+                //INTERACTIVE TIP BOX
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -390,7 +390,7 @@ fun AIAssistantOverlay(onDismiss: () -> Unit) {
 
                 Spacer(Modifier.height(32.dp))
 
-                // --- VOICE ANIMATION & DYNAMIC HINT ---
+                //VOICE ANIMATION & DYNAMIC HINT
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     if (isVoiceEnabled && !isPaused && isTtsReady) {
                         VoiceVisualizer()
@@ -482,7 +482,7 @@ fun HeroGlassCard(name: String, onAuraClick: () -> Unit) {
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Στην αρχική οθόνη isSpeaking = false
+            //Στην αρχική οθόνη isSpeaking = false
             Box(modifier = Modifier.clickable { onAuraClick() }) {
                 NeuralPrismAura(isSpeaking = false, onClick = onAuraClick)
             }
@@ -686,7 +686,7 @@ fun AnimatedMeshBackground() {
 fun NeuralPrismAura(isSpeaking: Boolean = false, onClick: () -> Unit) {
     val infiniteTransition = rememberInfiniteTransition(label = "aura_final")
 
-    // 1. ΣΥΝΕΧΗΣ ΠΕΡΙΣΤΡΟΦΗ (Spinning)
+    //ΣΥΝΕΧΗΣ ΠΕΡΙΣΤΡΟΦΗ
     val outerRotation by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 360f,
         animationSpec = infiniteRepeatable(tween(15000, easing = LinearEasing)), label = "outer"
@@ -697,7 +697,7 @@ fun NeuralPrismAura(isSpeaking: Boolean = false, onClick: () -> Unit) {
         animationSpec = infiniteRepeatable(tween(10000, easing = LinearEasing)), label = "inner"
     )
 
-    // 2. RADAR EFFECT (The "Click Me" hint)
+    //RADAR EFFECT
     val radarScale by infiniteTransition.animateFloat(
         initialValue = 1f, targetValue = 1.8f,
         animationSpec = infiniteRepeatable(
@@ -713,7 +713,7 @@ fun NeuralPrismAura(isSpeaking: Boolean = false, onClick: () -> Unit) {
         ), label = "radar_alpha"
     )
 
-    // 3. PULSE (Breathing)
+    //PULSE
     val pulse by infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = if (isSpeaking) 1.15f else 1.08f,
@@ -732,7 +732,7 @@ fun NeuralPrismAura(isSpeaking: Boolean = false, onClick: () -> Unit) {
             ),
         contentAlignment = Alignment.Center
     ) {
-        // --- LAYER 1: THE RADAR ---
+        //LAYER 1 THE RADAR
         Canvas(modifier = Modifier.fillMaxSize()) {
             if (!isSpeaking) {
                 drawCircle(
@@ -743,7 +743,7 @@ fun NeuralPrismAura(isSpeaking: Boolean = false, onClick: () -> Unit) {
             }
         }
 
-        // --- LAYER 2: THE ORIGINAL PRISM SHAPE ---
+        //LAYER 2 THE ORIGINAL PRISM SHAPE
         Box(
             modifier = Modifier
                 .size(85.dp)
@@ -760,14 +760,14 @@ fun NeuralPrismAura(isSpeaking: Boolean = false, onClick: () -> Unit) {
                 },
             contentAlignment = Alignment.Center
         ) {
-            // --- LAYER 3: THE ORIGINAL LAYERS ICON ---
+            //LAYER 3 THE ORIGINAL LAYERS ICON
             Icon(
                 imageVector = Icons.Default.Layers,
                 contentDescription = null,
                 tint = OrchidPrimary,
                 modifier = Modifier
                     .size(32.dp)
-                    .rotate(innerRotation - outerRotation) // Αντίθετη περιστροφή για το εφέ σου
+                    .rotate(innerRotation - outerRotation) //Αντίθετη περιστροφή
             )
         }
     }
