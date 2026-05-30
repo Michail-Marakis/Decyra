@@ -25,7 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.decyra.backend.ai.indexers.PineconeIndexerMasterCareer
+import com.example.decyra.backend.ai.indexers.PineconeIndexerCareer
+import com.example.decyra.backend.ai.indexers.PineconeIndexerErasmus
+import com.example.decyra.backend.ai.indexers.PineconeIndexerMaster
 import com.example.decyra.frontend.forget.ForgetActivity
 import com.example.decyra.frontend.register.RegisterActivity
 import com.example.decyra.backend.domain.User
@@ -51,7 +53,9 @@ class LoginComposeActivity : ComponentActivity() {
     private lateinit var usersFaceRef: DatabaseReference
     private lateinit var userInfoRef: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var indexer: PineconeIndexerMasterCareer
+    private lateinit var indexer: PineconeIndexerMaster
+    private lateinit var indexerCareer: PineconeIndexerCareer
+    private lateinit var indexerErasmus: PineconeIndexerErasmus
     private var imageCapture: ImageCapture? = null
     private var tflite: Interpreter? = null
 
@@ -85,7 +89,9 @@ class LoginComposeActivity : ComponentActivity() {
         usersFaceRef = firebaseDb.getReference("users_face_embedding")
         userInfoRef = firebaseDb.getReference("user_info")
         mAuth = FirebaseAuth.getInstance()
-        indexer = PineconeIndexerMasterCareer(this)
+        indexer = PineconeIndexerMaster(this)
+        indexerErasmus = PineconeIndexerErasmus(this)
+        indexerCareer = PineconeIndexerCareer(this)
         requestNotificationPermissionIfNeeded()
         loadFaceModel()
 
@@ -180,7 +186,17 @@ class LoginComposeActivity : ComponentActivity() {
                 if (!task.isSuccessful) {
                     isLoading = false
                     infoMessage = "Incorrect credentials"
-                    //indexer.indexMasterPrograms();
+                    //indexer.indexMasterPrograms()
+//                    indexerCareer.indexCareer()
+//                    indexerErasmus.indexErasmusAUEB()
+//                    indexerErasmus.indexErasmusEKPA()
+//                    indexerErasmus.indexErasmusCRETE()
+//                    indexerErasmus.indexErasmusPAPEI()
+//                    indexerErasmus.indexErasmusARISTOTLE()
+//                    indexerErasmus.indexErasmusHAROKOPIO()
+//                    indexerErasmus.indexErasmusIONIAN()
+//                    indexerErasmus.indexErasmusPELLOPONESE()
+//                    indexerErasmus.indexErasmusTHESSALY()
                     return@addOnCompleteListener
                 }
 

@@ -1,5 +1,3 @@
-package com.example.decyra.frontend.Profile_Menu.account_settings
-
 import android.graphics.Bitmap
 import android.widget.ImageView
 import androidx.compose.animation.AnimatedVisibility
