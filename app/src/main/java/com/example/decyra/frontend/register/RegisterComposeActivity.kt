@@ -439,17 +439,45 @@ class RegisterComposeActivity : ComponentActivity() {
 
     private fun processWithAugmentation(faceBitmap: Bitmap) {
         val resized = Bitmap.createScaledBitmap(faceBitmap, 160, 160, true)
+
         var emb = runModel(resized)
         emb = normalize(emb)
 
         val embeddingList = emb.map { it.toDouble() }
 
         if (currentAction == FaceAction.CENTER) {
-            if (centerEmbeddings.size < CENTER_EMBEDDINGS) {
+
+            if (centerEmbeddings.size < 3) {
                 centerEmbeddings.add(embeddingList)
             }
-        } else {
-            if (actionEmbeddings.size < 18) {   //taking all embeddings
+
+        } else if (currentAction == FaceAction.LOOK_LEFT) {
+
+            if (actionEmbeddings.size < 3) {
+                actionEmbeddings.add(embeddingList)
+            }
+
+        } else if (currentAction == FaceAction.LOOK_RIGHT) {
+
+            if (actionEmbeddings.size < 3) {
+                actionEmbeddings.add(embeddingList)
+            }
+
+        } else if (currentAction == FaceAction.LOOK_UP) {
+
+            if (actionEmbeddings.size < 3) {
+                actionEmbeddings.add(embeddingList)
+            }
+
+        } else if (currentAction == FaceAction.LOOK_DOWN) {
+
+            if (actionEmbeddings.size < 3) {
+                actionEmbeddings.add(embeddingList)
+            }
+
+        } else if (currentAction == FaceAction.BLINK) {
+
+            if (actionEmbeddings.size < 3) {
                 actionEmbeddings.add(embeddingList)
             }
         }
