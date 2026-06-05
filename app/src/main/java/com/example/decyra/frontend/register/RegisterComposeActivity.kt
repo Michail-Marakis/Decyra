@@ -449,7 +449,7 @@ class RegisterComposeActivity : ComponentActivity() {
                 centerEmbeddings.add(embeddingList)
             }
         } else {
-            if (actionEmbeddings.size < 15) {   //taking all embeddings
+            if (actionEmbeddings.size < 18) {   //taking all embeddings
                 actionEmbeddings.add(embeddingList)
             }
         }
