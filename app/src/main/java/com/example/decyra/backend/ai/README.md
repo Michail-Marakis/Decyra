@@ -44,6 +44,7 @@ The pipeline includes two optimization mechanisms that significantly improve bot
 
 ## Code Structure
 
+```text
 ai/
 ├── callbacks/
 │   ├── ChatCallback.java
@@ -52,15 +53,14 @@ ai/
 │   ├── PineconeCallback.java
 │   ├── RerankCallback.java
 │   └── RouterCallback.java
-│
 ├── clients/
 │   ├── CohereClient.java
 │   ├── OpenAIChatClient.java
 │   ├── PineconeClient.java
 │   └── RouterClient.java
-│
-├── indexers/
+└── indexers/
     ├── PineconeIndexerCareer.java
     ├── PineconeIndexerErasmus.java
     └── PineconeIndexerMaster.java
+```
 
