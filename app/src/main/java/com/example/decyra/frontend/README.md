@@ -21,3 +21,7 @@ The cloud and backend infrastructure of DECYRA was designed to support a product
 - **MySQL**: is used locally for database development, testing, and backup purposes. It helped structure and experiment with the data model before synchronizing key parts with the cloud environment.
 
 - **HTTP / Web APIs**: provide the communication layer between the Android client, the cloud infrastructure, and external services. They allow all backend and cloud components to operate as one integrated system.
+
+- **WebRTC / ZEGOCLOUD API** are used to support the video conference functionality of the application. WebRTC provides the real-time communication layer, while ZEGOCLOUD enables the implementation of user-to-user video calls through a dedicated cloud video calling platform.
+
+- **Google Services** are used for additional user-support features, including email-based password reset, speech-to-text input, and text-to-speech assistance. These services improve accessibility and make the app more practical in real usage scenarios.
