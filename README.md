@@ -26,7 +26,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 **DECYRA** is a multi-technology mobile application that combines Android development, cloud services, AI services, and real-time communication tools.
 
 ### Mobile Development
-- **Kotlin** with **Jetpack Compose** framework for modern Android frontend and UI development.
+- **Kotlin** with **Jetpack Compose Framework** for modern Android frontend and UI development.
 - **Java** for backend and core application logic
 
 ### NLP
