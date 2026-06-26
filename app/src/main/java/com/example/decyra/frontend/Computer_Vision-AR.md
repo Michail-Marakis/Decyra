@@ -74,3 +74,7 @@ Several embedding configurations were tested during development. The selected ap
 - Voice Guidance
 - Cosine Similarity Matching
 - Firebase (store the vectors for every user)
+
+<p align="center">
+  <img width="1146" height="629" alt="image" src="https://github.com/user-attachments/assets/06662f10-dbae-4599-9e80-0edfa93b3e86" />
+</p>
