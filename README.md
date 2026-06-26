@@ -42,7 +42,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - **Google ML Kit** for face detection
 - **FaceNet** for facial embedding generation and face-based login
 - **AR guidance** to help users capture correct face angles during registration and sign-in
-- Learn more about our [Computer Vision & AR](app/src/main/java/com/example/decyra/frontend/Computer-Vision.md).
+- Learn more about our [Computer Vision & AR](app/src/main/java/com/example/decyra/frontend/Computer_Vision-AR.md).
 
 ### Cloud and Backend Infrastructure
 - **Firebase Realtime Database** as the main cloud database
