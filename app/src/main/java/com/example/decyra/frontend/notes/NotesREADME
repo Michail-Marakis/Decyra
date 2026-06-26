@@ -1,0 +1,5 @@
+# Notes Module
+
+This module implements the personal notes functionality of DECYRA, allowing users to create, edit, pin, and delete notes inside the application.
+
+It is built with **Kotlin** and **Jetpack Compose** and uses **Firebase Realtime Database** for persistent note storage and synchronization. The module is designed as a lightweight productivity layer that supports quick information management within the app.
