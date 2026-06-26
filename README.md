@@ -15,7 +15,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - RAG-based chatbot pipeline for smarter and more relevant answers
 - User authentication with Face ID support
 - Forum for sharing opinions and experiences
-- Peer-to-peer chat between users
+- P2P chat between users
 - Video conferencing for live communication
 - Notes system for saving useful results, meeting codes, and personal reminders
 - Speech-to-text support for easier interaction
