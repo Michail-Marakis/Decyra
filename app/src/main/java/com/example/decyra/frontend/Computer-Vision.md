@@ -66,10 +66,17 @@ The authentication process follows a similar workflow.
 
 ---
 
+## Embedding Evaluation
+
+Several embedding configurations were tested during development. The selected approach, which stores **3 FaceNet embeddings for each pose** together with **1 centroid embedding**, provided the most consistent authentication results across different users and lighting conditions while maintaining reasonable storage requirements. Based on these experiments, the final user template consists of **19 stored vectors**, offering the best trade-off between accuracy and robustness.
+
+---
+
 ## Technologies Used
 
-- **Jetpack Compose** (Custom AR Guidance UI)
+- Jetpack Compose (Custom AR Guidance UI)
 - Google ML Kit (Face Detection)
 - FaceNet (CNN Face Embeddings)
 - Voice Guidance
 - Cosine Similarity Matching
+- Firebase (store the vectors for every user)
