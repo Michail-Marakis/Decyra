@@ -83,7 +83,7 @@ The application also includes cloud functions for secure API access and push not
 
 ## Why This Stack?
 
-This tech stack enables scalability, real-time performance, and a modern user experience. By combining advanced mobile development, managed cloud services, and cloud-based AI instead of heavier local model execution, DECYRA delivers an intelligent, accessible, and reliable guidance platform for students.
+This tech stack enables scalability, real-time performance, and a modern user experience. By combining advanced mobile development, managed cloud services, and cloud-based AI instead of heavier local model execution, DECYRA delivers a lightweight, 24/7 available, and reliable guidance platform. Unlike locally hosted LLaMA models, which require powerful hardware, large storage, and may introduce higher latency, our cloud-based approach eliminates the need for users to download or maintain a local server while ensuring fast and accessible AI services.
 
 ## Codebase Summary
 
