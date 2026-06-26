@@ -83,7 +83,7 @@ The application also includes cloud functions for secure API access and push not
 
 ## Why This Stack?
 
-This stack enables real-time performance, scalability, and secure mobile-cloud integration. By combining modern Android development with managed cloud and AI services, DECYRA delivers a responsive, practical, and production-ready guidance platform.
+This tech stack enables scalability, real-time performance, and a modern user experience. By combining advanced mobile development, managed cloud services, and cloud-based AI instead of heavier local model execution, DECYRA delivers an intelligent, accessible, and reliable guidance platform for students.
 
 ## Codebase Summary
 
