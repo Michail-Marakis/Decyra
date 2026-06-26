@@ -21,7 +21,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - Speech-to-text and Text-to-speech support for easier interaction
 - Responsive and modern mobile UI built for usability
 
-## Technologies Used
+## Technology Stack
 
 **DECYRA** is a multi-technology mobile application that combines Android development, cloud services, AI services, and real-time communication tools.
 
@@ -61,9 +61,8 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 ### Additional Services
 - **Google Services** for email-based password reset and speech-to-text , text-to-speech support
 
-### Technology Stack
 <p align="center">
-  <img width="425" height="193" alt="image" src="https://github.com/user-attachments/assets/98fc53e8-f771-4682-a1f8-06fcd788b454" />
+  <img width="425" height="244" alt="image" src="https://github.com/user-attachments/assets/121c4413-1d27-41e0-a07b-438d103cf261" />
 </p>
 
 ## Project Structure
