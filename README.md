@@ -49,7 +49,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - **Firebase Cloud Messaging** for notifications
 - **Supabase Edge Functions** for handling messaging-related requests
 - **Supabase Storage** for profile image storage
-- **MySQL** for our [database schema](Decyra/blob/main/blob/main/db_schema/README.md)
+- **MySQL** for our [database schema](db_schema/README.md)
 - **HTTP** as the protocol we use for our server-client communications 
 
 ### Security
