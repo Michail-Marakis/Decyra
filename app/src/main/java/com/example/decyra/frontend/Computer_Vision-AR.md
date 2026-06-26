@@ -25,8 +25,6 @@ The user is instructed to capture images in **6 different poses**:
 
 The AR overlay provides real-time visual feedback to help the user correctly align their face before each capture.
 
----
-
 ### 2. Face Detection
 
 For every captured image:
@@ -34,13 +32,9 @@ For every captured image:
 - **Google ML Kit** detects and validates the face.
 - Only valid face images continue to the next stage.
 
----
-
 ### 3. Face Embedding
 
 Each detected face is processed by **FaceNet (CNN)** to generate a face embedding vector.
-
----
 
 ### 4. User Template Creation
 
