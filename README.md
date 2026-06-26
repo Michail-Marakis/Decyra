@@ -49,7 +49,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - **Firebase Cloud Messaging** for notifications
 - **Supabase Edge Functions** for handling messaging-related requests
 - **Supabase Storage** for profile image storage
-- **MySQL** for local database development and backup
+- **MySQL** for our database schema
 - **HTTP** as the protocol we use for our server-client communications 
 
 ### Security
