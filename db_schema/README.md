@@ -1,6 +1,6 @@
 ## MySQL Local DB
 
-# We used it to build a scalable local copy of our database, enabling us to experiment with it locally while also maintaining backups of our cloud database hosted on Firebase.
+We used it to build a scalable local copy of our database, enabling us to experiment with it locally while also maintaining backups of our cloud database hosted on Firebase.
 
 
 <p align="center">
