@@ -37,7 +37,7 @@ The pipeline includes two optimization mechanisms that significantly improve bot
 | **OpenAI LLM**        | Generates the final context-aware response.                                    |
 | **Firebase**          | Stores conversation history and generated responses.                           |
 
-##System Architecture Diagram
+## System Architecture Diagram
 <p align="center">
   <img width="604" alt="AI Response Pipeline" src="https://github.com/user-attachments/assets/47e0acef-208a-40b8-ada6-c99acba2bf36" />
 </p>
