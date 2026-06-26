@@ -88,5 +88,5 @@ The project was evaluated through user research, expert feedback, and usability 
 
 Department of Informatics, Athens University of Economics and Business  
 Course: Human-Computer Interaction
-Professor: A.A. Basilakis
+Professor: A.A. Vasilakis
 Spring Semester 2025-26
