@@ -1,5 +1,7 @@
 # DECYRA
 
+You can watch the demo video [here](https://www.youtube.com/watch?v=UF1DgyN0P_4).
+
 DECYRA is a production-ready mobile application designed to help students make better academic and career decisions in the field of Computer Science. It combines AI-powered guidance with community-driven interaction, offering personalized support for Erasmus choices, Master studies, and early career planning.
 
 ## Overview
@@ -11,8 +13,6 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 ## Main Features
 
 - AI mentor for academic and career guidance
-- Recommendation support for Erasmus, Master's programs, and career paths
-- RAG-based chatbot pipeline for smarter and more relevant answers
 - User authentication with Face ID support
 - Forum for sharing opinions and experiences
 - P2P chat between users
@@ -26,11 +26,10 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 DECYRA is a multi-technology mobile application that combines Android development, cloud services, AI services, and real-time communication tools.
 
 ### Mobile Development
-- **Kotlin** for modern Android frontend development
-- **Jetpack Compose** for building the UI
+- **Kotlin** with **Jetpack Compose** framework for modern Android frontend and UI development.
 - **Java** for backend and core application logic
 
-### AI and NLP
+### NLP
 - **OpenAI GPT-4.1** for final response generation
 - **OpenAI GPT-4o-mini** for lightweight classification tasks
 - **OpenAI text-embedding-3-small** for text embeddings
@@ -38,7 +37,7 @@ DECYRA is a multi-technology mobile application that combines Android developmen
 - **Cohere Rerank** for improving result relevance
 - **RAG (Retrieval-Augmented Generation)** architecture for personalized recommendations
 
-### Computer Vision and Authentication
+### Computer Vision and Augmented Reality (AR)
 - **Google ML Kit** for face detection
 - **FaceNet** for facial embedding generation and face-based login
 - **AR guidance** to help users capture correct face angles during registration and sign-in
@@ -53,35 +52,20 @@ DECYRA is a multi-technology mobile application that combines Android developmen
 - **AWS API Gateway** for request routing
 - **AWS Secrets Manager** for secure API key storage
 - **MySQL** for local database development and backup
-- **Node.js**
-- **TypeScript**
 - **HTTP / Web APIs**
 
-### Communication
+### Video Conference
 - **ZEGOCLOUD API**
 - **WebRTC** for video calling and real-time communication
 
 ### Additional Services
-- **Google Services** for email-based password reset and speech-to-text support
-
-## AI Architecture
-
-The core intelligence of DECYRA is based on a Retrieval-Augmented Generation pipeline.
-
-1. The user submits a query.
-2. A lightweight classifier detects whether the system should retrieve new recommendation data or continue an existing conversation.
-3. If retrieval is needed, the query is converted into embeddings.
-4. Pinecone retrieves the most relevant candidate results.
-5. Cohere reranks these results.
-6. GPT-4.1 generates the final response based on the filtered context and system rules.
-
-This architecture improves relevance, reduces unnecessary processing, and helps keep response times low.
+- **Google Services** for email-based password reset and speech-to-text , text-to-speech support
 
 ## Project Structure
 
 The project is organized into three main parts:
 
-- **backend**: AI logic, domain model, and application services
+- **backend**: AI logic, domain model
 - **frontend**: screen-level UI implementation with Java/Kotlin integration
 - **extras**: utility classes and additional helper functionality
 
@@ -89,9 +73,9 @@ The application also includes cloud functions for secure API access and push not
 
 ## Codebase Summary
 
-The codebase includes a total of 99 files:
+The codebase includes a total of 100 files:
 
-- 47 Java files
+- 48 Java files
 - 43 Kotlin files
 - 6 interface files
 - 2 cloud function files
@@ -100,12 +84,6 @@ The codebase includes a total of 99 files:
 ## Evaluation Highlights
 
 The project was evaluated through user research, expert feedback, and usability testing. Results showed strong interest in an app of this type, especially for the AI mentor and forum features, while usability scores were high for chatbot performance, registration flow, and navigation.
-
-## Demo
-
-- **Source Code:** [Google Drive Folder](https://drive.google.com/drive/folders/1-2vgJKmJiMTkbafO4MwRBt8_libxXVx0?usp=sharing)
-- **APK:** [Download APK](https://drive.google.com/file/d/1glCVYu89DaMa4YPIhF1TUdMCwJ4Vfod7/view?usp=sharing)
-- **Video Presentation:** [Watch on YouTube](https://www.youtube.com/watch?v=UF1DgyN0P_4)
 
 ## Academic Context
 
