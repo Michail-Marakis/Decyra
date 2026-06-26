@@ -1,6 +1,6 @@
 # DECYRA
 
-DECYRA is a mobile application designed to help students make better academic and career decisions in the field of Computer Science. It combines AI-powered guidance with community-driven interaction, offering personalized support for Erasmus choices, postgraduate studies, and early career planning.
+DECYRA is a mobile application designed to help students make better academic and career decisions in the field of Computer Science. It combines AI-powered guidance with community-driven interaction, offering personalized support for Erasmus choices, Master studies, and early career planning.
 
 ## Overview
 
