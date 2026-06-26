@@ -55,8 +55,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - **HTTP / Web APIs**
 
 ### Video Conference
-- **ZEGOCLOUD API**
-- **WebRTC** for video calling and real-time communication
+- **WebRTC** as the protocol to connect users for a Video Conference through **ZEGOCLOUD API**.
 
 ### Additional Services
 - **Google Services** for email-based password reset and speech-to-text , text-to-speech support
