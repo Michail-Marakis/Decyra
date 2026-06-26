@@ -81,6 +81,10 @@ The project is organized into three main parts:
 
 The application also includes cloud functions for secure API access and push notification handling.
 
+## Why This Stack?
+
+This stack enables real-time performance, scalability, and secure mobile-cloud integration. By combining modern Android development with managed cloud and AI services, DECYRA delivers a responsive, practical, and production-ready guidance platform.
+
 ## Codebase Summary
 
 The codebase includes a total of 100 files:
