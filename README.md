@@ -61,6 +61,11 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 ### Additional Services
 - **Google Services** for email-based password reset and speech-to-text , text-to-speech support
 
+### Technology Stack
+<p align="center">
+  <img width="425" height="193" alt="image" src="https://github.com/user-attachments/assets/98fc53e8-f771-4682-a1f8-06fcd788b454" />
+</p>
+
 ## Project Structure
 
 The project is organized into three main parts:
