@@ -51,7 +51,6 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - **Supabase Storage** for profile image storage
 - **MySQL** for local database development and backup
 - **HTTP** as the protocol we use for our server-client communications 
-- Read the full [Cloud and Backend Infrastructure documentation](app/src/main/java/com/example/decyra/frontend/README.md).
 
 ### Security
 - **AWS Lambda** for secure API handling
@@ -64,6 +63,9 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 ### Additional Services
 - **Google Services** for email-based password reset and speech-to-text , text-to-speech support
 
+- Read the full [Cloud and Backend Infrastructure documentation & Security & Video Conference & Additional Services](app/src/main/java/com/example/decyra/frontend/README.md).
+
+  
 <p align="center">
   <img width="425" height="244" alt="image" src="https://github.com/user-attachments/assets/121c4413-1d27-41e0-a07b-438d103cf261" />
 </p>
