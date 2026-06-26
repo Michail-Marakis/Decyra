@@ -41,3 +41,26 @@ The pipeline includes two optimization mechanisms that significantly improve bot
 <p align="center">
   <img width="604" alt="AI Response Pipeline" src="https://github.com/user-attachments/assets/47e0acef-208a-40b8-ada6-c99acba2bf36" />
 </p>
+
+## Code Structure
+
+ai/
+├── callbacks/
+│   ├── ChatCallback.java
+│   ├── EmbeddingCallback.java
+│   ├── MessagesCallback.java
+│   ├── PineconeCallback.java
+│   ├── RerankCallback.java
+│   └── RouterCallback.java
+│
+├── clients/
+│   ├── CohereClient.java
+│   ├── OpenAIChatClient.java
+│   ├── PineconeClient.java
+│   └── RouterClient.java
+│
+├── indexers/
+    ├── PineconeIndexerCareer.java
+    ├── PineconeIndexerErasmus.java
+    └── PineconeIndexerMaster.java
+
