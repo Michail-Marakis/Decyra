@@ -54,6 +54,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - **AWS Secrets Manager** for secure API key storage
 - **MySQL** for local database development and backup
 - **HTTP / Web APIs**
+- Read the full [Cloud and Backend Infrastructure documentation](app/src/main/java/com/example/decyra/frontend/README.md).
 
 ### Video Conference
 - **WebRTC** as the protocol to connect users for a Video Conference through **ZEGOCLOUD API**.
