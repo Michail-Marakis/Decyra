@@ -36,7 +36,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - **Pinecone** as the vector database for semantic retrieval
 - **Cohere Rerank** for improving result relevance
 - **RAG (Retrieval-Augmented Generation)** architecture for personalized recommendations
-- Learn more about the [AI recommendation pipeline](app/src/main/java/com/example/decyra/backend/ai/README.md#ai-architecture).
+- Learn more about our [AI recommendation pipeline](app/src/main/java/com/example/decyra/backend/ai/README.md#ai-architecture).
 
 ### Computer Vision and Augmented Reality (AR)
 - **Google ML Kit** for face detection
