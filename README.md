@@ -6,7 +6,7 @@ You can watch the Demo Video [here](https://www.youtube.com/watch?v=UF1DgyN0P_4)
 
 **DECYRA** is a production-ready mobile application designed to help students make better academic and career decisions in the field of Computer Science. It combines AI-powered guidance with community-driven interaction, offering personalized support for Erasmus choices, Master studies, and early career planning.
 
-Many students struggle to decide between options such as joining an Erasmus program, applying for a Master's degree, or entering the job market. DECYRA was created to make this process easier through an intelligent mentor system, real-time communication features, and a modern mobile interface.
+Many students struggle to decide between options such as joining an Erasmus program, applying for a Master's degree, or entering the job market. **DECYRA** was created to make this process easier through an intelligent mentor system, real-time communication features, and a modern mobile interface.
 
 The app does not focus only on generic recommendations. Instead, it aims to provide more personalized guidance based on user needs, preferences, and goals, while also allowing students to exchange experiences through community features.
 
@@ -18,12 +18,12 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - P2P chat between users
 - Video conferencing for live communication
 - Notes system for saving useful results, meeting codes, and personal reminders
-- Speech-to-text support for easier interaction
+- Speech-to-text and Text-to-speech support for easier interaction
 - Responsive and modern mobile UI built for usability
 
 ## Technologies Used
 
-DECYRA is a multi-technology mobile application that combines Android development, cloud services, AI services, and real-time communication tools.
+**DECYRA** is a multi-technology mobile application that combines Android development, cloud services, AI services, and real-time communication tools.
 
 ### Mobile Development
 - **Kotlin** with **Jetpack Compose** framework for modern Android frontend and UI development.
