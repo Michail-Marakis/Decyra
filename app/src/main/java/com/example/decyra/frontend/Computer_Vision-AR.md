@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Face ID system combines **Computer Vision**, **Augmented Reality (AR)**, and **FaceNet** embeddings to provide a robust face registration and authentication pipeline.
+This Face ID system combines **Computer Vision**, **Augmented Reality (AR)**, and **FaceNet** embeddings to provide a solid face registration and authentication pipeline.
 
 A custom **AR guidance interface**, designed and implemented using **Jetpack Compose**, assists users during both the **registration** and **login** processes, ensuring correct face positioning and pose alignment before image capture.
 
