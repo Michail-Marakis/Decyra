@@ -22,7 +22,7 @@ This ensures:
 - No direct exposure of LLM or external API keys in the mobile app
 - Secure request routing through backend layers
 - Controlled access to AI and cloud services
-- 
+  
 ## Design Goals
 - Low-latency communication
 - Seamless user experience across features
