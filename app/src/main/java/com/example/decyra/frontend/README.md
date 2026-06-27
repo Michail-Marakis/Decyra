@@ -16,12 +16,16 @@ Real-time meetings for mentorship sessions and group discussions.
 
 ## 4. Security & API Protection
 
-Sensitive operations and external API keys are protected using AWS services. API keys are never exposed on the client side and are securely managed through server-side functions and secret management infrastructure.
+Sensitive operations and external API keys are handled through a secure backend layer using AWS infrastructure. The OpenAI API key is the only actively managed secret deployed in AWS Secrets Manager, while other previously used keys and services have been removed from production deployment to minimize cost and reduce unnecessary external dependencies.
+
+API keys are never exposed on the client side and are accessed exclusively through server-side functions.
 
 This ensures:
-- No direct exposure of LLM or external API keys in the mobile app
-- Secure request routing through backend layers
-- Controlled access to AI and cloud services
+
+- No direct exposure of LLM or external API keys in the mobile application
+- Secure request routing through backend-controlled endpoints
+- Centralized and controlled access to AI services
+- Reduced attack surface by minimizing active external integrations
   
 ## Design Goals
 - Low-latency communication
