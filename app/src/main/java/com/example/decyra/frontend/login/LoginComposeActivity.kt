@@ -82,7 +82,7 @@ class LoginComposeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val firebaseDb = FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         )
 
         usersRef = firebaseDb.getReference("users")
@@ -225,7 +225,7 @@ class LoginComposeActivity : ComponentActivity() {
                             FirebaseMessaging.getInstance().token
                                 .addOnSuccessListener { token ->
                                     FirebaseDatabase.getInstance(
-                                        "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+                                        "CLOUD_PATH"
                                     ).getReference("users")
                                         .child(uid)
                                         .child("fcmToken")
@@ -412,7 +412,7 @@ class LoginComposeActivity : ComponentActivity() {
                         }
                     }
 
-                    if (bestScore > 0.5f) {
+                    if (bestScore > 0.75f) {
                         Toast.makeText(this@LoginComposeActivity, "Face verified", Toast.LENGTH_LONG).show()
                         openNextActivity()
                     } else {

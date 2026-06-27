@@ -47,30 +47,6 @@ public class ProfileImageManager {
     }
 
     /**
-     * Save uri string.
-     *
-     * @param context the context
-     * @param userId  the user id
-     * @param uri     the uri
-     * @return the string
-     */
-    public static String saveUri(Context context, String userId, Uri uri) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            if (inputStream == null) return null;
-
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            inputStream.close();
-
-            return saveBitmap(context, userId, bitmap);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * Load bitmap bitmap.
      *
      * @param context the context

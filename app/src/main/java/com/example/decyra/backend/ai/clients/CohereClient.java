@@ -13,7 +13,7 @@ import okhttp3.*;
  * The type Cohere client.
  */
 public class CohereClient {
-    private static final String API_KEY = "tFpn5qnSYq5i4yreSu9uNM7mhZnPqDZNgSS8WfAY";
+    private static final String API_KEY = "YOUR_API_KEY";
     private final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)

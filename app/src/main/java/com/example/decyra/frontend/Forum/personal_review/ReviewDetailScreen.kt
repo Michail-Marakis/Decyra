@@ -366,7 +366,7 @@ fun CommentUserAvatar(
     LaunchedEffect(userId) {
         if (!userId.isNullOrBlank()) {
             val db = com.google.firebase.database.FirebaseDatabase.getInstance(
-                "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+                "CLOUD_PATH"
             )
             db.getReference("users").child(userId).get()
                 .addOnSuccessListener { snapshot ->

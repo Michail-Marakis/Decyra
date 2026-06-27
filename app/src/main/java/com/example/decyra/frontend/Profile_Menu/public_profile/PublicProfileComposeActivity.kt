@@ -60,7 +60,7 @@ class PublicProfileComposeActivity : AppCompatActivity() {
         userPhone = intent.getStringExtra("userPhone")
 
         val firebaseDb = FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         )
         usersRef = firebaseDb.getReference("users")
 
@@ -138,7 +138,7 @@ class PublicProfileComposeActivity : AppCompatActivity() {
         val uid = profileUid ?: return
 
         FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         ).getReference("users").child(uid).get()
             .addOnSuccessListener { snapshot ->
                 if (!snapshot.exists()) return@addOnSuccessListener
@@ -158,7 +158,7 @@ class PublicProfileComposeActivity : AppCompatActivity() {
         val uid = profileUid ?: return
 
         FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         ).getReference("user_info").child(uid).get()
             .addOnSuccessListener { snapshot ->
                 if (!snapshot.exists()) return@addOnSuccessListener

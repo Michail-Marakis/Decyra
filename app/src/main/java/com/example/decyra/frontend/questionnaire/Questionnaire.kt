@@ -45,7 +45,6 @@ val OrchidLight = Color(0xFFFDF4FF)
 val SoftPinkGlow = Color(0xFFFFE4FF)
 val PureWhite = Color(0xFFFFFFFF)
 
-// Keep your original color variables for logic compatibility
 val QuizPrimary = OrchidPrimary
 val QuizSecondary = Color(0xFF8B5CF6)
 val QuizAccent = Color(0xFFEC4899)
@@ -215,10 +214,6 @@ fun QuestionnaireScreen(
         }
     }
 }
-
-// --- BILLION DOLLAR VISUAL COMPONENTS ---
-
-// --- BILLION DOLLAR VISUAL COMPONENTS ---
 
 @Composable
 fun NeuralPrismAura() {

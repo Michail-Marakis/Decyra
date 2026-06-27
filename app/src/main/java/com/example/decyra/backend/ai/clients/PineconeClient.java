@@ -25,19 +25,19 @@ import okhttp3.Response;
  */
 public class PineconeClient {
 
-    private static final String API_KEY = "pcsk_2BxKaT_SFgCvuA3PLtbGaPxXYVA7AVXAXFGffPro5DxBdfVzzYaPo5FcUb4snuHHd338Yh";
+    private static final String API_KEY = "YOUR_API_KEY";
 
     private static final String ERASMUS_INDEX_BASE_URL =
-            "https://decyra-erasmus-index-trb4i0f.svc.aped-4627-b74a.pinecone.io";
+            "CLOUD_PATH";
 
     private static final String WORK_INDEX_BASE_URL =
-            "https://decyra-work-index-trb4i0f.svc.aped-4627-b74a.pinecone.io";
+            "CLOUD_PATH";
 
     private static final String HISTORY_INDEX_BASE_URL =
-            "https://decyra-llm-history-trb4i0f.svc.aped-4627-b74a.pinecone.io";
+            "CLOUD_PATH";
 
     private static final String MASTER_INDEX_BASE_URL =
-            "https://decyra-master-trb4i0f.svc.aped-4627-b74a.pinecone.io";
+            "CLOUD_PATH";
 
     private final OkHttpClient httpClient;
 

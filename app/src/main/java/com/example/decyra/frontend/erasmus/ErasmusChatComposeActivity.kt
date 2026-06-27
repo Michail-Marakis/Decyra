@@ -68,7 +68,7 @@ class ErasmusChatComposeActivity : AppCompatActivity() {
         inputText = userExpectations.orEmpty()
 
         val firebaseDb = FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         )
         usersRef = firebaseDb.getReference("users")
         userInfoRef = firebaseDb.getReference("user_info")

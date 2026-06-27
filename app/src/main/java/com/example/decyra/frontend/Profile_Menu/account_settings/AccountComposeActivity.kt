@@ -32,9 +32,9 @@ import java.io.IOException
 class AccountComposeActivity : AppCompatActivity() {
 
     companion object {
-        private const val SUPABASE_URL = "https://sbzxqcwvbbgbpykyvmfa.supabase.co"
-        private const val SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNienhxY3d2YmJnYnB5a3l2bWZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MjcwNDEsImV4cCI6MjA5MDAwMzA0MX0.oUc-uXUKPE6HJS7peW3ytfW1H5uSTFP6vUa_8Zn7iuo"
-        private const val SUPABASE_BUCKET = "avatars"
+        private const val SUPABASE_URL = "CLOUD_PATH"
+        private const val SUPABASE_KEY = "YOUR_API_KEY"
+        private const val SUPABASE_BUCKET = " "
     }
 
     private lateinit var usersRef: DatabaseReference
@@ -79,7 +79,7 @@ class AccountComposeActivity : AppCompatActivity() {
         userPhone = intent.getStringExtra("userPhone")
 
         val firebaseDb = FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         )
         usersRef = firebaseDb.getReference("users")
         userInfoRef = firebaseDb.getReference("user_info")
@@ -195,7 +195,7 @@ class AccountComposeActivity : AppCompatActivity() {
                 val imageBytes = bos.toByteArray()
 
                 val path = "$uid.jpg"
-                val url = "$SUPABASE_URL/storage/v1/object/$SUPABASE_BUCKET/$path"
+                val url = "CLOUD_PATH"
 
                 val body = imageBytes.toRequestBody("image/jpeg".toMediaTypeOrNull())
 
@@ -222,7 +222,7 @@ class AccountComposeActivity : AppCompatActivity() {
                     return@Thread
                 }
 
-                val publicUrl = "$SUPABASE_URL/storage/v1/object/public/$SUPABASE_BUCKET/$path"
+                val publicUrl = "CLOUD_PATH"
                 saveProfileImageUrlToFirebase(publicUrl)
 
                 runOnUiThread {

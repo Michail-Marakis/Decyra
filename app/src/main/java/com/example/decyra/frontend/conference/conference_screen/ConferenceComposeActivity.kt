@@ -76,7 +76,7 @@ class ConferenceComposeActivity : AppCompatActivity() {
         permissionsGranted = hasAllPermissions()
 
         val db = FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         )
 
         usersRef = db.getReference("users")
@@ -217,8 +217,8 @@ class ConferenceComposeActivity : AppCompatActivity() {
             return
         }
 
-        val appID = 750984672L
-        val appSign = "407fa63422294713ac2817e379891688f659af2e652fa3f45d3e428c90c4e888"
+        val appID = 123L
+        val appSign = "appSign"
         val config = ZegoUIKitPrebuiltVideoConferenceConfig()
 
         val fragment = ZegoUIKitPrebuiltVideoConferenceFragment.newInstance(

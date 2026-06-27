@@ -38,7 +38,7 @@ public class FCMTokenService extends FirebaseMessagingService {
 
         if (uid != null) {
             FirebaseDatabase.getInstance(
-                    "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+                    "CLOUD_PATH"
             ).getReference("users").child(uid).child("fcmToken").setValue(token);
         }
     }

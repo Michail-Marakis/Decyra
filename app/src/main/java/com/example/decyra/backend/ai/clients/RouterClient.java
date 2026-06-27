@@ -52,7 +52,7 @@ public class RouterClient {
             body.put("temperature", 0);
 
             Request request = new Request.Builder()
-                    .url("https://api.openai.com/v1/chat/completions")
+                    .url("CLOUD_PATH")
                     .addHeader("Authorization", "Bearer " + apiKey)
                     .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
                     .build();

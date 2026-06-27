@@ -86,7 +86,7 @@ class RegisterComposeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val firebaseDb = FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         )
         usersRef = firebaseDb.getReference("users")
         usersFaceEmbeddingRef = firebaseDb.getReference("users_face_embedding")

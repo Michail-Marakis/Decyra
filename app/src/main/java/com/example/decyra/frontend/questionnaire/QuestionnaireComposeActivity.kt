@@ -65,7 +65,7 @@ class QuestionnaireComposeActivity : AppCompatActivity() {
         userFullName = intent.getStringExtra("userFullName")
         userEmail = intent.getStringExtra("userEmail")
         userPhone = intent.getStringExtra("userPhone")
-        db = FirebaseDatabase.getInstance("https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app")
+        db = FirebaseDatabase.getInstance("CLOUD_PATH")
         questionsRef = db.getReference("questionnaire_questions")
         answersRef = db.getReference("questionnaire_answers")
         expectationsRef = db.getReference("user_expectations")

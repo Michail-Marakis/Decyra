@@ -31,7 +31,7 @@ import okhttp3.*;
 public class OpenAIChatClient {
 
     private static final String OPENAI_URL =
-            "https://api.openai.com/v1/chat/completions";
+            "CLOUD_PATH";
 
     private static final MediaType JSON =
             MediaType.get("application/json; charset=utf-8");
@@ -47,7 +47,7 @@ public class OpenAIChatClient {
     private final CohereClient reranker = new CohereClient();
 
     private static final String AWS_API_KEY_URL =
-            "https://koa1qztjbi.execute-api.eu-north-1.amazonaws.com/prod/apikey";
+            "CLOUD_PATH";
 
     private interface ApiKeyCallback {
         /**
@@ -72,7 +72,7 @@ public class OpenAIChatClient {
      */
     public OpenAIChatClient(Context context) {
         firebaseDb = FirebaseDatabase.getInstance(
-                "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+                "CLOUD_PATH"
         );
     }
 
@@ -142,7 +142,7 @@ public class OpenAIChatClient {
                     body.put("input", text);
 
                     Request request = new Request.Builder()
-                            .url("https://api.openai.com/v1/embeddings")
+                            .url("CLOUD_PATH")
                             .addHeader("Authorization", "Bearer " + apiKey)
                             .post(RequestBody.create(body.toString(), JSON))
                             .build();

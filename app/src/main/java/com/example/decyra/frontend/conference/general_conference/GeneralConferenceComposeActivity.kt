@@ -60,7 +60,7 @@ class GeneralConferenceComposeActivity : AppCompatActivity() {
 
     private val inter = InternetConnection()
     private val firebaseDb: FirebaseDatabase = FirebaseDatabase.getInstance(
-        "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+        "CLOUD_PATH"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

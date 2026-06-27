@@ -44,10 +44,9 @@ fun LoginScreen(
     faceLoginEnabled: Boolean,
     isLoading: Boolean,
     showCameraPreview: Boolean,
-    // --- NEA STATES ΓΙΑ ΤΟ AR ---
     isFaceCentered: Boolean = false,
     guidanceMessage: String = "Align your face inside the frame",
-    // ----------------------------
+
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
@@ -365,13 +364,13 @@ fun CameraCaptureOverlay(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "modern_scan")
 
-    // 1. Περιστροφή κύριων τόξων (σταθερή κίνηση)
+
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 360f,
         animationSpec = infiniteRepeatable(tween(2000, easing = LinearEasing)), label = "rotation"
     )
 
-    // 2. Εφέ παλμού για τον δακτύλιο και το εικονίδιο
+
     val pulseScale by animateFloatAsState(
         targetValue = if (isFaceCentered) 1.08f else 1f,
         animationSpec = spring(stiffness = Spring.StiffnessLow), label = "pulse"
@@ -380,7 +379,7 @@ fun CameraCaptureOverlay(
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         cameraPreview()
 
-        // --- LAYER 1: THE SCANNER RING ---
+        //THE SCANNER RING
         Canvas(modifier = Modifier
             .fillMaxSize()
             .graphicsLayer(scaleX = pulseScale, scaleY = pulseScale)
@@ -417,7 +416,7 @@ fun CameraCaptureOverlay(
             }
         }
 
-        // --- LAYER 2: TOP CONTROLS ---
+        //TOP CONTROLS
         IconButton(
             onClick = onBackClick,
             modifier = Modifier
@@ -429,7 +428,7 @@ fun CameraCaptureOverlay(
             Icon(Icons.Default.Close, null, tint = Color.White)
         }
 
-        // --- LAYER 3: GUIDANCE & SHUTTER ---
+        //GUIDANCE & SHUTTER
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -449,11 +448,11 @@ fun CameraCaptureOverlay(
 
             Spacer(Modifier.height(40.dp))
 
-            // Premium Shutter Button με εικονίδιο κάμερας
+            //Premium Shutter Button με εικονίδιο κάμερας
             Box(
                 modifier = Modifier
                     .size(80.dp)
-                    .scale(pulseScale) // Το κουμπί μεγαλώνει όταν κλειδώνει το πρόσωπο
+                    .scale(pulseScale) //Το κουμπί μεγαλώνει όταν κλειδώνει το πρόσωπο
                     .border(2.dp, Color.White, CircleShape)
                     .padding(6.dp)
                     .clip(CircleShape)
@@ -462,7 +461,7 @@ fun CameraCaptureOverlay(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    // Αντικατάσταση Fingerprint με PhotoCamera
+                    //Αντικατάσταση Fingerprint με PhotoCamera
                     imageVector = Icons.Default.PhotoCamera,
                     contentDescription = "Capture",
                     tint = Color.White,

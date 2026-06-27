@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class NotificationSender {
 
     private static final String FUNCTION_URL =
-            "https://sbzxqcwvbbgbpykyvmfa.supabase.co/functions/v1/send-email";
+            "CLOUD_PATH";
 
     /**
      * Send.

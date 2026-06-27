@@ -31,7 +31,7 @@ class UsersComposeActivity : AppCompatActivity() {
 
     private val inter = InternetConnection()
     private val db: FirebaseDatabase = FirebaseDatabase.getInstance(
-        "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+        "CLOUD_PATH"
     )
 
     private lateinit var conversationsRef: DatabaseReference

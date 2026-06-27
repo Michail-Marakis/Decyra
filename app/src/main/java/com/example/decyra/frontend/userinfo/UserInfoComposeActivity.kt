@@ -62,7 +62,7 @@ class UserInfoComposeActivity : AppCompatActivity() {
         }
 
         val db = FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         )
         userInfoRef = db.getReference("user_info")
         universitiesRef = db.getReference("universities")

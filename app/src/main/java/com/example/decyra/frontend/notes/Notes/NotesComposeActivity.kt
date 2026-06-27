@@ -55,7 +55,7 @@ class NotesComposeActivity : AppCompatActivity() {
         userPhone = incomingIntent.getStringExtra("userPhone")
 
         val firebaseDb = FirebaseDatabase.getInstance(
-            "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+            "CLOUD_PATH"
         )
 
         notesRef = firebaseDb.getReference("notes")

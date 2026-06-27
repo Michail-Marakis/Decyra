@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase
 class ModeSelectionComposeActivity : AppCompatActivity() {
 
     private val firebaseDb: FirebaseDatabase = FirebaseDatabase.getInstance(
-        "https://mega-5a5b4-default-rtdb.europe-west1.firebasedatabase.app"
+        "CLOUD_PATH"
     )
 
     private val usersRef: DatabaseReference = firebaseDb.getReference("users")
