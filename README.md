@@ -105,3 +105,11 @@ Department of Informatics, Athens University of Economics and Business
 Course: Human-Computer Interaction  
 Professor: A. A. Vasilakis  
 Spring Semester 2025-26
+
+## Developers
+
+> [Nikolaos Poulopoulos](https://github.com/nikwilldoit), BSc Student  
+> Department of Informatics, Athens University of Economics and Business  
+
+> [Michail Marakis](https://github.com/Michail-Marakis), BSc Student  
+> Department of Informatics, Athens University of Economics and Business  
