@@ -1,7 +1,7 @@
 # Real-Time Communication & Social Layer (DECYRA)
 
 ## Overview
-This module of DECYRA enables real-time interaction between students through chat, forum discussions, and video conferencing. It supports collaborative decision-making for academic and career guidance.
+This module of **DECYRA** enables real-time interaction between students through chat, forum discussions, and video conferencing. It supports collaborative decision-making for academic and career guidance.
 
 ## Features
 
@@ -42,7 +42,7 @@ Students often need quick feedback and peer validation when making academic deci
 
 ## Frontend Code Architecture
 
-DECYRA follows a hybrid Android architecture combining Java-based navigation with Kotlin and Jetpack Compose for state management and UI rendering. The system is designed with clear separation of concerns to ensure scalability, modularity, and maintainability.
+**DECYRA** follows a hybrid Android architecture combining Java-based navigation with Kotlin and Jetpack Compose for state management and UI rendering. The system is designed with clear separation of concerns to ensure scalability, modularity, and maintainability.
 
 ### 1. Navigation Layer (Java Activities)
 The Java layer is responsible for screen routing and Android lifecycle entry points. It primarily handles Intent-based navigation and acts as a bridge between different application modules. This layer contains minimal logic and focuses on directing users to the appropriate Compose-based screens.
