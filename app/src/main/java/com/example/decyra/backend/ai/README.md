@@ -1,4 +1,4 @@
-# AI Response Pipeline
+# AI Agent Architecture
 
 The application implements a **Retrieval-Augmented Generation (RAG)** pipeline with **semantic routing** and **multi-stage re-ranking** to improve both response quality and system efficiency.
 
