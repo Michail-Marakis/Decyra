@@ -20,7 +20,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 - Notes system for saving useful results, meeting codes, and personal reminders
 - Speech-to-text and Text-to-speech support for easier interaction
 - Responsive and modern mobile UI built for usability
-- As in most production-ready applications, users can choose to stay signed in. When the **Remember Me** option is enabled, DECYRA automatically restores the user's session, eliminating the need to log in again on subsequent launches.
+- As in most production-ready applications, users can choose to stay signed in. When the **Remember Me** option is enabled, **DECYRA** automatically restores the user's session, eliminating the need to log in again on subsequent launches.
 
 ## Technology Stack
 
