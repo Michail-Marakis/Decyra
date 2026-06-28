@@ -4,5 +4,5 @@ We used it to build a scalable local copy of our database, enabling us to experi
 
 
 <p align="center">
-  <img width="1124" height="933" alt="image" src="https://github.com/user-attachments/assets/70b7e1c5-bd96-4576-8991-fd53b6086dc3" />
+  <img width="1473" height="1219" alt="sql" src="https://github.com/user-attachments/assets/6e4346fe-d720-4342-943f-09a89d5a4348" />
 </p>
