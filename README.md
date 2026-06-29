@@ -1,5 +1,4 @@
-<img width="45" height="48" alt="image-removebg-preview" src="https://github.com/user-attachments/assets/d28fef58-c3cc-46d5-803d-fde91b7f3f6d" />    
-
+<img width="55" height="58" alt="image-removebg-preview" src="https://github.com/user-attachments/assets/d28fef58-c3cc-46d5-803d-fde91b7f3f6d" />    
 # DECYRA: AI-Powered Academic and Career Guidance App  
 
 You can watch the Demo Video [here](https://www.youtube.com/watch?v=UF1DgyN0P_4).   
