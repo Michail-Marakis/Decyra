@@ -7,7 +7,7 @@ It outlines the core user experience (UX) goals, details target user personas, a
 
 # Application Design  
      
-This file illustrates the architectural design and system interaction flows through detailed use cases, activity diagrams, and full system flowcharts.      
+This presentation illustrates the architectural design and system interaction flows through detailed use cases, activity diagrams, and full system flowcharts.      
 It also covers the application's physical design system including the color palette and typography alongside the evolution from low-to-high fidelity user interface prototypes.
 
 ---
