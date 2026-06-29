@@ -1,4 +1,4 @@
-<img width="65" height="68" alt="image-removebg-preview" src="https://github.com/user-attachments/assets/d28fef58-c3cc-46d5-803d-fde91b7f3f6d" />
+<img width="75" height="78" alt="image-removebg-preview" src="https://github.com/user-attachments/assets/d28fef58-c3cc-46d5-803d-fde91b7f3f6d" />
 
 # DECYRA: AI-Powered Academic and Career Guidance App  
 
