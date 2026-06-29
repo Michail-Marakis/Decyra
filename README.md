@@ -34,7 +34,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 
 ### NLP
 - **OpenAI GPT-4.1** for final response generation
-- **OpenAI GPT-4o-mini** for lightweight classification tasks
+- **OpenAI GPT-4o-mini** for a binary classification task
 - **OpenAI text-embedding-3-small** for text embeddings
 - **Pinecone** as the vector database for semantic retrieval
 - **Cohere Rerank** for improving result relevance
@@ -49,7 +49,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 
 ### Cloud and Backend Infrastructure
 - **Firebase Realtime Database** as the main cloud database
-- **Firebase Authentication** for user login and password reset
+- **Firebase Authentication** for user login and password reset and for **Remember me** feature
 - **Firebase Cloud Messaging** for notifications
 - **Supabase Edge Functions** for handling messaging-related requests
 - **Supabase Storage** for profile image storage
