@@ -4,6 +4,9 @@ You can watch the Demo Video [here](https://www.youtube.com/watch?v=UF1DgyN0P_4)
 Explore our UI [here](https://miro.com/app/board/uXjVHBeWLB0=/?share_link_id=507636727005).          
 You can view the app's Lucid model presentations [here](https://github.com/nikwilldoit/Decyra/tree/main/presentations)
 
+<img width="25" height="28" alt="image-removebg-preview" src="https://github.com/user-attachments/assets/d28fef58-c3cc-46d5-803d-fde91b7f3f6d" />
+
+
 ## Overview
 
 **DECYRA** is a production-ready android mobile application designed to help students make better academic and career decisions in the field of Computer Science. It combines AI-powered guidance with community-driven interaction, offering personalized support for Erasmus choices, Master studies, and early career planning.
