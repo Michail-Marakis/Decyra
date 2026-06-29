@@ -1,3 +1,5 @@
+During the Semester we did these presentations in front of the class.
+
 # Requirements Analysis & UX  
 
 This presentation focuses on the functional and non-functional requirements of the DECYRA application, which acts as a digital mentor for Computer Science students.    
