@@ -1,4 +1,4 @@
-**During the Semester we did these presentations in front of the class.**   
+**During the semester, we gave these presentations in front of the class.**   
 
 # Requirements Analysis & UX  
 
