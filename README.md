@@ -34,7 +34,7 @@ The app does not focus only on generic recommendations. Instead, it aims to prov
 
 ### NLP
 - **OpenAI GPT-4.1** for final response generation
-- **OpenAI GPT-4o-mini** for a binary classification task
+- **OpenAI GPT-4o-mini** acts as a binary classifier (semantic router)
 - **OpenAI text-embedding-3-small** for text embeddings
 - **Pinecone** as the vector database for semantic retrieval
 - **Cohere Rerank** for improving result relevance
