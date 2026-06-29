@@ -1,11 +1,8 @@
+<img width="65" height="68" alt="image-removebg-preview" src="https://github.com/user-attachments/assets/d28fef58-c3cc-46d5-803d-fde91b7f3f6d" />
+
 # DECYRA: AI-Powered Academic and Career Guidance App  
 
-You can watch the Demo Video [here](https://www.youtube.com/watch?v=UF1DgyN0P_4).                                           <img 
-  src="https://github.com/user-attachments/assets/d28fef58-c3cc-46d5-803d-fde91b7f3f6d"
-  width="65"
-  height="68"
-  style="display:inline-block; margin-left: 25px; vertical-align: middle;"
-/>                         
+You can watch the Demo Video [here](https://www.youtube.com/watch?v=UF1DgyN0P_4).     
 Explore our UI [here](https://miro.com/app/board/uXjVHBeWLB0=/?share_link_id=507636727005).          
 You can view the app's Lucid Model Presentations [here](https://github.com/nikwilldoit/Decyra/tree/main/presentations)
 
