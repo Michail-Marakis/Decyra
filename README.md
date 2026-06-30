@@ -4,7 +4,7 @@
 
 You can watch the Demo Video [here](https://www.youtube.com/watch?v=UF1DgyN0P_4).     
 Explore our UI [here](https://miro.com/app/board/uXjVHBeWLB0=/?share_link_id=507636727005).          
-You can view the app's Lucid Model Presentations [here](https://github.com/nikwilldoit/Decyra/tree/main/presentations)
+You can view the app's Lucid Model Presentations [here](https://github.com/nikwilldoit/Decyra/tree/main/presentations).
 
 ## Overview
 
